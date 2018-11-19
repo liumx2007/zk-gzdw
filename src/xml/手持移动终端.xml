@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<config 获取服务器时间="http://127.0.0.1:8080/server/interface/getServerTime.do?random={random}">
+	<设备监控 数据="http://127.0.0.1:8080/server/terminal/getRunningTerminalsHardwaresInfo.do?random={random}"
+	开="http://127.0.0.1:8080/server/cmd/poweron.do?codeName={code}"
+	关="http://127.0.0.1:8080/server/cmd/poweroff.do?codeName={code}"
+	重启="http://127.0.0.1:8080/server/cmd/reboot.do?codeName={code}"
+	加="http://127.0.0.1:8080/server/cmd/send.do?client={code},VOL_AD 5000"
+	减="http://127.0.0.1:8080/server/cmd/send.do?client={code},VOL_AD -5000"
+	静音="http://127.0.0.1:8080/server/cmd/send.do?client={code},VOL_MIN"
+	恢复="http://127.0.0.1:8080/server/cmd/send.do?client={code},VOL_RE"
+	刷新="http://127.0.0.1:8080/server/terminal/refresh.do?code={code}"
+	关闭="http://127.0.0.1:8080/server/cmd/send.do?client={code},cancel"
+	全开="http://127.0.0.1:8080/server/cmd/poweronAll.do?groupId=6daa4c79-c0bf-4e35-9f6d-156665263f38"
+	全关="http://127.0.0.1:8080/server/cmd/poweroffAll.do?groupId=6daa4c79-c0bf-4e35-9f6d-156665263f38"
+	全部重启="http://127.0.0.1:8080/server/cmd/rebootAll.do?groupId=6daa4c79-c0bf-4e35-9f6d-156665263f38">
+		<关键值>
+			<CPU 温度="60,80" 占用率="40,70"></CPU>
+			<内存 占用率="50,70"></内存>
+			<硬盘 温度="50,70" 占用率="80,90"></硬盘>
+			<显卡 占用率="40,70"></显卡>
+		</关键值>
+		<设备列表>
+			<设备 X="12" Y="35" 名称="右" MAC="DC-4A-3E-72-34-C4" CODE="NH-24"></设备>
+			<设备 X="12" Y="43" 名称="中" MAC="DC-4A-3E-77-28-2C" CODE="NH-23"></设备>
+			<设备 X="12" Y="51" 名称="左" MAC="DC-4A-3E-72-34-B2" CODE="NH-22"></设备>
+			<设备 X="15" Y="78" 名称="全电厨房" MAC="DC-4A-3E-72-34-AB" CODE="NH-21"></设备>
+			<设备 X="25" Y="92" 名称="滑轨" MAC="DC-4A-3E-6D-D9-A2" CODE="NH-20"></设备>
+			<!--<设备 X="30" Y="66" 名称="国网商城" MAC="DC-4A-3E-77-28-6D" CODE="NH-18"></设备>-->
+			<设备 X="25" Y="80" 名称="互动茶几" MAC="DC-4A-3E-76-DC-13" CODE="NH-35"></设备>
+			<设备 X="54.5" Y="73" 名称="2x2大屏" MAC="DC-4A-3E-6A-77-D5" CODE="NH-11"></设备>
+			<设备 X="54.5" Y="100" 名称="LED" MAC="DC-4A-3E-77-28-96" CODE="NH-45"></设备>
+			<!--<设备 X="63" Y="52" 名称="95598" MAC="00-F1-F5-11-17-04" CODE="NH-50"></设备>-->
+			<设备 X="35" Y="92" 名称="意见簿" MAC="00-E0-AC-CD-70-01" CODE="NH-36"></设备>
+			<!--<设备 X="80" Y="90" 名称="电动汽车" MAC="DC-4A-3E-74-74-DD" CODE="NH-35"></设备>-->
+			<设备 X="95" Y="80" 名称="拼接屏" MAC="DC-4A-3E-6A-77-FB" CODE="NH-34"></设备>
+			<设备 X="83" Y="60" 名称="业务办理流程" MAC="DC-4A-3E-74-74-EB" CODE="NH-33"></设备>
+		</设备列表>
+	</设备监控>
+	<人员调度>
+		<获取排班信息><![CDATA[http://127.0.0.1:8080/server/interface/interface_getDetialByDate.do?random={random}]]></获取排班信息>
+		<调度><![CDATA[http://127.0.0.1:8080/server/interface/interface_onduty.do]]></调度>
+		<岗位名称>
+			<岗位0>咨询台-1</岗位0>
+			<岗位1>咨询台-2</岗位1>
+			<岗位2>大堂-1</岗位2>
+			<岗位3>大堂-2</岗位3>
+			<岗位4>业务窗口-1</岗位4>
+			<岗位5>业务窗口-2</岗位5>
+			<岗位6>业务窗口-3</岗位6>
+			<岗位7>业务窗口-4</岗位7>
+			<岗位8>业务窗口-5</岗位8>
+			<岗位9>业务窗口-6</岗位9>
+			<岗位10>大客户室</岗位10>
+			<岗位11>值长</岗位11>
+		</岗位名称>
+	</人员调度>
+	<意见查询>
+		<获取列表><![CDATA[http://127.0.0.1:8080/server/yj/getAll.do?random={random}]]></获取列表>
+		<提交反馈><![CDATA[http://127.0.0.1:8080/server/yj/feedback.do?random={random}]]></提交反馈>
+		<更新记录状态><![CDATA[http://127.0.0.1:8080/server/yj/updateStatus.do?random={random}]]></更新记录状态>
+		<获取未读记录><![CDATA[http://127.0.0.1:8080/server/yj/getUnreadMessage.do?random={random}]]></获取未读记录>
+	</意见查询>
+	<客户信息>
+		<查询><![CDATA[http://127.0.0.1:8080/server/customer/find.do?random={random}]]></查询>
+	</客户信息>
+</config>

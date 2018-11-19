@@ -1,0 +1,10 @@
+#----- begin Chinese Simplified support package (2011-10.27)
+cidToUnicode    Adobe-GB1   D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\Adobe-GB1.cidToUnicode
+unicodeMap    ISO-2022-CN   D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\ISO-2022-CN.unicodeMap
+unicodeMap    EUC-CN       D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\EUC-CN.unicodeMap
+unicodeMap    GBK       D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\GBK.unicodeMap
+cMapDir        Adobe-GB1   D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\CMap
+toUnicodeDir           D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\CMap
+displayCIDFontTT    Adobe-GB1   D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\CMap\gbsn00lp.ttf
+displayCIDFontTT    Adobe-GB1   D:\tomcat8\webapps\server\WEB-INF\classes\exe\swftools\xpdf-chinese-simplified\CMap\gkai00mp.ttf
+#----- end Chinese Simplified support package

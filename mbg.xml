@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!-- 配置数据库链接信息 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/uec_gd"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 指定JavaBean的生成位置 -->
+        <javaModelGenerator targetPackage="com.zzqx.mvc.entity"
+                            targetProject=".\src">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- 指定sql映射文件的生成位置 -->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject=".\src\resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+        <!-- 指定dao接口的生成位置，mapper接口 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.zzqx.mvc.dao"
+                             targetProject=".\src">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+        <!-- table指点每张表的生成策略 -->
+        <table tableName="tb_interaction" domainObjectName="Interaction"></table>
+        <table tableName="tb_interaction_log" domainObjectName="InteractionLog"></table>
+    </context>
+</generatorConfiguration>

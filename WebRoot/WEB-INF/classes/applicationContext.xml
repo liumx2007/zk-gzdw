@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+       	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+      	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd"
+       default-lazy-init="true">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:applicationContext.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
+    <context:annotation-config />
+    <!-- 自动搜索@Controller标注的类 -->
+    <context:component-scan base-package="com.zzqx" />
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" />
+
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+        <bean class="com.zzqx.mvc.validation.CheckAuthorizedInterceptor"/>
+        <bean class="com.zzqx.mvc.validation.CheckLoggedInterceptor"/>
+    </mvc:interceptors>
+
+    <!-- 数据源配置,使用应用服务器的数据库连接池 -->
+    <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/dev" />-->
+
+    <!-- Hibernate配置 -->
+    <!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${dbcp.driver}" />
+        <property name="url" value="${dbcp.url}" />
+        <property name="username" value="${dbcp.username}" />
+        <property name="password" value="${dbcp.password}" />
+        <property name="initialSize" value="${dbcp.initialSize}"/>
+        <property name="maxTotal" value="${dbcp.maxTotal}" />
+        <property name="maxIdle" value="${dbcp.maxIdle}" />
+        <property name="maxWaitMillis" value="${dbcp.maxWaitMillis}" />
+    </bean>
+
+    <!-- 数据源配置,使用应用服务器的数据库连接池 -->
+    <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/dev" />-->
+
+    <!-- Hibernate配置 -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="namingStrategy">
+            <bean class="org.hibernate.cfg.ImprovedNamingStrategy" />
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+        <property name="packagesToScan" value="com.zzqx" />
+    </bean>
+
+    <!-- 配置mybatis的整合 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定mybatis的全局配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="dataSource" ref="dataSource"></property>
+        <!-- 指定mybatis.mapper的文件位置 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+    </bean>
+    <!-- 配置扫描器，将mybatis接口的实现加入到IOC容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描所有的dao接口的实现，加入到IOC的容器中 -->
+        <property name="basePackage" value="com.zzqx.mvc.dao"></property>
+    </bean>
+
+    <!-- mina配置 -->
+    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="customEditors">
+            <map>
+                <entry key="java.net.SocketAddress" value="org.apache.mina.integration.beans.InetSocketAddressEditor"/>
+            </map>
+        </property>
+    </bean>
+    <!-- 服务端 -->
+    <bean id="minaServer" class="com.zzqx.support.framework.mina.MinaServer"/>
+    <!-- Android Mina服务端 -->
+    <bean id="androidMinaServer" class="com.zzqx.support.framework.mina.androidser.AndroidMinaServer"/>
+    <!-- 系统过滤器 -->
+    <bean id="codecFilter" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+        <constructor-arg>
+            <bean class="com.zzqx.support.framework.mina.code.MinaCodeFactory" />
+        </constructor-arg>
+    </bean>
+    <!-- android客户端消息过滤器 -->           
+    <bean id="androidCodecFilter" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+        <constructor-arg>
+            <bean class="org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory" />
+        </constructor-arg>
+    </bean>
+    <bean id="loggingFilter" class="org.apache.mina.filter.logging.LoggingFilter">
+    	<property name="messageSentLogLevel" ref="none"/>
+    	<property name="messageReceivedLogLevel" ref="none"/>
+    </bean>
+    <bean id="none" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">    
+        <property name="staticField" value="org.apache.mina.filter.logging.LogLevel.NONE" />    
+    </bean>
+    <bean id="executorFilter"   class="org.apache.mina.filter.executor.ExecutorFilter" />
+    <bean id="mdcInjectionFilter"   class="org.apache.mina.filter.logging.MdcInjectionFilter"/>
+    <bean id="filterChainBuilder"
+          class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+        <property name="filters">
+            <map>
+                <entry key="loggingFilter" value-ref="loggingFilter" />
+                <entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter" />
+                <entry key="codecFilter" value-ref="codecFilter" />
+            </map>
+        </property>
+    </bean>
+    <!-- android mina服务端过虑器 -->
+    <bean id="androidfilterChainBuilder"
+          class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+        <property name="filters">
+            <map>
+                <entry key="loggingFilter" value-ref="loggingFilter" />
+                <entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter" />
+                <entry key="codecFilter" value-ref="androidCodecFilter" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- 服务端配置 -->
+    <bean id="ioAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor" init-method="bind" destroy-method="unbind" lazy-init="false">
+        <property name="defaultLocalAddress" value=":34561" />
+        <property name="handler" ref="minaServer" />
+        <property name="filterChainBuilder" ref="filterChainBuilder" />
+        <property name="reuseAddress" value="true"/>
+    </bean>
+    
+    
+    
+    <!-- Android Mina服务端配置  begin -->
+    <bean id="ioAndroidAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor" init-method="bind" destroy-method="unbind" lazy-init="false">
+        <property name="defaultLocalAddress" value=":34562" />
+        <property name="handler" ref="androidMinaServer" />
+        <!-- <property name="filterChainBuilder" ref="androidfilterChainBuilder" /> -->
+        <property name="filterChainBuilder" ref="androidfilterChainBuilder" />
+        <property name="reuseAddress" value="true"/>
+    </bean>
+    <bean id="sessionConfig" factory-bean="ioAndroidAcceptor" 
+        factory-method="getSessionConfig" > 
+        <property name="bothIdleTime" value="10"/>
+        <property name="receiveBufferSize" value="1024"/> 
+    </bean>
+    <!-- Android Mina服务端配置  end -->
+    
+    <bean id="springContext" class="com.zzqx.mvc.SpringContext" lazy-init="false"/>
+
+    <!--
+    	cron表达式：* * * * * *（共6位，使用空格隔开，具体如下）
+		cron表达式：*(秒0-59) *(分钟0-59) *(小时0-23) *(日期1-31) *(月份1-12或是JAN-DEC) *(星期1-7或是SUN-SAT)
+     -->
+    <task:annotation-driven/>
+    <bean id="terminalStateTimerTask" class="com.zzqx.support.framework.task.timerTask.TerminalStateTimerTask"/>
+    <bean id="AndroidTimerTask" class="com.zzqx.support.framework.task.timerTask.AndroidTimerTask"/>
+    <task:scheduled-tasks>
+        <task:scheduled ref="terminalStateTimerTask" method="doTask" fixed-rate="5000"/><!-- 5000,5秒 -->
+        <task:scheduled ref="AndroidTimerTask" method="sendAutoMessage" cron="0 0 6 * * *"/>
+    </task:scheduled-tasks>
+
+    <!-- 事务管理器配置,单数据源事务 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+</beans>

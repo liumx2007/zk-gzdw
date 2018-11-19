@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzqx.mvc.dao.InteractionMapper">
+  <resultMap id="BaseResultMap" type="com.zzqx.mvc.entity.Interaction">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="interact_name" jdbcType="VARCHAR" property="interactName" />
+    <result column="interact_code" jdbcType="VARCHAR" property="interactCode" />
+    <result column="previous_id" jdbcType="VARCHAR" property="previousId" />
+    <result column="folder_type" jdbcType="INTEGER" property="folderType" />
+    <result column="hall_id" jdbcType="INTEGER" property="hallId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, interact_name, interact_code, previous_id, folder_type, hall_id
+  </sql>
+  <select id="selectByExample" parameterType="com.zzqx.mvc.entity.InteractionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_interaction
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_interaction
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tb_interaction
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzqx.mvc.entity.InteractionExample">
+    delete from tb_interaction
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzqx.mvc.entity.Interaction">
+    insert into tb_interaction (id, interact_name, interact_code, 
+      previous_id, folder_type, hall_id
+      )
+    values (#{id,jdbcType=VARCHAR}, #{interactName,jdbcType=VARCHAR}, #{interactCode,jdbcType=VARCHAR}, 
+      #{previousId,jdbcType=VARCHAR}, #{folderType,jdbcType=INTEGER}, #{hallId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.Interaction">
+    insert into tb_interaction
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="interactName != null">
+        interact_name,
+      </if>
+      <if test="interactCode != null">
+        interact_code,
+      </if>
+      <if test="previousId != null">
+        previous_id,
+      </if>
+      <if test="folderType != null">
+        folder_type,
+      </if>
+      <if test="hallId != null">
+        hall_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="interactName != null">
+        #{interactName,jdbcType=VARCHAR},
+      </if>
+      <if test="interactCode != null">
+        #{interactCode,jdbcType=VARCHAR},
+      </if>
+      <if test="previousId != null">
+        #{previousId,jdbcType=VARCHAR},
+      </if>
+      <if test="folderType != null">
+        #{folderType,jdbcType=INTEGER},
+      </if>
+      <if test="hallId != null">
+        #{hallId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzqx.mvc.entity.InteractionExample" resultType="java.lang.Long">
+    select count(*) from tb_interaction
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_interaction
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interactName != null">
+        interact_name = #{record.interactName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interactCode != null">
+        interact_code = #{record.interactCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.previousId != null">
+        previous_id = #{record.previousId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.folderType != null">
+        folder_type = #{record.folderType,jdbcType=INTEGER},
+      </if>
+      <if test="record.hallId != null">
+        hall_id = #{record.hallId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_interaction
+    set id = #{record.id,jdbcType=VARCHAR},
+      interact_name = #{record.interactName,jdbcType=VARCHAR},
+      interact_code = #{record.interactCode,jdbcType=VARCHAR},
+      previous_id = #{record.previousId,jdbcType=VARCHAR},
+      folder_type = #{record.folderType,jdbcType=INTEGER},
+      hall_id = #{record.hallId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzqx.mvc.entity.Interaction">
+    update tb_interaction
+    <set>
+      <if test="interactName != null">
+        interact_name = #{interactName,jdbcType=VARCHAR},
+      </if>
+      <if test="interactCode != null">
+        interact_code = #{interactCode,jdbcType=VARCHAR},
+      </if>
+      <if test="previousId != null">
+        previous_id = #{previousId,jdbcType=VARCHAR},
+      </if>
+      <if test="folderType != null">
+        folder_type = #{folderType,jdbcType=INTEGER},
+      </if>
+      <if test="hallId != null">
+        hall_id = #{hallId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.Interaction">
+    update tb_interaction
+    set interact_name = #{interactName,jdbcType=VARCHAR},
+      interact_code = #{interactCode,jdbcType=VARCHAR},
+      previous_id = #{previousId,jdbcType=VARCHAR},
+      folder_type = #{folderType,jdbcType=INTEGER},
+      hall_id = #{hallId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

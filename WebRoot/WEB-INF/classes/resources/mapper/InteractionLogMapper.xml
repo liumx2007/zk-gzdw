@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzqx.mvc.dao.InteractionLogMapper">
+  <resultMap id="BaseResultMap" type="com.zzqx.mvc.entity.InteractionLog">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="interaction_id" jdbcType="VARCHAR" property="interactionId" />
+    <result column="click_time" jdbcType="TIMESTAMP" property="clickTime" />
+    <result column="session_business" jdbcType="VARCHAR" property="sessionBusiness" />
+    <result column="session_interact" jdbcType="VARCHAR" property="sessionInteract" />
+    <result column="folder_type" jdbcType="INTEGER" property="folderType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, interaction_id, click_time, session_business, session_interact, folder_type
+  </sql>
+  <select id="selectByExample" parameterType="com.zzqx.mvc.entity.InteractionLogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_interaction_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <!--有选择的条件查询-->
+  <select id="selectByEntity" parameterType="com.zzqx.mvc.entity.InteractionLog" resultMap="BaseResultMap" >
+    SELECT * FROM  tb_interaction_log
+    <where>
+      1=1
+      <if test="interactionId != null">
+        and interaction_id = #{interactionId,jdbcType=VARCHAR}
+      </if>
+      <if test="clickTime != null">
+        and  click_time = #{clickTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="sessionBusiness != null">
+        and session_business = #{sessionBusiness,jdbcType=VARCHAR}
+      </if>
+      <if test="sessionInteract != null">
+        and session_interact = #{sessionInteract,jdbcType=VARCHAR}
+      </if>
+      <if test="folderType != null">
+        and folder_type = #{folderType,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+  <!--连tb_interaction表查-->
+  <sql id="mcolumn">
+      l.id,l.interaction_id,l.click_time,l.folder_type,
+      i.id as iid,i.interact_name as i_interact_name,i.previous_id
+--       i.folder_type as i_folder_type
+  </sql>
+  <resultMap id="getMap" type="com.zzqx.mvc.entity.InteractionLog">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="interaction_id" jdbcType="VARCHAR" property="interactionId" />
+    <result column="click_time" jdbcType="TIMESTAMP" property="clickTime" />
+    <result column="session_business" jdbcType="VARCHAR" property="sessionBusiness" />
+    <result column="session_interact" jdbcType="VARCHAR" property="sessionInteract" />
+    <result column="folder_type" jdbcType="INTEGER" property="folderType" />
+    <association property="interaction" javaType="com.zzqx.mvc.entity.Interaction">
+      <id column="iid" property="id"></id>
+      <result column="i_interact_name" property="interactName"></result>
+      <result column="previous_id" property="previousId"></result>
+      <!--<result column="i_folder_type" property="folderType"></result>-->
+    </association>
+  </resultMap>
+  <select id="selectWithInteraction" parameterType="com.zzqx.mvc.dto.InteractionLogDto" resultMap="getMap">
+      SELECT
+      <include refid="mcolumn"></include>
+      FROM tb_interaction_log l LEFT JOIN  tb_interaction i ON   l.interaction_id = i.id
+      WHERE 1=1
+        <if test="interactionId != null">
+          and l.interaction_id = #{interactionId,jdbcType=VARCHAR}
+        </if>
+        <if test="clickTime != null">
+          and  l.click_time = #{clickTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="sessionBusiness != null">
+          and l.session_business = #{sessionBusiness,jdbcType=VARCHAR}
+        </if>
+        <if test="sessionInteract != null">
+          and l.session_interact = #{sessionInteract,jdbcType=VARCHAR}
+        </if>
+        <if test="folderType != null">
+          and l.folder_type = #{folderType,jdbcType=INTEGER}
+        </if>
+        <if test="interactName != null">
+          and i.interact_name like CONCAT('%',#{interactName},'%')
+        </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_interaction_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tb_interaction_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzqx.mvc.entity.InteractionLogExample">
+    delete from tb_interaction_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzqx.mvc.entity.InteractionLog">
+    insert into tb_interaction_log (id, interaction_id, click_time, 
+      session_business, session_interact, folder_type
+      )
+    values (#{id,jdbcType=VARCHAR}, #{interactionId,jdbcType=VARCHAR}, #{clickTime,jdbcType=TIMESTAMP}, 
+      #{sessionBusiness,jdbcType=VARCHAR}, #{sessionInteract,jdbcType=VARCHAR}, #{folderType,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.InteractionLog">
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into tb_interaction_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="interactionId != null">
+        interaction_id,
+      </if>
+      <if test="clickTime != null">
+        click_time,
+      </if>
+      <if test="sessionBusiness != null">
+        session_business,
+      </if>
+      <if test="sessionInteract != null">
+        session_interact,
+      </if>
+      <if test="folderType != null">
+        folder_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="interactionId != null">
+        #{interactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="clickTime != null">
+        #{clickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sessionBusiness != null">
+        #{sessionBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionInteract != null">
+        #{sessionInteract,jdbcType=VARCHAR},
+      </if>
+      <if test="folderType != null">
+        #{folderType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzqx.mvc.entity.InteractionLogExample" resultType="java.lang.Long">
+    select count(*) from tb_interaction_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_interaction_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interactionId != null">
+        interaction_id = #{record.interactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clickTime != null">
+        click_time = #{record.clickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sessionBusiness != null">
+        session_business = #{record.sessionBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sessionInteract != null">
+        session_interact = #{record.sessionInteract,jdbcType=VARCHAR},
+      </if>
+      <if test="record.folderType != null">
+        folder_type = #{record.folderType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_interaction_log
+    set id = #{record.id,jdbcType=VARCHAR},
+      interaction_id = #{record.interactionId,jdbcType=VARCHAR},
+      click_time = #{record.clickTime,jdbcType=TIMESTAMP},
+      session_business = #{record.sessionBusiness,jdbcType=VARCHAR},
+      session_interact = #{record.sessionInteract,jdbcType=VARCHAR},
+      folder_type = #{record.folderType,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzqx.mvc.entity.InteractionLog">
+    update tb_interaction_log
+    <set>
+      <if test="interactionId != null">
+        interaction_id = #{interactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="clickTime != null">
+        click_time = #{clickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sessionBusiness != null">
+        session_business = #{sessionBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionInteract != null">
+        session_interact = #{sessionInteract,jdbcType=VARCHAR},
+      </if>
+      <if test="folderType != null">
+        folder_type = #{folderType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.InteractionLog">
+    update tb_interaction_log
+    set interaction_id = #{interactionId,jdbcType=VARCHAR},
+      click_time = #{clickTime,jdbcType=TIMESTAMP},
+      session_business = #{sessionBusiness,jdbcType=VARCHAR},
+      session_interact = #{sessionInteract,jdbcType=VARCHAR},
+      folder_type = #{folderType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
