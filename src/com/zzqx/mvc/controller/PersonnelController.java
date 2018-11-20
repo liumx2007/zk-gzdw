@@ -3,13 +3,18 @@ package com.zzqx.mvc.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.setting.dialect.Props;
+import com.sdicons.json.validator.impl.predicates.Object;
+import com.zzqx.support.utils.file.PropertiesHelper;
+import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.mina.core.session.IoSession;
 import org.hibernate.Query;
@@ -18,6 +23,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,13 +54,16 @@ import com.zzqx.support.utils.net.SocketDataSender;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
-
+@OpenAccess
 @Controller
 @SuppressWarnings({ "deprecation", "unchecked" })
 @RequestMapping(value = "/personnel")
 public class PersonnelController extends BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger(PersonnelController.class);
+
+//	@Value("#{com.http.core}")
+//	private String HttpCore;
 
 	@Autowired
 	private PersonnelService personnelService;
@@ -72,6 +81,7 @@ public class PersonnelController extends BaseController {
 		List<Personnel> list = personnelService.getAll();
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+		String s = JSONArray.fromObject(list, jsonConfig).toString();
 		return JSONArray.fromObject(list, jsonConfig).toString();
 	}
 
@@ -272,14 +282,27 @@ public class PersonnelController extends BaseController {
 	public String watchUpdateWorkStatus(HttpServletRequest request) {
 		int statu = Integer.valueOf(request.getParameter("statu"));
 		String watchCode = request.getParameter("watchCode");
-		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
+		PropertiesHelper pro = new PropertiesHelper("config.properties");
+		String httpCore = pro.readValue("url");
+		String s = HttpUtil.get(httpCore + "/api/employeeInformation/updateByWatchCode?workState=4&watchCode=" + watchCode);
+//		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
+//		Personnel person = null;
+		if (!s.contains("修改成功")) {
+//			return "人员信息不存在";
+			return "修改状态失败。";
+		}
+//		else {
+//			logger.error("人员信息不存在");
+//			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
+//			return "人员信息不存在";
+//		}
+
+		String perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
 		Personnel person = null;
-		if (personList != null && personList.size() > 0) {
-			person = personList.get(0);
-		} else {
-			logger.error("人员信息不存在");
-			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
-			return "人员信息不存在";
+		if(!"".equals(perStr)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(perStr);
+			person = JSONUtil.toBean(object,Personnel.class);
+			person.setWork_status(statu);
 		}
 
 		String statDay = DateManager.date2Str(DateManager.date_sdf);
@@ -339,9 +362,9 @@ public class PersonnelController extends BaseController {
 			stat.setBusy_time(null);
 		}
 		statService.saveOrUpdate(stat);
-		person.setWork_status(statu);
-		person.setChange_time(new Date());
-		personnelService.saveOrUpdate(person);
+//		person.setWork_status(statu);
+//		person.setChange_time(new Date());
+//		personnelService.saveOrUpdate(person);
 		return "状态修改成功";
 	}
 
@@ -355,11 +378,20 @@ public class PersonnelController extends BaseController {
 	@RequestMapping("watchGetStatTime")
 	public String watchGetStatTime(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
-		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
+//		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
+		PropertiesHelper pro = new PropertiesHelper("config.properties");
+		String httpCore = pro.readValue("url");
+		String perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
 		Personnel person = null;
-		if (personList != null && personList.size() > 0) {
-			person = personList.get(0);
-		} else {
+		if(!"".equals(perStr)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(perStr);
+			person = JSONUtil.toBean(object,Personnel.class);
+//			person.setWork_status(statu);
+		}
+//		if (personList != null && personList.size() > 0) {
+//			person = personList.get(0);
+//		}
+		else {
 			logger.error("人员信息不存在");
 			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
 			return "人员信息不存在";
@@ -381,11 +413,15 @@ public class PersonnelController extends BaseController {
 	@ResponseBody
 	@RequestMapping("getPersonByBindStatus")
 	public String getPerson(HttpServletRequest request) {
-		Integer bindStatus = Integer.valueOf(request.getParameter("bindStatus"));
-		Query query = personnelService.createQuery("from Personnel t where t.bind_status = ?", bindStatus);
-		List<Personnel> list = query.list();
-		JSONArray json = JSONArray.fromObject(list);
-		return json.toString();
+//		Integer bindStatus = Integer.valueOf(request.getParameter("bindStatus"));
+//		Query query = personnelService.createQuery("from Personnel t where t.bind_status = ?", bindStatus);
+//		List<Personnel> list = query.list();
+//		JSONArray json = JSONArray.fromObject(list);
+//		return json.toString();
+		PropertiesHelper p = new PropertiesHelper("config.properties");
+		String httpCore = p.readValue("url");
+		String s = HttpUtil.get(httpCore+"/api/employeeInformation/getWatchList?hallId=2");
+		return  s;
 	}
 
 	@ResponseBody
@@ -414,24 +450,32 @@ public class PersonnelController extends BaseController {
 		String uuid = request.getParameter("uuid");
 		int status = Integer.valueOf(request.getParameter("status"));
 		String id = request.getParameter("id");
-		Personnel person = personnelService.getById(id);
-		if (person != null) {
-			if(person.getBind_status()==0){
-				logger.error("人员已绑定");
-				return "fail";
-			}
-			person.setBind_status(status);
-			if (person.getWatch_code() == null || "".equals(person.getWatch_code())) {
-				person.setWatch_code(uuid);
-			} else {
-				uuid = person.getWatch_code();
-			}
-			personnelService.saveOrUpdate(person);
-		} else {
-			logger.error("人员信息不存在");
-			return "fail";
+		Integer i = Integer.parseInt(id);
+//		Personnel person = personnelService.getById(id);
+		PropertiesHelper p = new PropertiesHelper("config.properties");
+		String httpCore = p.readValue("url");
+		String re = HttpUtil.get(httpCore+"/api/employeeInformation/updateWatch?id="+i+"&hallId=2&bindState=1&watchCode="+uuid);
+//		if (person != null) {
+//			if(person.getBind_status()==0){
+//				logger.error("人员已绑定");
+//				return "fail";
+//			}
+//			person.setBind_status(status);
+//			if (person.getWatch_code() == null || "".equals(person.getWatch_code())) {
+//				person.setWatch_code(uuid);
+//			} else {
+//				uuid = person.getWatch_code();
+//			}
+//			personnelService.saveOrUpdate(person);
+//		} else {
+//			logger.error("人员信息不存在");
+//			return "fail";
+//		}
+
+		if (re.contains("修改成功")){
+			return uuid;
 		}
-		return uuid;
+		return "fail";
 	}
 	
 	/**
@@ -444,9 +488,15 @@ public class PersonnelController extends BaseController {
 	@RequestMapping("getPersonnelWatchCode")
 	public String getPersonnelWatchCode(HttpServletRequest request) {
 		String uuid = request.getParameter("uuid");
-		Personnel person = personnelService.getPersonnelWatchCode(uuid);
-		if(person != null){
-			return person.getName();
+		PropertiesHelper p = new PropertiesHelper("config.properties");
+		String httpCore = p.readValue("url");
+		String s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+uuid);
+//		Personnel person = personnelService.getPersonnelWatchCode(uuid);
+		Personnel personnels = null;
+		if(!"".equals(s)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+			personnels = JSONUtil.toBean(object,Personnel.class);
+			return personnels.getName();
 		}
 		return "fail";
 	}
@@ -516,5 +566,5 @@ public class PersonnelController extends BaseController {
 			});
 		}
 	}
-	
+
 }

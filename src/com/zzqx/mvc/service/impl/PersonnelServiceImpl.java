@@ -8,6 +8,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.sun.deploy.net.HttpRequest;
+import com.zzqx.support.utils.file.PropertiesHelper;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -255,18 +262,41 @@ public class PersonnelServiceImpl implements PersonnelService {
 					throw new ServiceException("未获取到空闲的集团业务员信息");
 				}
 			} else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_NORMAL_KEY.intValue()) {// 日常消息
-				List<Personnel> personnels = personnelDao.find(Restrictions.eq("watch_code", watchCode));
-				if (personnels != null && personnels.size() > 0 && personnels.get(0) != null) {
-					personnel = personnels.get(0);
+//				List<Personnel> personnels = personnelDao.find(Restrictions.eq("watch_code", watchCode));
+				PropertiesHelper p = new PropertiesHelper("config.properties");
+				String httpCore = p.readValue("url");
+				String s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+				Personnel personnels = null;
+				if(!"".equals(s)){
+					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+					personnels = JSONUtil.toBean(object,Personnel.class);
+				}
+				if (personnels != null) {
+					personnel = personnels;
 					resState = true;
 					
 					sb = new StringBuffer("");
 					sb.append(personnel.getName());
-					sb.append("工号");
-					sb.append(personnel.getJob_num());
-					WorkPosition work = getWorkByPerson(personnel);
-					if(work != null){
-						sb.append("今日工作岗位为" + getWorkByPerson(personnel).getPosition_name());
+//					sb.append("工号");
+//					sb.append(personnel.getJob_num());
+					//获取拍板信息
+					String schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2");
+					String wordStr = "";
+					if(!"".equals(schMsg)){
+						JSONObject jsa = JSONObject.parseObject(schMsg);
+						Object Json = jsa.get("data");
+						JSONArray schJson = JSONArray.parseArray(Json.toString());
+						for(int i = 0;i<schJson.size();i++){
+							JSONObject schTemp = schJson.getJSONObject(i);
+							if(personnels.getName().equals(schTemp.get("name"))){
+								wordStr = schTemp.get("jobsName").toString();
+							};
+						}
+					}
+//					WorkPosition work = getWorkByPerson(personnel);
+					if(!"".equals(wordStr)){
+//						sb.append("今日工作岗位为" + getWorkByPerson(personnel).getPosition_name());
+						sb.append("今日工作岗位为" + wordStr);
 					}else{
 						sb.append("今日工作岗位无排班记录");
 						return true;

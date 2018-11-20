@@ -1,4 +1,4 @@
-<%@page import="com.zzqx.mvc.entity.User"%>
+<%--<%@page import="com.zzqx.mvc.entity.InteractionLog"%>--%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
     String path = request.getContextPath();
@@ -10,7 +10,7 @@
 <head>
     <base href="<%=basePath%>">
 
-    <title>数据列表</title>
+    <title>交互体验数据</title>
 
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
@@ -28,23 +28,17 @@
     <script type="text/javascript" src="resources/js/jquery-easyui/plugins/jquery.parser.js"></script>
     <script type="text/javascript">
         $(function(){
-            $('#dataGrid').datagrid({
+            $("#log_table").datagrid({
                 url: "interactionlog/list.do",
                 idField: "id",
-                border: 0,
-                nowrap: true,
-                striped: true,
-                rownumbers: true,
+                split: false,
                 fit: true,
-                frozenColumns: [[
-                    {field:'ck',checkbox:true}
-                ]],
-                columns: [[
-                    {field:'interactionLogList.interaction.interactName',title:'交互名称',width:200,align:'center'},
-                    {field:'interactionLogList.clickTime',title:'点击时间',width:200,align:'center'},
-                    {field:'interactionLogList.folderType',title:'类型',width:200,align:'center',formatter:getType}
-                ]]
+                border: 0,
+                frozenColumns: [[{field:'ck',checkbox:true}]],
+                rownumbers: true,
+//                toolbar: "#bar",
             });
+            $('#log_table').datagrid().datagrid('getPager');
         });
         function getType(v,r,i) {
             if(v == 1){
@@ -56,11 +50,34 @@
             if(v == 3){
                 return "交互触点";
             }
-        }
+        };
+        function getName(v,r,i) {
+            var obj  = eval(v);
+            return obj.interactName;
+        };
     </script>
 </head>
 
 <body>
-<table id="dataGrid"></table>
+    <%--<table id="dg" class="easyui-datagrid" title="交互体验数据" style="width:450px;height:250px"--%>
+           <%--data-options="rownumbers:true,singleSelect:true,url:'interactionlog/list.do',method:'get'">--%>
+        <%--<thead>--%>
+        <%--<tr>--%>
+            <%--<th data-options="field:'ck',checkbox:true"></th>--%>
+            <%--<th data-options="field:'interactionLogList.interaction.interactName',width:80">交互名称</th>--%>
+            <%--<th data-options="field:'interactionLogList.clickTime',width:100">点击时间</th>--%>
+            <%--<th data-options="field:'interactionLogList.folderType',width:80,align:'right'">类型</th>--%>
+        <%--</tr>--%>
+        <%--</thead>--%>
+    <%--</table>--%>
+    <table id="log_table">
+        <thead>
+        <tr>
+            <th align='center' data-options="field:'interaction',width:150,halign:'center',formatter:getName">交互名称</th>
+            <th align='center' data-options="field:'clickTime',width:150,halign:'center'">点击时间</th>
+            <th align='center' data-options="field:'folderType',width:120,halign:'center',formatter:getType">类型</th>
+        </tr>
+        </thead>
+    </table>
 </body>
 </html>

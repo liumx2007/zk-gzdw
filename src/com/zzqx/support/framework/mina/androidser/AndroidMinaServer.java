@@ -2,6 +2,9 @@ package com.zzqx.support.framework.mina.androidser;
 
 import java.util.List;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.zzqx.support.utils.file.PropertiesHelper;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -84,10 +87,17 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 				minaSession.setWatchCode(msgs);
 				AndroidMinaManager.add(minaSession);
 				PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
-
-				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
-				if (personnels != null && personnels.size() > 0 && personnels.get(0) != null) {
-					if (personnels.get(0).getBind_status() == AndroidConstant.PERSON_BIND_STATUS_BOUND_KEY) {
+//				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
+				PropertiesHelper p = new PropertiesHelper("config.properties");
+				String httpCore = p.readValue("url");
+				String s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
+				Personnel personnels = null;
+				if(!"".equals(s)){
+					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+					personnels = JSONUtil.toBean(object,Personnel.class);
+				}
+				if (personnels != null ) {
+					if (personnels.getBind_status() == AndroidConstant.PERSON_BIND_STATUS_BOUND_KEY) {
 						String statDay = DateManager.date2Str(DateManager.date_sdf);
 						MessageService messageService = (MessageService) SpringContext.getBean("messageService");
 						List<Message> messageList = messageService.find(Restrictions.eq("watch_code", msgs),

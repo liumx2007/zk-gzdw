@@ -119,7 +119,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <li>
             <a href="javascript:void(0);" onclick="openWindow('interactionLog','interactionlog/interactionLog');">
                 <img src="resources/images/desktop/liti-xitong-desktop-14.png">
-                <div>数据</div></a>
+                <div>交互体验数据</div></a>
         </li>
     </ul>
 </div>
@@ -159,7 +159,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div id="subject" class="easyui-window" title="题库" data-options="iconCls:'icon-comment',minimizable:false,shadow:true,closed:true" style="width:910px;height:600px;overflow:hidden">
 	<iframe width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 </div>
-<div id="interactionLog" class="easyui-window" title="数据" data-options="iconCls:'icon-comment',minimizable:false,shadow:true,closed:true" style="width:910px;height:600px;overflow:hidden">
+<div id="interactionLog" class="easyui-window" title="交互体验数据" data-options="iconCls:'icon-comment',minimizable:false,shadow:true,closed:true" style="width:550px;height:600px;overflow:hidden">
     <iframe width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 </div>
 <a id="photos" class="example-image-link" data-lightbox="example-set" style="display:none;"></a>

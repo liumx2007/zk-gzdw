@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import cn.hutool.setting.dialect.Props;
 import com.zzqx.support.utils.StringHelper;
 
 public class PropertiesHelper {
@@ -93,4 +94,9 @@ public class PropertiesHelper {
 		}
 		this.props = props;
 	}
+//	public static String  url(){
+//		Props props = new Props("config.properties");
+//		String url = props.getProperty("url");
+//		return url;
+//	}
 }
