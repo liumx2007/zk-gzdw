@@ -1,17 +1,26 @@
 package com.zzqx.mvc.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import cn.hutool.http.HttpUtil;
+import com.zzqx.Global;
+import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.entity.*;
+import com.zzqx.mvc.javabean.NewsContent;
+import com.zzqx.mvc.javabean.NewsImage;
+import com.zzqx.mvc.javabean.NewsInfo;
+import com.zzqx.mvc.javabean.NewsWords;
+import com.zzqx.mvc.service.*;
+import com.zzqx.support.framework.mina.androidser.AndroidConstant;
+import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
+import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
+import com.zzqx.support.utils.CommonUtil;
+import com.zzqx.support.utils.DateManager;
+import com.zzqx.support.utils.StringHelper;
+import com.zzqx.support.utils.file.PropertiesHelper;
+import com.zzqx.support.utils.net.SocketDataSender;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -25,36 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zzqx.Global;
-import com.zzqx.mvc.annotation.OpenAccess;
-import com.zzqx.mvc.entity.ArrangeDate;
-import com.zzqx.mvc.entity.ArrangeDetial;
-import com.zzqx.mvc.entity.ArrangeDetialAndPersData;
-import com.zzqx.mvc.entity.Message;
-import com.zzqx.mvc.entity.Personnel;
-import com.zzqx.mvc.entity.WorkPosition;
-import com.zzqx.mvc.javabean.NewsContent;
-import com.zzqx.mvc.javabean.NewsImage;
-import com.zzqx.mvc.javabean.NewsInfo;
-import com.zzqx.mvc.javabean.NewsWords;
-import com.zzqx.mvc.service.ArrangeDateService;
-import com.zzqx.mvc.service.ArrangeDetialService;
-import com.zzqx.mvc.service.MessageService;
-import com.zzqx.mvc.service.PersonnelService;
-import com.zzqx.mvc.service.WorkPositionService;
-import com.zzqx.support.framework.mina.androidser.AndroidConstant;
-import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
-import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
-import com.zzqx.support.utils.CommonUtil;
-import com.zzqx.support.utils.DateManager;
-import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.file.PropertiesHelper;
-import com.zzqx.support.utils.net.SocketDataSender;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/interface")
@@ -188,9 +171,16 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("onduty/confirm")
 	public String ondutyConfirm(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
-		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
-		person.setMy_work(getWork(person));
-		personnelService.saveOrUpdate(person);
+//		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
+//		person.setMy_work(getWork(person));
+//		personnelService.saveOrUpdate(person);
+		try{
+			PropertiesHelper propertiesHelper = new PropertiesHelper("config.properties");
+			String httpCore = propertiesHelper.readValue("url");
+			HttpUtil.get(httpCore+"/api/employeeInformation/getJobByWatchCode?watchCode="+watchCode+"&hallId=2");
+		}catch (Exception e){
+			return "";
+		}
 		return "确认到岗";
 	}
 	/**
