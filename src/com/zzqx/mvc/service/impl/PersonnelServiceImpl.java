@@ -1,20 +1,21 @@
 package com.zzqx.mvc.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.deploy.net.HttpRequest;
+import com.jetsum.core.orm.entity.Page;
+import com.zzqx.mvc.dao.PersonnelDao;
+import com.zzqx.mvc.entity.*;
+import com.zzqx.mvc.service.*;
+import com.zzqx.mvc.vo.PersonVo;
+import com.zzqx.support.framework.mina.androidser.AndroidConstant;
+import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
+import com.zzqx.support.utils.CommonUtil;
+import com.zzqx.support.utils.ServiceException;
+import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.file.PropertiesHelper;
+import com.zzqx.support.utils.net.SocketDataSender;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -22,24 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jetsum.core.orm.entity.Page;
-import com.zzqx.mvc.dao.PersonnelDao;
-import com.zzqx.mvc.entity.ArrangeDate;
-import com.zzqx.mvc.entity.ArrangeDetial;
-import com.zzqx.mvc.entity.Message;
-import com.zzqx.mvc.entity.Personnel;
-import com.zzqx.mvc.entity.WorkPosition;
-import com.zzqx.mvc.service.ArrangeDateService;
-import com.zzqx.mvc.service.ArrangeDetialService;
-import com.zzqx.mvc.service.MessageService;
-import com.zzqx.mvc.service.PersonnelService;
-import com.zzqx.mvc.service.WorkPositionService;
-import com.zzqx.support.framework.mina.androidser.AndroidConstant;
-import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
-import com.zzqx.support.utils.CommonUtil;
-import com.zzqx.support.utils.ServiceException;
-import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.net.SocketDataSender;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service("personnelService")
 @Transactional
@@ -55,6 +45,8 @@ public class PersonnelServiceImpl implements PersonnelService {
 	private WorkPositionService workPositionService;
 	@Autowired
 	private MessageService messageService;
+
+	String s = "";
 
 
 	@Override
@@ -263,16 +255,22 @@ public class PersonnelServiceImpl implements PersonnelService {
 				}
 			} else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_NORMAL_KEY.intValue()) {// 日常消息
 //				List<Personnel> personnels = personnelDao.find(Restrictions.eq("watch_code", watchCode));
-				PropertiesHelper p = new PropertiesHelper("config.properties");
-				String httpCore = p.readValue("url");
-				String s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
-				Personnel personnels = null;
+
+				try{
+					PropertiesHelper p = new PropertiesHelper("config.properties");
+					String httpCore = p.readValue("url");
+					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+				}catch (Exception e){
+					return false;
+				}
+//				Personnel personnels = null;
+				PersonVo personnels = null;
 				if(!"".equals(s)){
 					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-					personnels = JSONUtil.toBean(object,Personnel.class);
+					personnels = JSONUtil.toBean(object,PersonVo.class);
 				}
 				if (personnels != null) {
-					personnel = personnels;
+					personnel = new Personnel(personnels);
 					resState = true;
 					
 					sb = new StringBuffer("");
@@ -280,7 +278,14 @@ public class PersonnelServiceImpl implements PersonnelService {
 //					sb.append("工号");
 //					sb.append(personnel.getJob_num());
 					//获取拍板信息
-					String schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2");
+					String schMsg = "";
+					try{
+						PropertiesHelper p = new PropertiesHelper("config.properties");
+						String httpCore = p.readValue("url");
+						schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2");
+					}catch (Exception e){
+						return false;
+					}
 					String wordStr = "";
 					if(!"".equals(schMsg)){
 						JSONObject jsa = JSONObject.parseObject(schMsg);
@@ -290,7 +295,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 							JSONObject schTemp = schJson.getJSONObject(i);
 							if(personnels.getName().equals(schTemp.get("name"))){
 								wordStr = schTemp.get("jobsName").toString();
-							};
+							}
 						}
 					}
 //					WorkPosition work = getWorkByPerson(personnel);

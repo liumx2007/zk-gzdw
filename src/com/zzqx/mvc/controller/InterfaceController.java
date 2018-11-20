@@ -71,6 +71,8 @@ public class InterfaceController extends BaseController {
 	@Autowired
 	private WorkPositionService workPositionService;
 	Map<String, WorkPosition> goingOnduty = new HashMap<String, WorkPosition>();
+
+
 	
 	List<AndroidMinaSession> sessions = AndroidMinaManager.getClients();
 	@OpenAccess

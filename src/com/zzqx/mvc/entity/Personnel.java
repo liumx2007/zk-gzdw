@@ -7,6 +7,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.jetsum.core.orm.entity.IdEntity;
+import com.zzqx.mvc.vo.PersonVo;
 import com.zzqx.support.utils.StringHelper;
 
 @Entity
@@ -28,6 +29,23 @@ public class Personnel extends IdEntity {
 	private Date change_time;
 	private int bind_status;
 	private String passWork;
+
+	public Personnel (){
+
+	}
+
+	public Personnel(PersonVo personVo){
+		this.name = personVo.getName();
+		this.sex = personVo.getSex();
+		this.watch_code = personVo.getWatchCode();
+		this.photo = personVo.getPhoto();
+		this.my_work = personVo.getMyWork();
+		this.work_status = personVo.getWorkStatus();
+		this.work_time = personVo.getWorkTime();
+		this.change_time = personVo.getChangeTime();
+		this.passWork = personVo.getPassWork();
+	}
+
 	public String getPassWork() {
 		return passWork;
 	}

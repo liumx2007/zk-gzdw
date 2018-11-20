@@ -1,18 +1,7 @@
 package com.zzqx.support.framework.mina.androidser;
 
-import java.util.List;
-
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.zzqx.support.utils.file.PropertiesHelper;
-import org.apache.mina.core.service.IoHandlerAdapter;
-import org.apache.mina.core.session.IdleStatus;
-import org.apache.mina.core.session.IoSession;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.zzqx.mvc.SpringContext;
 import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.entity.Personnel;
@@ -21,7 +10,17 @@ import com.zzqx.mvc.service.PersonnelService;
 import com.zzqx.support.utils.DateManager;
 import com.zzqx.support.utils.ServiceException;
 import com.zzqx.support.utils.StringHelper;
+import com.zzqx.support.utils.file.PropertiesHelper;
 import com.zzqx.support.utils.net.SocketDataSender;
+import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.session.IoSession;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * 处理android手机终端的Main服务端
@@ -32,6 +31,8 @@ import com.zzqx.support.utils.net.SocketDataSender;
 public class AndroidMinaServer extends IoHandlerAdapter {
 
 	private static Logger logger = LoggerFactory.getLogger(AndroidMinaServer.class);
+
+	String s = null;
 
 	@Override
 	public void messageReceived(IoSession session, Object msg) throws Exception {
@@ -88,9 +89,13 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 				AndroidMinaManager.add(minaSession);
 				PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 //				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
-				PropertiesHelper p = new PropertiesHelper("config.properties");
-				String httpCore = p.readValue("url");
-				String s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
+				try{
+					PropertiesHelper p = new PropertiesHelper("config.properties");
+					String httpCore = p.readValue("url");
+					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
+				}catch (Exception e){
+					return ;
+				}
 				Personnel personnels = null;
 				if(!"".equals(s)){
 					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);

@@ -10,20 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.setting.dialect.Props;
-import com.sdicons.json.validator.impl.predicates.Object;
+import com.zzqx.mvc.vo.PersonVo;
 import com.zzqx.support.utils.file.PropertiesHelper;
-import net.sf.json.JSONObject;
-import net.sf.json.util.JSONUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.mina.core.session.IoSession;
-import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +31,6 @@ import com.zzqx.mvc.entity.ArrangeDetial;
 import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.entity.Personnel;
 import com.zzqx.mvc.entity.Stat;
-import com.zzqx.mvc.entity.User;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.ArrangeDetialService;
 import com.zzqx.mvc.service.MessageService;
@@ -47,7 +41,6 @@ import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
 import com.zzqx.support.utils.DateManager;
 import com.zzqx.support.utils.StringHelper;
-//import com.zzqx.support.utils.net.SocketData;
 import com.zzqx.support.utils.file.FileManager;
 import com.zzqx.support.utils.net.SocketDataSender;
 
@@ -74,6 +67,8 @@ public class PersonnelController extends BaseController {
 
 	@Autowired
 	private StatService statService;
+
+	String s = null;
 
 	@ResponseBody
 	@RequestMapping("getAll")
@@ -284,7 +279,12 @@ public class PersonnelController extends BaseController {
 		String watchCode = request.getParameter("watchCode");
 		PropertiesHelper pro = new PropertiesHelper("config.properties");
 		String httpCore = pro.readValue("url");
-		String s = HttpUtil.get(httpCore + "/api/employeeInformation/updateByWatchCode?workState=4&watchCode=" + watchCode);
+		try{
+			s = HttpUtil.get(httpCore + "/api/employeeInformation/updateByWatchCode?workState=4&watchCode=" + watchCode);
+		}catch (Exception e){
+			return "";
+		}
+
 //		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
 //		Personnel person = null;
 		if (!s.contains("修改成功")) {
@@ -296,11 +296,14 @@ public class PersonnelController extends BaseController {
 //			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
 //			return "人员信息不存在";
 //		}
-
-		String perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+		try{
+			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+		}catch (Exception e){
+			return "";
+		}
 		Personnel person = null;
-		if(!"".equals(perStr)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(perStr);
+		if(!"".equals(s)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 			person = JSONUtil.toBean(object,Personnel.class);
 			person.setWork_status(statu);
 		}
@@ -381,11 +384,17 @@ public class PersonnelController extends BaseController {
 //		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
 		PropertiesHelper pro = new PropertiesHelper("config.properties");
 		String httpCore = pro.readValue("url");
-		String perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
-		Personnel person = null;
+		String perStr = "";
+		try{
+			perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+		}catch (Exception e){
+			return "";
+		}
+//		Personnel person = null;
+		PersonVo person =null;
 		if(!"".equals(perStr)){
 			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(perStr);
-			person = JSONUtil.toBean(object,Personnel.class);
+			person = JSONUtil.toBean(object,PersonVo.class);
 //			person.setWork_status(statu);
 		}
 //		if (personList != null && personList.size() > 0) {
@@ -397,11 +406,11 @@ public class PersonnelController extends BaseController {
 			return "人员信息不存在";
 		}
 
-		Date changeTime = person.getChange_time();
+		Date changeTime = person.getChangeTime();
 		Calendar startTime = Calendar.getInstance();
 		startTime.setTime(changeTime);
 		Integer getSeconds = DateManager.dateDiff('s', Calendar.getInstance(), startTime);
-		return getSeconds + "," + person.getWork_status();
+		return getSeconds + "," + person.getWorkStatus();
 	}
 
 	/**
@@ -420,7 +429,11 @@ public class PersonnelController extends BaseController {
 //		return json.toString();
 		PropertiesHelper p = new PropertiesHelper("config.properties");
 		String httpCore = p.readValue("url");
-		String s = HttpUtil.get(httpCore+"/api/employeeInformation/getWatchList?hallId=2");
+		try{
+			s = HttpUtil.get(httpCore+"/api/employeeInformation/getWatchList?hallId=2");
+		}catch (Exception e){
+			return "";
+		}
 		return  s;
 	}
 
@@ -454,7 +467,12 @@ public class PersonnelController extends BaseController {
 //		Personnel person = personnelService.getById(id);
 		PropertiesHelper p = new PropertiesHelper("config.properties");
 		String httpCore = p.readValue("url");
-		String re = HttpUtil.get(httpCore+"/api/employeeInformation/updateWatch?id="+i+"&hallId=2&bindState=1&watchCode="+uuid);
+		String re ="";
+		try{
+			re = HttpUtil.get(httpCore+"/api/employeeInformation/updateWatch?id="+i+"&hallId=2&bindState=1&watchCode="+uuid);
+		}catch (Exception e){
+			return "";
+		}
 //		if (person != null) {
 //			if(person.getBind_status()==0){
 //				logger.error("人员已绑定");
@@ -490,7 +508,11 @@ public class PersonnelController extends BaseController {
 		String uuid = request.getParameter("uuid");
 		PropertiesHelper p = new PropertiesHelper("config.properties");
 		String httpCore = p.readValue("url");
-		String s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+uuid);
+		try{
+			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+uuid);
+		}catch (Exception e){
+			return "";
+		}
 //		Personnel person = personnelService.getPersonnelWatchCode(uuid);
 		Personnel personnels = null;
 		if(!"".equals(s)){
