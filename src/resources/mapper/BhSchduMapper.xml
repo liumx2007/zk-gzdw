@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzqx.mvc.dao.BhSchduMapper">
+  <resultMap id="BaseResultMap" type="com.zzqx.mvc.entity.BhSchdu">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="HALL_ID" jdbcType="DECIMAL" property="hallId" />
+    <result column="EMPLOYEE_ID" jdbcType="DECIMAL" property="employeeId" />
+    <result column="JOBS_ID" jdbcType="DECIMAL" property="jobsId" />
+    <result column="SCHEDU_DATE" jdbcType="TIMESTAMP" property="scheduDate" />
+    <result column="MARK_COLOR" jdbcType="VARCHAR" property="markColor" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, HALL_ID, EMPLOYEE_ID, JOBS_ID, SCHEDU_DATE, MARK_COLOR, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByExample" parameterType="com.zzqx.mvc.entity.BhSchduExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dw_bh_schedu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dw_bh_schedu
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from dw_bh_schedu
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzqx.mvc.entity.BhSchduExample">
+    delete from dw_bh_schedu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzqx.mvc.entity.BhSchdu">
+    insert into dw_bh_schedu (ID, HALL_ID, EMPLOYEE_ID, 
+      JOBS_ID, SCHEDU_DATE, MARK_COLOR, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{hallId,jdbcType=DECIMAL}, #{employeeId,jdbcType=DECIMAL}, 
+      #{jobsId,jdbcType=DECIMAL}, #{scheduDate,jdbcType=TIMESTAMP}, #{markColor,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.BhSchdu">
+    insert into dw_bh_schedu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="hallId != null">
+        HALL_ID,
+      </if>
+      <if test="employeeId != null">
+        EMPLOYEE_ID,
+      </if>
+      <if test="jobsId != null">
+        JOBS_ID,
+      </if>
+      <if test="scheduDate != null">
+        SCHEDU_DATE,
+      </if>
+      <if test="markColor != null">
+        MARK_COLOR,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        #{hallId,jdbcType=DECIMAL},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=DECIMAL},
+      </if>
+      <if test="jobsId != null">
+        #{jobsId,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduDate != null">
+        #{scheduDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="markColor != null">
+        #{markColor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzqx.mvc.entity.BhSchduExample" resultType="java.lang.Long">
+    select count(*) from dw_bh_schedu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dw_bh_schedu
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hallId != null">
+        HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.employeeId != null">
+        EMPLOYEE_ID = #{record.employeeId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.jobsId != null">
+        JOBS_ID = #{record.jobsId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.scheduDate != null">
+        SCHEDU_DATE = #{record.scheduDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.markColor != null">
+        MARK_COLOR = #{record.markColor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dw_bh_schedu
+    set ID = #{record.id,jdbcType=VARCHAR},
+      HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=DECIMAL},
+      JOBS_ID = #{record.jobsId,jdbcType=DECIMAL},
+      SCHEDU_DATE = #{record.scheduDate,jdbcType=TIMESTAMP},
+      MARK_COLOR = #{record.markColor,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzqx.mvc.entity.BhSchdu">
+    update dw_bh_schedu
+    <set>
+      <if test="hallId != null">
+        HALL_ID = #{hallId,jdbcType=DECIMAL},
+      </if>
+      <if test="employeeId != null">
+        EMPLOYEE_ID = #{employeeId,jdbcType=DECIMAL},
+      </if>
+      <if test="jobsId != null">
+        JOBS_ID = #{jobsId,jdbcType=DECIMAL},
+      </if>
+      <if test="scheduDate != null">
+        SCHEDU_DATE = #{scheduDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="markColor != null">
+        MARK_COLOR = #{markColor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.BhSchdu">
+    update dw_bh_schedu
+    set HALL_ID = #{hallId,jdbcType=DECIMAL},
+      EMPLOYEE_ID = #{employeeId,jdbcType=DECIMAL},
+      JOBS_ID = #{jobsId,jdbcType=DECIMAL},
+      SCHEDU_DATE = #{scheduDate,jdbcType=TIMESTAMP},
+      MARK_COLOR = #{markColor,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

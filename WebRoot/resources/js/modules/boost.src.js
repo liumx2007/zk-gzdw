@@ -93,7 +93,7 @@
          *
          * Setting to e.g. 20 will cause the whole chart to enter boost mode
          * if there are 20 or more series active. When the chart is in boost mode,
-         * every series in it will be rendered to a common canvas. This offers 
+         * every series in it will be rendered to a commons canvas. This offers 
          * a significant speed improvment in charts with a very high
          * amount of series.
          *  
@@ -2048,7 +2048,7 @@
         }
 
         ////////////////////////////////////////////////////////////////////////////////
-        // Following is the parts of the boost that's common between OGL/Legacy
+        // Following is the parts of the boost that's commons between OGL/Legacy
 
         /**
          * Return a full Point object based on the index. 

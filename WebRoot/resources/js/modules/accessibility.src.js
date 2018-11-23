@@ -199,7 +199,7 @@
                     return point[key] !== undefined;
                 });
 
-            // If the point has one of the less common properties defined, display all that are defined
+            // If the point has one of the less commons properties defined, display all that are defined
             if (hasSpecialKey) {
                 if (dateTimePoint) {
                     infoString = timeDesc;

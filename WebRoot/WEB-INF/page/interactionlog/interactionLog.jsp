@@ -51,6 +51,10 @@
                 return "交互触点";
             }
         };
+        function  FamterTime(v,r,i) {
+            var date = Date.parse(v);
+            return date;
+        }
         function getName(v,r,i) {
             var obj  = eval(v);
             return obj.interactName;
@@ -74,7 +78,7 @@
         <thead>
         <tr>
             <th align='center' data-options="field:'interaction',width:150,halign:'center',formatter:getName">交互名称</th>
-            <th align='center' data-options="field:'clickTime',width:150,halign:'center'">点击时间</th>
+            <th align='center' data-options="field:'clickTime',width:150,halign:'center',formatter:FamterTime">点击时间</th>
             <th align='center' data-options="field:'folderType',width:120,halign:'center',formatter:getType">类型</th>
         </tr>
         </thead>

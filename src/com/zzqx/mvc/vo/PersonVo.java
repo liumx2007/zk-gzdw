@@ -12,7 +12,7 @@ public class PersonVo {
     private String watchCode;
     private String photo;
     private WorkPosition myWork;
-    private int workStatus;
+    private int workState;
     private int workTime;
     private String remark;
     private String onduty;
@@ -68,12 +68,12 @@ public class PersonVo {
         this.myWork = myWork;
     }
 
-    public int getWorkStatus() {
-        return workStatus;
+    public int getWorkState() {
+        return workState;
     }
 
-    public void setWorkStatus(int workStatus) {
-        this.workStatus = workStatus;
+    public void setWorkState(int workState) {
+        this.workState = workState;
     }
 
     public int getWorkTime() {

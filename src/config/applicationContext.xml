@@ -177,7 +177,7 @@
     <bean id="AndroidTimerTask" class="com.zzqx.support.framework.task.timerTask.AndroidTimerTask"/>
     <task:scheduled-tasks>
         <task:scheduled ref="terminalStateTimerTask" method="doTask" fixed-rate="5000"/><!-- 5000,5秒 -->
-        <task:scheduled ref="AndroidTimerTask" method="sendAutoMessage" cron="0 0 6 * * *"/>
+        <task:scheduled ref="AndroidTimerTask" method="sendAutoMessage_new" cron="0 0 6 * * *"/>
     </task:scheduled-tasks>
 
     <!-- 事务管理器配置,单数据源事务 -->

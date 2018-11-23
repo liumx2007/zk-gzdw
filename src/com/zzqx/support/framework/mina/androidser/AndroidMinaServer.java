@@ -1,8 +1,8 @@
 package com.zzqx.support.framework.mina.androidser;
 
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.SpringContext;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.entity.Personnel;
 import com.zzqx.mvc.service.MessageService;
@@ -10,7 +10,6 @@ import com.zzqx.mvc.service.PersonnelService;
 import com.zzqx.support.utils.DateManager;
 import com.zzqx.support.utils.ServiceException;
 import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.file.PropertiesHelper;
 import com.zzqx.support.utils.net.SocketDataSender;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -90,16 +89,18 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 				PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 //				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
 				try{
-					PropertiesHelper p = new PropertiesHelper("config.properties");
-					String httpCore = p.readValue("url");
-					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
+//					PropertiesHelper p = new PropertiesHelper("config.properties");
+//					String httpCore = p.readValue("url");
+//					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
+					s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+msgs);
 				}catch (Exception e){
 					return ;
 				}
-				Personnel personnels = null;
+				Personnel personnels = new Personnel();
 				if(!"".equals(s)){
 					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-					personnels = JSONUtil.toBean(object,Personnel.class);
+//					personnels = JSONUtil.toBean(object,Personnel.class);=
+					personnels.setBind_status(Integer.parseInt(object.get("bindState").toString()));
 				}
 				if (personnels != null ) {
 					if (personnels.getBind_status() == AndroidConstant.PERSON_BIND_STATUS_BOUND_KEY) {

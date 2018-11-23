@@ -40,7 +40,7 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- table指点每张表的生成策略 -->
-        <table tableName="tb_interaction" domainObjectName="Interaction"></table>
-        <table tableName="tb_interaction_log" domainObjectName="InteractionLog"></table>
+        <!--<table tableName="dw_employee_information" domainObjectName="EmployeeInformation"></table>-->
+        <!--<table tableName="dw_employee_jobs" domainObjectName="EmployeeJobs"></table>-->
     </context>
 </generatorConfiguration>
