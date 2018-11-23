@@ -45,5 +45,15 @@ public class CountInfo {
      * 确认上岗
      */
     public static final String GET_JOB_BY_WATCHCODE = SERVER_IP+"/api/employeeInformation/getJobByWatchCode?hallId="+HALL_ID+"&watchCode=";
+    /**
+     * 每分钟获取排版变动信息
+     * http://192.168.43.46:8090/api/dwBhSchedu/synchronousData?hallId=2
+     */
+    public static final String GET_MESSAGE_SCHEDU = SERVER_IP+"/api/dwBhSchedu/synchronousData?hallId="+HALL_ID;
+     /* *
+     * 获取排班和人员信息同步（每天）
+     * http://192.168.43.46:8090/api/synchronousData/getList?hallId=2
+     */
+    public static final String GET_SYNC_DAYA = SERVER_IP+"/api/synchronousData/getList?hallId="+HALL_ID;
 
 }
