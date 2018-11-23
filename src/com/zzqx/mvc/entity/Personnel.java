@@ -1,14 +1,13 @@
 package com.zzqx.mvc.entity;
 
-import java.util.Date;
+import com.jetsum.core.orm.entity.IdEntity;
+import com.zzqx.mvc.vo.PersonVo;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.jetsum.core.orm.entity.IdEntity;
-import com.zzqx.mvc.vo.PersonVo;
-import com.zzqx.support.utils.StringHelper;
+import java.util.Date;
 
 @Entity
 @Table(name = "tb_personnel")
@@ -40,7 +39,7 @@ public class Personnel extends IdEntity {
 		this.watch_code = personVo.getWatchCode();
 		this.photo = personVo.getPhoto();
 		this.my_work = personVo.getMyWork();
-		this.work_status = personVo.getWorkStatus();
+		this.work_status = personVo.getWorkState();
 		this.work_time = personVo.getWorkTime();
 		this.change_time = personVo.getChangeTime();
 		this.passWork = personVo.getPassWork();

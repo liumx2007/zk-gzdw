@@ -518,7 +518,7 @@
              * a range within each day, but once moving the range to include the gap between two
              * days, the interval would include the cut-away night hours and the data grouping
              * would be wrong. So the below method tries to compensate by identifying the most
-             * common point interval, in this case days.
+             * commons point interval, in this case days.
              *
              * An opposite case is presented in issue #718. We have a long array of daily data,
              * then one point is appended one hour after the last point. We expect the data grouping
@@ -1112,7 +1112,7 @@
                 // smoothed = false, // enable this for navigator series only
             },
 
-            specificOptions = { // extends common options
+            specificOptions = { // extends commons options
                 line: {},
                 spline: {},
                 area: {},

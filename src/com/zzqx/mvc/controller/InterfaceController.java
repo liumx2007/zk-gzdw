@@ -1,14 +1,17 @@
 package com.zzqx.mvc.controller;
 
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.zzqx.Global;
 import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.NewsContent;
 import com.zzqx.mvc.javabean.NewsImage;
 import com.zzqx.mvc.javabean.NewsInfo;
 import com.zzqx.mvc.javabean.NewsWords;
 import com.zzqx.mvc.service.*;
+import com.zzqx.mvc.vo.PersonVo;
 import com.zzqx.support.framework.mina.androidser.AndroidConstant;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
@@ -175,9 +178,10 @@ public class InterfaceController extends BaseController {
 //		person.setMy_work(getWork(person));
 //		personnelService.saveOrUpdate(person);
 		try{
-			PropertiesHelper propertiesHelper = new PropertiesHelper("config.properties");
-			String httpCore = propertiesHelper.readValue("url");
-			HttpUtil.get(httpCore+"/api/employeeInformation/getJobByWatchCode?watchCode="+watchCode+"&hallId=2");
+//			PropertiesHelper propertiesHelper = new PropertiesHelper("config.properties");
+//			String httpCore = propertiesHelper.readValue("url");
+//			HttpUtil.get(httpCore+"/api/employeeInformation/getJobByWatchCode?watchCode="+watchCode+"&hallId=2");
+			HttpUtil.get(CountInfo.GET_JOB_BY_WATCHCODE+watchCode);
 		}catch (Exception e){
 			return "";
 		}
@@ -268,16 +272,51 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("interface_onduty")
 	public void dispatchTemp(HttpServletRequest request) {
 		WorkPosition work = null;
-		Personnel person = new Personnel();
+//		Personnel person = new Personnel();
 		Message msg = new Message();
-		String personId = request.getParameter("personId");
-		if(!personId.isEmpty() && personId != null){
-			person = personnelService.getById(personId);
+		String watchCode = request.getParameter("watchCode");
+
+//		String personId = request.getParameter("personId");
+//		if(!personId.isEmpty() && personId != null){
+//			person = personnelService.getById(personId);
+//		}
+//		PropertiesHelper p = new PropertiesHelper("config.properties");
+//		String httpCore = p.readValue("url");
+		String s = null;
+		try{
+//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+		}catch (Exception e){
+			return ;
 		}
+//		PersonVo personnels = null;
+		Personnel person = new Personnel();
+		if(!"".equals(s)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+			// todo error
+//			personnels = JSONUtil.toBean(object,PersonVo.class);
+			String name = object.get("name").toString();
+			person.setName(name);
+			person.setWatch_code(watchCode);
+		}
+//		Personnel person = new Personnel(personnels);
+		//岗位ID position
 		String position = request.getParameter("position");
 		if(position != null && !position.isEmpty() ){
-			work = workPositionService.getById(position);
-			msg.setContent("请" + person.getName() + "工号" + person.getJob_num() + "到" + work.getPosition_name());
+			//todo 查询岗位
+//			work = workPositionService.getById(position);
+			try {
+				s =  HttpUtil.get(CountInfo.JOB_BY_ID+position);
+			}catch (Exception e){
+				return;
+			}
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+//			WorkPositionVo  workPositionVo = JSONUtil.toBean(object, WorkPositionVo.class);
+			String wPosition = object.get("jobsName").toString();
+//			work.setPosition_name(wPosition);
+//			msg.setContent("请" + person.getName() + "工号" + person.getJob_num() + "到" + work.getPosition_name());
+//			msg.setContent("请" + person.getName() + "到" + work.getPosition_name());
+			msg.setContent("请" + person.getName() + "到" + wPosition);
 			msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			msg.setCreator("admin");
 			msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
@@ -288,7 +327,7 @@ public class InterfaceController extends BaseController {
 		}
 		messageService.saveOrUpdate(msg);
 		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, person.getWatch_code(), person);
-		System.out.println(person.getName() + "调度到" + work.getPosition_name() );
+//		System.out.println(person.getName() + "调度到" + work.getPosition_name() );
 		goingOnduty.put(person.getWatch_code(), work);
 	}
 	/**
@@ -300,8 +339,23 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("confirmGoOnDuty")
 	public void confirmGoOnDuty(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
-		String ondutyType = request.getParameter("ondutyType");
-		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
+//		String ondutyType = request.getParameter("ondutyType");
+//		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
+		PropertiesHelper p = new PropertiesHelper("config.properties");
+		String httpCore = p.readValue("url");
+		String s = null;
+		try{
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+		}catch (Exception e){
+			return ;
+		}
+		PersonVo personnels = null;
+		if(!"".equals(s)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+			personnels = JSONUtil.toBean(object,PersonVo.class);
+		}
+		Personnel person = new Personnel(personnels);
+
 		if(goingOnduty.get(watchCode)!=null){
 			person.setMy_work(goingOnduty.get(watchCode));
 			personnelService.saveOrUpdate(person);
@@ -491,7 +545,22 @@ public class InterfaceController extends BaseController {
 		msg.setWatch_code(toWatchCode);
 		msg.setOrdertime(new Date());
 		messageService.saveOrUpdate(msg);
-		Personnel person = personnelService.find(Restrictions.eq("watch_code", toWatchCode)).get(0);
+//		Personnel person = personnelService.find(Restrictions.eq("watch_code", toWatchCode)).get(0);
+		PropertiesHelper p = new PropertiesHelper("config.properties");
+		String httpCore = p.readValue("url");
+		String s = null;
+		try{
+//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+toWatchCode);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+toWatchCode);
+		}catch (Exception e){
+			return "";
+		}
+		PersonVo personnels = null;
+		if(!"".equals(s)){
+			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+			personnels = JSONUtil.toBean(object,PersonVo.class);
+		}
+		Personnel person = new Personnel(personnels);
 		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_ANSWER_KEY, toWatchCode, person);
 		return "反馈成功";
 	}

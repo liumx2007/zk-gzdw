@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzqx.mvc.dao.EmployeeInformationMapper">
+  <resultMap id="BaseResultMap" type="com.zzqx.mvc.entity.EmployeeInformation">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="EMPLOYEE_ID" jdbcType="VARCHAR" property="employeeId" />
+    <result column="EMPLOYEE_ACCOUNT" jdbcType="VARCHAR" property="employeeAccount" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="EMPLOYEE_AGE" jdbcType="VARCHAR" property="employeeAge" />
+    <result column="BUSINESS_TODAY" jdbcType="VARCHAR" property="businessToday" />
+    <result column="AVERAGE_PROCESS_TIME" jdbcType="VARCHAR" property="averageProcessTime" />
+    <result column="EMPLOYEE_STATE" jdbcType="VARCHAR" property="employeeState" />
+    <result column="EMPLOYEE_SEX" jdbcType="VARCHAR" property="employeeSex" />
+    <result column="EMPLOYEE_EDUCATION" jdbcType="VARCHAR" property="employeeEducation" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
+    <result column="USER_TYPE" jdbcType="CHAR" property="userType" />
+    <result column="LOGIN_IP" jdbcType="VARCHAR" property="loginIp" />
+    <result column="HALL_ID" jdbcType="DECIMAL" property="hallId" />
+    <result column="JOBS" jdbcType="VARCHAR" property="jobs" />
+    <result column="LOGIN_DATE" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="LOGIN_FLAG" jdbcType="VARCHAR" property="loginFlag" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="REMARKS" jdbcType="VARCHAR" property="remarks" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="EMPLOYEE_BIRTHDAY" jdbcType="TIMESTAMP" property="employeeBirthday" />
+    <result column="MONITOR_FLAG" jdbcType="CHAR" property="monitorFlag" />
+    <result column="WATCH_CODE" jdbcType="VARCHAR" property="watchCode" />
+    <result column="WORK_POSITION" jdbcType="VARCHAR" property="workPosition" />
+    <result column="WORK_STATE" jdbcType="VARCHAR" property="workState" />
+    <result column="WORK_TIME" jdbcType="DECIMAL" property="workTime" />
+    <result column="ON_DUTY" jdbcType="VARCHAR" property="onDuty" />
+    <result column="BIND_STATE" jdbcType="DECIMAL" property="bindState" />
+    <result column="CHANGE_TIME" jdbcType="TIMESTAMP" property="changeTime" />
+    <result column="MY_WORK" jdbcType="VARCHAR" property="myWork" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zzqx.mvc.entity.EmployeeInformation">
+    <result column="PHOTO" jdbcType="LONGVARCHAR" property="photo" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, LOGIN_NAME, PASSWORD, EMPLOYEE_ID, EMPLOYEE_ACCOUNT, NAME, EMPLOYEE_AGE, BUSINESS_TODAY, 
+    AVERAGE_PROCESS_TIME, EMPLOYEE_STATE, EMPLOYEE_SEX, EMPLOYEE_EDUCATION, EMAIL, PHONE, 
+    MOBILE, USER_TYPE, LOGIN_IP, HALL_ID, JOBS, LOGIN_DATE, LOGIN_FLAG, CREATE_BY, CREATE_TIME, 
+    UPDATE_BY, UPDATE_TIME, REMARKS, DEL_FLAG, EMPLOYEE_BIRTHDAY, MONITOR_FLAG, WATCH_CODE, 
+    WORK_POSITION, WORK_STATE, WORK_TIME, ON_DUTY, BIND_STATE, CHANGE_TIME, MY_WORK
+  </sql>
+  <sql id="Blob_Column_List">
+    PHOTO
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.zzqx.mvc.entity.EmployeeInformationExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dw_employee_information
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.zzqx.mvc.entity.EmployeeInformationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dw_employee_information
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from dw_employee_information
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from dw_employee_information
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzqx.mvc.entity.EmployeeInformationExample">
+    delete from dw_employee_information
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
+    insert into dw_employee_information (ID, LOGIN_NAME, PASSWORD, 
+      EMPLOYEE_ID, EMPLOYEE_ACCOUNT, NAME, 
+      EMPLOYEE_AGE, BUSINESS_TODAY, AVERAGE_PROCESS_TIME, 
+      EMPLOYEE_STATE, EMPLOYEE_SEX, EMPLOYEE_EDUCATION, 
+      EMAIL, PHONE, MOBILE, 
+      USER_TYPE, LOGIN_IP, HALL_ID, 
+      JOBS, LOGIN_DATE, LOGIN_FLAG, 
+      CREATE_BY, CREATE_TIME, UPDATE_BY, 
+      UPDATE_TIME, REMARKS, DEL_FLAG, 
+      EMPLOYEE_BIRTHDAY, MONITOR_FLAG, WATCH_CODE, 
+      WORK_POSITION, WORK_STATE, WORK_TIME, 
+      ON_DUTY, BIND_STATE, CHANGE_TIME, 
+      MY_WORK, PHOTO)
+    values (#{id,jdbcType=DECIMAL}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{employeeId,jdbcType=VARCHAR}, #{employeeAccount,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{employeeAge,jdbcType=VARCHAR}, #{businessToday,jdbcType=VARCHAR}, #{averageProcessTime,jdbcType=VARCHAR}, 
+      #{employeeState,jdbcType=VARCHAR}, #{employeeSex,jdbcType=VARCHAR}, #{employeeEducation,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{userType,jdbcType=CHAR}, #{loginIp,jdbcType=VARCHAR}, #{hallId,jdbcType=DECIMAL}, 
+      #{jobs,jdbcType=VARCHAR}, #{loginDate,jdbcType=TIMESTAMP}, #{loginFlag,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR}, 
+      #{employeeBirthday,jdbcType=TIMESTAMP}, #{monitorFlag,jdbcType=CHAR}, #{watchCode,jdbcType=VARCHAR}, 
+      #{workPosition,jdbcType=VARCHAR}, #{workState,jdbcType=VARCHAR}, #{workTime,jdbcType=DECIMAL}, 
+      #{onDuty,jdbcType=VARCHAR}, #{bindState,jdbcType=DECIMAL}, #{changeTime,jdbcType=TIMESTAMP}, 
+      #{myWork,jdbcType=VARCHAR}, #{photo,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
+    insert into dw_employee_information
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="loginName != null">
+        LOGIN_NAME,
+      </if>
+      <if test="password != null">
+        PASSWORD,
+      </if>
+      <if test="employeeId != null">
+        EMPLOYEE_ID,
+      </if>
+      <if test="employeeAccount != null">
+        EMPLOYEE_ACCOUNT,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="employeeAge != null">
+        EMPLOYEE_AGE,
+      </if>
+      <if test="businessToday != null">
+        BUSINESS_TODAY,
+      </if>
+      <if test="averageProcessTime != null">
+        AVERAGE_PROCESS_TIME,
+      </if>
+      <if test="employeeState != null">
+        EMPLOYEE_STATE,
+      </if>
+      <if test="employeeSex != null">
+        EMPLOYEE_SEX,
+      </if>
+      <if test="employeeEducation != null">
+        EMPLOYEE_EDUCATION,
+      </if>
+      <if test="email != null">
+        EMAIL,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="mobile != null">
+        MOBILE,
+      </if>
+      <if test="userType != null">
+        USER_TYPE,
+      </if>
+      <if test="loginIp != null">
+        LOGIN_IP,
+      </if>
+      <if test="hallId != null">
+        HALL_ID,
+      </if>
+      <if test="jobs != null">
+        JOBS,
+      </if>
+      <if test="loginDate != null">
+        LOGIN_DATE,
+      </if>
+      <if test="loginFlag != null">
+        LOGIN_FLAG,
+      </if>
+      <if test="createBy != null">
+        CREATE_BY,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateBy != null">
+        UPDATE_BY,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="remarks != null">
+        REMARKS,
+      </if>
+      <if test="delFlag != null">
+        DEL_FLAG,
+      </if>
+      <if test="employeeBirthday != null">
+        EMPLOYEE_BIRTHDAY,
+      </if>
+      <if test="monitorFlag != null">
+        MONITOR_FLAG,
+      </if>
+      <if test="watchCode != null">
+        WATCH_CODE,
+      </if>
+      <if test="workPosition != null">
+        WORK_POSITION,
+      </if>
+      <if test="workState != null">
+        WORK_STATE,
+      </if>
+      <if test="workTime != null">
+        WORK_TIME,
+      </if>
+      <if test="onDuty != null">
+        ON_DUTY,
+      </if>
+      <if test="bindState != null">
+        BIND_STATE,
+      </if>
+      <if test="changeTime != null">
+        CHANGE_TIME,
+      </if>
+      <if test="myWork != null">
+        MY_WORK,
+      </if>
+      <if test="photo != null">
+        PHOTO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeAccount != null">
+        #{employeeAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeAge != null">
+        #{employeeAge,jdbcType=VARCHAR},
+      </if>
+      <if test="businessToday != null">
+        #{businessToday,jdbcType=VARCHAR},
+      </if>
+      <if test="averageProcessTime != null">
+        #{averageProcessTime,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeState != null">
+        #{employeeState,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeSex != null">
+        #{employeeSex,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeEducation != null">
+        #{employeeEducation,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=CHAR},
+      </if>
+      <if test="loginIp != null">
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        #{hallId,jdbcType=DECIMAL},
+      </if>
+      <if test="jobs != null">
+        #{jobs,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFlag != null">
+        #{loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="employeeBirthday != null">
+        #{employeeBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="monitorFlag != null">
+        #{monitorFlag,jdbcType=CHAR},
+      </if>
+      <if test="watchCode != null">
+        #{watchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="workPosition != null">
+        #{workPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="workState != null">
+        #{workState,jdbcType=VARCHAR},
+      </if>
+      <if test="workTime != null">
+        #{workTime,jdbcType=DECIMAL},
+      </if>
+      <if test="onDuty != null">
+        #{onDuty,jdbcType=VARCHAR},
+      </if>
+      <if test="bindState != null">
+        #{bindState,jdbcType=DECIMAL},
+      </if>
+      <if test="changeTime != null">
+        #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="myWork != null">
+        #{myWork,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzqx.mvc.entity.EmployeeInformationExample" resultType="java.lang.Long">
+    select count(*) from dw_employee_information
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dw_employee_information
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loginName != null">
+        LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        PASSWORD = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeId != null">
+        EMPLOYEE_ID = #{record.employeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeAccount != null">
+        EMPLOYEE_ACCOUNT = #{record.employeeAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeAge != null">
+        EMPLOYEE_AGE = #{record.employeeAge,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessToday != null">
+        BUSINESS_TODAY = #{record.businessToday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.averageProcessTime != null">
+        AVERAGE_PROCESS_TIME = #{record.averageProcessTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeState != null">
+        EMPLOYEE_STATE = #{record.employeeState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeSex != null">
+        EMPLOYEE_SEX = #{record.employeeSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeEducation != null">
+        EMPLOYEE_EDUCATION = #{record.employeeEducation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null">
+        PHONE = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null">
+        MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userType != null">
+        USER_TYPE = #{record.userType,jdbcType=CHAR},
+      </if>
+      <if test="record.loginIp != null">
+        LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hallId != null">
+        HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.jobs != null">
+        JOBS = #{record.jobs,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginDate != null">
+        LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.loginFlag != null">
+        LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null">
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remarks != null">
+        REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlag != null">
+        DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.employeeBirthday != null">
+        EMPLOYEE_BIRTHDAY = #{record.employeeBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.monitorFlag != null">
+        MONITOR_FLAG = #{record.monitorFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.watchCode != null">
+        WATCH_CODE = #{record.watchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workPosition != null">
+        WORK_POSITION = #{record.workPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workState != null">
+        WORK_STATE = #{record.workState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workTime != null">
+        WORK_TIME = #{record.workTime,jdbcType=DECIMAL},
+      </if>
+      <if test="record.onDuty != null">
+        ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bindState != null">
+        BIND_STATE = #{record.bindState,jdbcType=DECIMAL},
+      </if>
+      <if test="record.changeTime != null">
+        CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.myWork != null">
+        MY_WORK = #{record.myWork,jdbcType=VARCHAR},
+      </if>
+      <if test="record.photo != null">
+        PHOTO = #{record.photo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update dw_employee_information
+    set ID = #{record.id,jdbcType=DECIMAL},
+      LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      PASSWORD = #{record.password,jdbcType=VARCHAR},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=VARCHAR},
+      EMPLOYEE_ACCOUNT = #{record.employeeAccount,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      EMPLOYEE_AGE = #{record.employeeAge,jdbcType=VARCHAR},
+      BUSINESS_TODAY = #{record.businessToday,jdbcType=VARCHAR},
+      AVERAGE_PROCESS_TIME = #{record.averageProcessTime,jdbcType=VARCHAR},
+      EMPLOYEE_STATE = #{record.employeeState,jdbcType=VARCHAR},
+      EMPLOYEE_SEX = #{record.employeeSex,jdbcType=VARCHAR},
+      EMPLOYEE_EDUCATION = #{record.employeeEducation,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      PHONE = #{record.phone,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      USER_TYPE = #{record.userType,jdbcType=CHAR},
+      LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
+      HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      JOBS = #{record.jobs,jdbcType=VARCHAR},
+      LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
+      LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      EMPLOYEE_BIRTHDAY = #{record.employeeBirthday,jdbcType=TIMESTAMP},
+      MONITOR_FLAG = #{record.monitorFlag,jdbcType=CHAR},
+      WATCH_CODE = #{record.watchCode,jdbcType=VARCHAR},
+      WORK_POSITION = #{record.workPosition,jdbcType=VARCHAR},
+      WORK_STATE = #{record.workState,jdbcType=VARCHAR},
+      WORK_TIME = #{record.workTime,jdbcType=DECIMAL},
+      ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
+      BIND_STATE = #{record.bindState,jdbcType=DECIMAL},
+      CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
+      MY_WORK = #{record.myWork,jdbcType=VARCHAR},
+      PHOTO = #{record.photo,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dw_employee_information
+    set ID = #{record.id,jdbcType=DECIMAL},
+      LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      PASSWORD = #{record.password,jdbcType=VARCHAR},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=VARCHAR},
+      EMPLOYEE_ACCOUNT = #{record.employeeAccount,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      EMPLOYEE_AGE = #{record.employeeAge,jdbcType=VARCHAR},
+      BUSINESS_TODAY = #{record.businessToday,jdbcType=VARCHAR},
+      AVERAGE_PROCESS_TIME = #{record.averageProcessTime,jdbcType=VARCHAR},
+      EMPLOYEE_STATE = #{record.employeeState,jdbcType=VARCHAR},
+      EMPLOYEE_SEX = #{record.employeeSex,jdbcType=VARCHAR},
+      EMPLOYEE_EDUCATION = #{record.employeeEducation,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      PHONE = #{record.phone,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      USER_TYPE = #{record.userType,jdbcType=CHAR},
+      LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
+      HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      JOBS = #{record.jobs,jdbcType=VARCHAR},
+      LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
+      LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      REMARKS = #{record.remarks,jdbcType=VARCHAR},
+      DEL_FLAG = #{record.delFlag,jdbcType=CHAR},
+      EMPLOYEE_BIRTHDAY = #{record.employeeBirthday,jdbcType=TIMESTAMP},
+      MONITOR_FLAG = #{record.monitorFlag,jdbcType=CHAR},
+      WATCH_CODE = #{record.watchCode,jdbcType=VARCHAR},
+      WORK_POSITION = #{record.workPosition,jdbcType=VARCHAR},
+      WORK_STATE = #{record.workState,jdbcType=VARCHAR},
+      WORK_TIME = #{record.workTime,jdbcType=DECIMAL},
+      ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
+      BIND_STATE = #{record.bindState,jdbcType=DECIMAL},
+      CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
+      MY_WORK = #{record.myWork,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
+    update dw_employee_information
+    <set>
+      <if test="loginName != null">
+        LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null">
+        EMPLOYEE_ID = #{employeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeAccount != null">
+        EMPLOYEE_ACCOUNT = #{employeeAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeAge != null">
+        EMPLOYEE_AGE = #{employeeAge,jdbcType=VARCHAR},
+      </if>
+      <if test="businessToday != null">
+        BUSINESS_TODAY = #{businessToday,jdbcType=VARCHAR},
+      </if>
+      <if test="averageProcessTime != null">
+        AVERAGE_PROCESS_TIME = #{averageProcessTime,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeState != null">
+        EMPLOYEE_STATE = #{employeeState,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeSex != null">
+        EMPLOYEE_SEX = #{employeeSex,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeEducation != null">
+        EMPLOYEE_EDUCATION = #{employeeEducation,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        USER_TYPE = #{userType,jdbcType=CHAR},
+      </if>
+      <if test="loginIp != null">
+        LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        HALL_ID = #{hallId,jdbcType=DECIMAL},
+      </if>
+      <if test="jobs != null">
+        JOBS = #{jobs,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginFlag != null">
+        LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="employeeBirthday != null">
+        EMPLOYEE_BIRTHDAY = #{employeeBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="monitorFlag != null">
+        MONITOR_FLAG = #{monitorFlag,jdbcType=CHAR},
+      </if>
+      <if test="watchCode != null">
+        WATCH_CODE = #{watchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="workPosition != null">
+        WORK_POSITION = #{workPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="workState != null">
+        WORK_STATE = #{workState,jdbcType=VARCHAR},
+      </if>
+      <if test="workTime != null">
+        WORK_TIME = #{workTime,jdbcType=DECIMAL},
+      </if>
+      <if test="onDuty != null">
+        ON_DUTY = #{onDuty,jdbcType=VARCHAR},
+      </if>
+      <if test="bindState != null">
+        BIND_STATE = #{bindState,jdbcType=DECIMAL},
+      </if>
+      <if test="changeTime != null">
+        CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="myWork != null">
+        MY_WORK = #{myWork,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        PHOTO = #{photo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
+    update dw_employee_information
+    set LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      EMPLOYEE_ID = #{employeeId,jdbcType=VARCHAR},
+      EMPLOYEE_ACCOUNT = #{employeeAccount,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      EMPLOYEE_AGE = #{employeeAge,jdbcType=VARCHAR},
+      BUSINESS_TODAY = #{businessToday,jdbcType=VARCHAR},
+      AVERAGE_PROCESS_TIME = #{averageProcessTime,jdbcType=VARCHAR},
+      EMPLOYEE_STATE = #{employeeState,jdbcType=VARCHAR},
+      EMPLOYEE_SEX = #{employeeSex,jdbcType=VARCHAR},
+      EMPLOYEE_EDUCATION = #{employeeEducation,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      USER_TYPE = #{userType,jdbcType=CHAR},
+      LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      HALL_ID = #{hallId,jdbcType=DECIMAL},
+      JOBS = #{jobs,jdbcType=VARCHAR},
+      LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
+      LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      EMPLOYEE_BIRTHDAY = #{employeeBirthday,jdbcType=TIMESTAMP},
+      MONITOR_FLAG = #{monitorFlag,jdbcType=CHAR},
+      WATCH_CODE = #{watchCode,jdbcType=VARCHAR},
+      WORK_POSITION = #{workPosition,jdbcType=VARCHAR},
+      WORK_STATE = #{workState,jdbcType=VARCHAR},
+      WORK_TIME = #{workTime,jdbcType=DECIMAL},
+      ON_DUTY = #{onDuty,jdbcType=VARCHAR},
+      BIND_STATE = #{bindState,jdbcType=DECIMAL},
+      CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
+      MY_WORK = #{myWork,jdbcType=VARCHAR},
+      PHOTO = #{photo,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
+    update dw_employee_information
+    set LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      EMPLOYEE_ID = #{employeeId,jdbcType=VARCHAR},
+      EMPLOYEE_ACCOUNT = #{employeeAccount,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      EMPLOYEE_AGE = #{employeeAge,jdbcType=VARCHAR},
+      BUSINESS_TODAY = #{businessToday,jdbcType=VARCHAR},
+      AVERAGE_PROCESS_TIME = #{averageProcessTime,jdbcType=VARCHAR},
+      EMPLOYEE_STATE = #{employeeState,jdbcType=VARCHAR},
+      EMPLOYEE_SEX = #{employeeSex,jdbcType=VARCHAR},
+      EMPLOYEE_EDUCATION = #{employeeEducation,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      USER_TYPE = #{userType,jdbcType=CHAR},
+      LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      HALL_ID = #{hallId,jdbcType=DECIMAL},
+      JOBS = #{jobs,jdbcType=VARCHAR},
+      LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
+      LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      DEL_FLAG = #{delFlag,jdbcType=CHAR},
+      EMPLOYEE_BIRTHDAY = #{employeeBirthday,jdbcType=TIMESTAMP},
+      MONITOR_FLAG = #{monitorFlag,jdbcType=CHAR},
+      WATCH_CODE = #{watchCode,jdbcType=VARCHAR},
+      WORK_POSITION = #{workPosition,jdbcType=VARCHAR},
+      WORK_STATE = #{workState,jdbcType=VARCHAR},
+      WORK_TIME = #{workTime,jdbcType=DECIMAL},
+      ON_DUTY = #{onDuty,jdbcType=VARCHAR},
+      BIND_STATE = #{bindState,jdbcType=DECIMAL},
+      CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
+      MY_WORK = #{myWork,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

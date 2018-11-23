@@ -1,17 +1,30 @@
 package com.zzqx.mvc.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Lists;
+import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.entity.ArrangeDetial;
+import com.zzqx.mvc.entity.Message;
+import com.zzqx.mvc.entity.Personnel;
+import com.zzqx.mvc.entity.Stat;
+import com.zzqx.mvc.javabean.ReturnMessage;
+import com.zzqx.mvc.service.ArrangeDetialService;
+import com.zzqx.mvc.service.MessageService;
+import com.zzqx.mvc.service.PersonnelService;
+import com.zzqx.mvc.service.StatService;
 import com.zzqx.mvc.vo.PersonVo;
-import com.zzqx.support.utils.file.PropertiesHelper;
+import com.zzqx.support.framework.mina.androidser.AndroidConstant;
+import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
+import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
+import com.zzqx.support.utils.DateManager;
+import com.zzqx.support.utils.StringHelper;
+import com.zzqx.support.utils.file.FileManager;
+import com.zzqx.support.utils.net.SocketDataSender;
+import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 import org.apache.commons.io.FileUtils;
 import org.apache.mina.core.session.IoSession;
 import org.hibernate.criterion.MatchMode;
@@ -25,28 +38,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.google.common.collect.Lists;
-import com.zzqx.mvc.annotation.OpenAccess;
-import com.zzqx.mvc.entity.ArrangeDetial;
-import com.zzqx.mvc.entity.Message;
-import com.zzqx.mvc.entity.Personnel;
-import com.zzqx.mvc.entity.Stat;
-import com.zzqx.mvc.javabean.ReturnMessage;
-import com.zzqx.mvc.service.ArrangeDetialService;
-import com.zzqx.mvc.service.MessageService;
-import com.zzqx.mvc.service.PersonnelService;
-import com.zzqx.mvc.service.StatService;
-import com.zzqx.support.framework.mina.androidser.AndroidConstant;
-import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
-import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
-import com.zzqx.support.utils.DateManager;
-import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.file.FileManager;
-import com.zzqx.support.utils.net.SocketDataSender;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 @OpenAccess
 @Controller
 @SuppressWarnings({ "deprecation", "unchecked" })
@@ -55,8 +54,6 @@ public class PersonnelController extends BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger(PersonnelController.class);
 
-//	@Value("#{com.http.core}")
-//	private String HttpCore;
 
 	@Autowired
 	private PersonnelService personnelService;
@@ -277,11 +274,13 @@ public class PersonnelController extends BaseController {
 	public String watchUpdateWorkStatus(HttpServletRequest request) {
 		int statu = Integer.valueOf(request.getParameter("statu"));
 		String watchCode = request.getParameter("watchCode");
-		PropertiesHelper pro = new PropertiesHelper("config.properties");
-		String httpCore = pro.readValue("url");
+//		PropertiesHelper pro = new PropertiesHelper("config.properties");
+//		String httpCore = pro.readValue("url");
 		try{
-			s = HttpUtil.get(httpCore + "/api/employeeInformation/updateByWatchCode?workState=4&watchCode=" + watchCode);
+//			s = HttpUtil.get(httpCore + "/api/employeeInformation/updateByWatchCode?workState="+statu+"&watchCode=" + watchCode);
+			s = HttpUtil.get(CountInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode);
 		}catch (Exception e){
+			logger.error("连接中台失败");
 			return "";
 		}
 
@@ -297,8 +296,10 @@ public class PersonnelController extends BaseController {
 //			return "人员信息不存在";
 //		}
 		try{
-			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
 		}catch (Exception e){
+			logger.error("连接中台失败");
 			return "";
 		}
 		Personnel person = null;
@@ -382,19 +383,32 @@ public class PersonnelController extends BaseController {
 	public String watchGetStatTime(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
 //		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
-		PropertiesHelper pro = new PropertiesHelper("config.properties");
-		String httpCore = pro.readValue("url");
+//		PropertiesHelper pro = new PropertiesHelper("config.properties");
+//		String httpCore = pro.readValue("url");
 		String perStr = "";
 		try{
-			perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+//			perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+			perStr = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
 		}catch (Exception e){
+			logger.error("连接中台失败");
 			return "";
 		}
 //		Personnel person = null;
-		PersonVo person =null;
+		PersonVo person = new PersonVo();
 		if(!"".equals(perStr)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(perStr);
-			person = JSONUtil.toBean(object,PersonVo.class);
+			cn.hutool.json.JSONObject object = JSONUtil.parseObj(perStr);
+			Object ob = object.get("changeTime");
+			Date ChangeT =null;
+			if (ob != null){
+				ChangeT = new Date(Long.valueOf(ob.toString()));
+			}else {
+				ChangeT = new Date();
+			}
+			person.setChangeTime(ChangeT);
+			String wStatus = object.get("workState").toString();
+			System.out.println(Integer.valueOf(wStatus));
+			person.setWorkState(Integer.parseInt(wStatus));
+//			person = JSONUtil.toBean(object,PersonVo.class);
 //			person.setWork_status(statu);
 		}
 //		if (personList != null && personList.size() > 0) {
@@ -410,7 +424,7 @@ public class PersonnelController extends BaseController {
 		Calendar startTime = Calendar.getInstance();
 		startTime.setTime(changeTime);
 		Integer getSeconds = DateManager.dateDiff('s', Calendar.getInstance(), startTime);
-		return getSeconds + "," + person.getWorkStatus();
+		return getSeconds + "," + person.getWorkState();
 	}
 
 	/**
@@ -427,11 +441,13 @@ public class PersonnelController extends BaseController {
 //		List<Personnel> list = query.list();
 //		JSONArray json = JSONArray.fromObject(list);
 //		return json.toString();
-		PropertiesHelper p = new PropertiesHelper("config.properties");
-		String httpCore = p.readValue("url");
+//		PropertiesHelper p = new PropertiesHelper("config.properties");
+//		String httpCore = p.readValue("url");
 		try{
-			s = HttpUtil.get(httpCore+"/api/employeeInformation/getWatchList?hallId=2");
+//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getWatchList?hallId=2");
+			s = HttpUtil.get(CountInfo.GET_PERSON_LIST);
 		}catch (Exception e){
+			logger.error("连接中台失败");
 			return "";
 		}
 		return  s;
@@ -465,12 +481,14 @@ public class PersonnelController extends BaseController {
 		String id = request.getParameter("id");
 		Integer i = Integer.parseInt(id);
 //		Personnel person = personnelService.getById(id);
-		PropertiesHelper p = new PropertiesHelper("config.properties");
-		String httpCore = p.readValue("url");
+//		PropertiesHelper p = new PropertiesHelper("config.properties");
+//		String httpCore = p.readValue("url");
 		String re ="";
 		try{
-			re = HttpUtil.get(httpCore+"/api/employeeInformation/updateWatch?id="+i+"&hallId=2&bindState=1&watchCode="+uuid);
+//			re = HttpUtil.get(httpCore+"/api/employeeInformation/updateWatch?id="+i+"&hallId=2&bindState=0&watchCode="+uuid);
+			re = HttpUtil.get(CountInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid);
 		}catch (Exception e){
+			logger.error("连接中台失败");
 			return "";
 		}
 //		if (person != null) {
@@ -506,19 +524,21 @@ public class PersonnelController extends BaseController {
 	@RequestMapping("getPersonnelWatchCode")
 	public String getPersonnelWatchCode(HttpServletRequest request) {
 		String uuid = request.getParameter("uuid");
-		PropertiesHelper p = new PropertiesHelper("config.properties");
-		String httpCore = p.readValue("url");
+//		PropertiesHelper p = new PropertiesHelper("config.properties");
+//		String httpCore = p.readValue("url");
 		try{
-			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+uuid);
+//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+uuid);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+uuid,5000);
 		}catch (Exception e){
+			logger.error("连接中台失败");
 			return "";
 		}
 //		Personnel person = personnelService.getPersonnelWatchCode(uuid);
-		Personnel personnels = null;
+//		Personnel personnels = null;
 		if(!"".equals(s)){
 			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-			personnels = JSONUtil.toBean(object,Personnel.class);
-			return personnels.getName();
+			System.out.println(object.get("name").toString());
+			return object.get("name").toString();
 		}
 		return "fail";
 	}

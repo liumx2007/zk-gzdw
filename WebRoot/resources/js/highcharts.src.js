@@ -433,7 +433,7 @@
 
                 if (start.length && H.isNumber(shift)) {
 
-                    // The common target length for the start and end array, where both 
+                    // The commons target length for the start and end array, where both 
                     // arrays are padded in opposite ends
                     fullLength = end.length + shift * positionFactor * numParams;
 
@@ -2461,7 +2461,7 @@
              * }
              */
             /**
-             * Build and apply an SVG gradient out of a common JavaScript configuration
+             * Build and apply an SVG gradient out of a commons JavaScript configuration
              * object. This function is called from the attribute setters.
              *
              * @private
@@ -7895,7 +7895,7 @@
                 }
 
 
-                // common for lines and bands
+                // commons for lines and bands
                 if (isNew && path && path.length) {
                     svgElem.attr({
                         d: path
@@ -16092,7 +16092,7 @@
 
                 // Record preliminary dimensions for later comparison
                 tempWidth = chart.plotWidth;
-                tempHeight = chart.plotHeight = chart.plotHeight - 21; // 21 is the most common correction for X axis labels
+                tempHeight = chart.plotHeight = chart.plotHeight - 21; // 21 is the most commons correction for X axis labels
 
                 // Get margins by pre-rendering axes
                 each(axes, function(axis) {
@@ -16304,7 +16304,7 @@
                 chart.resetMargins();
                 chart.setChartSize();
 
-                // Set the common chart properties (mainly invert) from the given series
+                // Set the commons chart properties (mainly invert) from the given series
                 chart.propFromSeries();
 
                 // get axes
@@ -16659,7 +16659,7 @@
             /**
              * Extendable method for formatting each point's tooltip line
              *
-             * @return {String} A string to be concatenated in to the common tooltip text
+             * @return {String} A string to be concatenated in to the commons tooltip text
              */
             tooltipFormatter: function(pointFormat) {
 
@@ -17327,7 +17327,7 @@
                         }
                     }
 
-                    // Forgetting to cast strings to numbers is a common caveat when handling CSV or JSON
+                    // Forgetting to cast strings to numbers is a commons caveat when handling CSV or JSON
                     if (isString(yData[0])) {
                         H.error(14, true);
                     }

@@ -1,33 +1,5 @@
 package com.zzqx.mvc.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zzqx.mvc.vo.ContentStatusVo;
-import org.apache.commons.io.FileUtils;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.entity.Content;
 import com.zzqx.mvc.entity.Folder;
@@ -38,15 +10,32 @@ import com.zzqx.mvc.service.ContentService;
 import com.zzqx.mvc.service.FolderService;
 import com.zzqx.mvc.service.QueueService;
 import com.zzqx.mvc.service.TerminalContentService;
+import com.zzqx.mvc.vo.ContentStatusVo;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.file.FileManager;
 import com.zzqx.support.utils.file.PropertiesHelper;
 import com.zzqx.support.utils.net.SocketDataSender;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
+import org.apache.commons.io.FileUtils;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Controller
@@ -557,14 +546,18 @@ public class ContentController extends BaseController {
 	@OpenAccess
     @RequestMapping("/nostatus")
 	@ResponseBody
-    public String selectByCheckStatus(){
+	public String selectByCheckStatus(){
 		@SuppressWarnings("unchecked")
 		List<Content> files = contentService.createQuery(
 				"from Content where checkStatus = ?", 0).list();
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-		jsonConfig.setExcludes(new String[] { "terminalContents", "contents"});
-		return JSONArray.fromObject(files, jsonConfig).toString();
+		com.alibaba.fastjson.JSONArray ja = new com.alibaba.fastjson.JSONArray();
+		ja.add(files);
+		String re = ja.toString().substring(1,ja.toString().length()-1);
+		return 	re;
+//		JsonConfig jsonConfig = new JsonConfig();
+//		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+//		jsonConfig.setExcludes(new String[] { "terminalContents", "contents"});
+//		return JSONArray.fromObject(files, jsonConfig).toString();
 	}
 	//审核状态修改
 	@OpenAccess
