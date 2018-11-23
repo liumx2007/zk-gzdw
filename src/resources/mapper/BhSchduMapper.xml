@@ -165,6 +165,27 @@
       </if>
     </trim>
   </insert>
+  <!--批量插入或更新-->
+  <insert id="batchInsertBhSchdu" parameterType="java.util.List">
+     insert into dw_bh_schedu (ID, HALL_ID, EMPLOYEE_ID,
+      JOBS_ID, SCHEDU_DATE, MARK_COLOR,
+      CREATE_TIME, UPDATE_TIME)
+      values 
+      <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.id,jdbcType=VARCHAR}, #{item.hallId,jdbcType=DECIMAL}, #{item.employeeId,jdbcType=DECIMAL},
+        #{item.jobsId,jdbcType=DECIMAL}, #{item.scheduDate,jdbcType=TIMESTAMP}, #{item.markColor,jdbcType=VARCHAR},
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP})
+      </foreach>
+    ON DUPLICATE KEY UPDATE
+      HALL_ID = VALUES (HALL_ID),
+      EMPLOYEE_ID = VALUES (EMPLOYEE_ID),
+      JOBS_ID = VALUES (JOBS_ID),
+      SCHEDU_DATE = VALUES (SCHEDU_DATE),
+      MARK_COLOR = VALUES (MARK_COLOR),
+      CREATE_TIME = VALUES (CREATE_TIME),
+      UPDATE_TIME = VALUES (UPDATE_TIME)
+  </insert>
+  
   <select id="countByExample" parameterType="com.zzqx.mvc.entity.BhSchduExample" resultType="java.lang.Long">
     select count(*) from dw_bh_schedu
     <if test="_parameter != null">

@@ -17,6 +17,13 @@ public interface BhSchduMapper {
 
     int insertSelective(BhSchdu record);
 
+    /**
+     * 批量更新或插入
+     * @param example
+     * @return
+     */
+    int batchInsertBhSchdu(List<BhSchdu> list);
+
     List<BhSchdu> selectByExample(BhSchduExample example);
 
     BhSchdu selectByPrimaryKey(String id);
