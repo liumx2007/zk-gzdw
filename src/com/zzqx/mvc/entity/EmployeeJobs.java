@@ -1,10 +1,10 @@
 package com.zzqx.mvc.entity;
 
-import java.math.BigDecimal;
+import java.lang.Integer;
 import java.util.Date;
 
 public class EmployeeJobs {
-    private BigDecimal id;
+    private int id;
 
     private String jobsNumber;
 
@@ -32,11 +32,11 @@ public class EmployeeJobs {
 
     private String delFlag;
 
-    public BigDecimal getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zzqx.mvc.dao.EmployeeInformationMapper">
   <resultMap id="BaseResultMap" type="com.zzqx.mvc.entity.EmployeeInformation">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <id column="ID" jdbcType="INTEGER" property="id" />
     <result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
     <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
     <result column="EMPLOYEE_ID" jdbcType="VARCHAR" property="employeeId" />
@@ -19,7 +19,7 @@
     <result column="MOBILE" jdbcType="VARCHAR" property="mobile" />
     <result column="USER_TYPE" jdbcType="CHAR" property="userType" />
     <result column="LOGIN_IP" jdbcType="VARCHAR" property="loginIp" />
-    <result column="HALL_ID" jdbcType="DECIMAL" property="hallId" />
+    <result column="HALL_ID" jdbcType="INTEGER" property="hallId" />
     <result column="JOBS" jdbcType="VARCHAR" property="jobs" />
     <result column="LOGIN_DATE" jdbcType="TIMESTAMP" property="loginDate" />
     <result column="LOGIN_FLAG" jdbcType="VARCHAR" property="loginFlag" />
@@ -34,9 +34,9 @@
     <result column="WATCH_CODE" jdbcType="VARCHAR" property="watchCode" />
     <result column="WORK_POSITION" jdbcType="VARCHAR" property="workPosition" />
     <result column="WORK_STATE" jdbcType="VARCHAR" property="workState" />
-    <result column="WORK_TIME" jdbcType="DECIMAL" property="workTime" />
+    <result column="WORK_TIME" jdbcType="INTEGER" property="workTime" />
     <result column="ON_DUTY" jdbcType="VARCHAR" property="onDuty" />
-    <result column="BIND_STATE" jdbcType="DECIMAL" property="bindState" />
+    <result column="BIND_STATE" jdbcType="INTEGER" property="bindState" />
     <result column="CHANGE_TIME" jdbcType="TIMESTAMP" property="changeTime" />
     <result column="MY_WORK" jdbcType="VARCHAR" property="myWork" />
   </resultMap>
@@ -141,17 +141,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from dw_employee_information
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from dw_employee_information
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.zzqx.mvc.entity.EmployeeInformationExample">
     delete from dw_employee_information
@@ -173,19 +173,52 @@
       WORK_POSITION, WORK_STATE, WORK_TIME, 
       ON_DUTY, BIND_STATE, CHANGE_TIME, 
       MY_WORK, PHOTO)
-    values (#{id,jdbcType=DECIMAL}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{employeeId,jdbcType=VARCHAR}, #{employeeAccount,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{employeeAge,jdbcType=VARCHAR}, #{businessToday,jdbcType=VARCHAR}, #{averageProcessTime,jdbcType=VARCHAR}, 
       #{employeeState,jdbcType=VARCHAR}, #{employeeSex,jdbcType=VARCHAR}, #{employeeEducation,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{userType,jdbcType=CHAR}, #{loginIp,jdbcType=VARCHAR}, #{hallId,jdbcType=DECIMAL}, 
+      #{userType,jdbcType=CHAR}, #{loginIp,jdbcType=VARCHAR}, #{hallId,jdbcType=INTEGER}, 
       #{jobs,jdbcType=VARCHAR}, #{loginDate,jdbcType=TIMESTAMP}, #{loginFlag,jdbcType=VARCHAR}, 
       #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR}, 
       #{employeeBirthday,jdbcType=TIMESTAMP}, #{monitorFlag,jdbcType=CHAR}, #{watchCode,jdbcType=VARCHAR}, 
-      #{workPosition,jdbcType=VARCHAR}, #{workState,jdbcType=VARCHAR}, #{workTime,jdbcType=DECIMAL}, 
-      #{onDuty,jdbcType=VARCHAR}, #{bindState,jdbcType=DECIMAL}, #{changeTime,jdbcType=TIMESTAMP}, 
+      #{workPosition,jdbcType=VARCHAR}, #{workState,jdbcType=VARCHAR}, #{workTime,jdbcType=INTEGER}, 
+      #{onDuty,jdbcType=VARCHAR}, #{bindState,jdbcType=INTEGER}, #{changeTime,jdbcType=TIMESTAMP}, 
       #{myWork,jdbcType=VARCHAR}, #{photo,jdbcType=LONGVARCHAR})
+  </insert>
+  <!--批量更新或插入-->
+  <insert id="batchInsert" parameterType="java.util.List">
+    <!--insert into dw_employee_information(<include refid="Base_Column_List" />)-->
+    insert into dw_employee_information (ID, LOGIN_NAME, PASSWORD,
+    EMPLOYEE_ID, EMPLOYEE_ACCOUNT, NAME,
+    EMPLOYEE_AGE, BUSINESS_TODAY, AVERAGE_PROCESS_TIME,
+    EMPLOYEE_STATE, EMPLOYEE_SEX, EMPLOYEE_EDUCATION,
+    EMAIL, PHONE, MOBILE,
+    USER_TYPE, LOGIN_IP, HALL_ID,
+    JOBS, LOGIN_DATE, LOGIN_FLAG,
+    CREATE_BY, CREATE_TIME, UPDATE_BY,
+    UPDATE_TIME, REMARKS, DEL_FLAG,
+    EMPLOYEE_BIRTHDAY, MONITOR_FLAG, WATCH_CODE,
+    WORK_POSITION, WORK_STATE, WORK_TIME,
+    ON_DUTY, BIND_STATE, CHANGE_TIME,
+    MY_WORK, PHOTO)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id,jdbcType=INTEGER}, #{item.loginName,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR},
+      #{item.employeeId,jdbcType=VARCHAR}, #{item.employeeAccount,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR},
+      #{item.employeeAge,jdbcType=VARCHAR}, #{item.businessToday,jdbcType=VARCHAR}, #{item.averageProcessTime,jdbcType=VARCHAR},
+      #{item.employeeState,jdbcType=VARCHAR}, #{item.employeeSex,jdbcType=VARCHAR}, #{item.employeeEducation,jdbcType=VARCHAR},
+      #{item.email,jdbcType=VARCHAR}, #{item.phone,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR},
+      #{item.userType,jdbcType=CHAR}, #{item.loginIp,jdbcType=VARCHAR}, #{item.hallId,jdbcType=INTEGER},
+      #{item.jobs,jdbcType=VARCHAR}, #{item.loginDate,jdbcType=TIMESTAMP}, #{item.loginFlag,jdbcType=VARCHAR},
+      #{item.createBy,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR},
+      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remarks,jdbcType=VARCHAR}, #{item.delFlag,jdbcType=CHAR},
+      #{item.employeeBirthday,jdbcType=TIMESTAMP}, #{item.monitorFlag,jdbcType=CHAR}, #{item.watchCode,jdbcType=VARCHAR},
+      #{item.workPosition,jdbcType=VARCHAR}, #{item.workState,jdbcType=VARCHAR}, #{item.workTime,jdbcType=INTEGER},
+      #{item.onDuty,jdbcType=VARCHAR}, #{item.bindState,jdbcType=INTEGER}, #{item.changeTime,jdbcType=TIMESTAMP},
+      #{item.myWork,jdbcType=VARCHAR}, #{item.photo,jdbcType=LONGVARCHAR})
+    </foreach>
   </insert>
   <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
     insert into dw_employee_information
@@ -307,7 +340,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=DECIMAL},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="loginName != null">
         #{loginName,jdbcType=VARCHAR},
@@ -358,7 +391,7 @@
         #{loginIp,jdbcType=VARCHAR},
       </if>
       <if test="hallId != null">
-        #{hallId,jdbcType=DECIMAL},
+        #{hallId,jdbcType=INTEGER},
       </if>
       <if test="jobs != null">
         #{jobs,jdbcType=VARCHAR},
@@ -403,13 +436,13 @@
         #{workState,jdbcType=VARCHAR},
       </if>
       <if test="workTime != null">
-        #{workTime,jdbcType=DECIMAL},
+        #{workTime,jdbcType=INTEGER},
       </if>
       <if test="onDuty != null">
         #{onDuty,jdbcType=VARCHAR},
       </if>
       <if test="bindState != null">
-        #{bindState,jdbcType=DECIMAL},
+        #{bindState,jdbcType=INTEGER},
       </if>
       <if test="changeTime != null">
         #{changeTime,jdbcType=TIMESTAMP},
@@ -432,7 +465,7 @@
     update dw_employee_information
     <set>
       <if test="record.id != null">
-        ID = #{record.id,jdbcType=DECIMAL},
+        ID = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.loginName != null">
         LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
@@ -483,7 +516,7 @@
         LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
       </if>
       <if test="record.hallId != null">
-        HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+        HALL_ID = #{record.hallId,jdbcType=INTEGER},
       </if>
       <if test="record.jobs != null">
         JOBS = #{record.jobs,jdbcType=VARCHAR},
@@ -528,13 +561,13 @@
         WORK_STATE = #{record.workState,jdbcType=VARCHAR},
       </if>
       <if test="record.workTime != null">
-        WORK_TIME = #{record.workTime,jdbcType=DECIMAL},
+        WORK_TIME = #{record.workTime,jdbcType=INTEGER},
       </if>
       <if test="record.onDuty != null">
         ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
       </if>
       <if test="record.bindState != null">
-        BIND_STATE = #{record.bindState,jdbcType=DECIMAL},
+        BIND_STATE = #{record.bindState,jdbcType=INTEGER},
       </if>
       <if test="record.changeTime != null">
         CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
@@ -552,7 +585,7 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update dw_employee_information
-    set ID = #{record.id,jdbcType=DECIMAL},
+    set ID = #{record.id,jdbcType=INTEGER},
       LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
       PASSWORD = #{record.password,jdbcType=VARCHAR},
       EMPLOYEE_ID = #{record.employeeId,jdbcType=VARCHAR},
@@ -569,7 +602,7 @@
       MOBILE = #{record.mobile,jdbcType=VARCHAR},
       USER_TYPE = #{record.userType,jdbcType=CHAR},
       LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
-      HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      HALL_ID = #{record.hallId,jdbcType=INTEGER},
       JOBS = #{record.jobs,jdbcType=VARCHAR},
       LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
       LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
@@ -584,9 +617,9 @@
       WATCH_CODE = #{record.watchCode,jdbcType=VARCHAR},
       WORK_POSITION = #{record.workPosition,jdbcType=VARCHAR},
       WORK_STATE = #{record.workState,jdbcType=VARCHAR},
-      WORK_TIME = #{record.workTime,jdbcType=DECIMAL},
+      WORK_TIME = #{record.workTime,jdbcType=INTEGER},
       ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
-      BIND_STATE = #{record.bindState,jdbcType=DECIMAL},
+      BIND_STATE = #{record.bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
       MY_WORK = #{record.myWork,jdbcType=VARCHAR},
       PHOTO = #{record.photo,jdbcType=LONGVARCHAR}
@@ -596,7 +629,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update dw_employee_information
-    set ID = #{record.id,jdbcType=DECIMAL},
+    set ID = #{record.id,jdbcType=INTEGER},
       LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
       PASSWORD = #{record.password,jdbcType=VARCHAR},
       EMPLOYEE_ID = #{record.employeeId,jdbcType=VARCHAR},
@@ -613,7 +646,7 @@
       MOBILE = #{record.mobile,jdbcType=VARCHAR},
       USER_TYPE = #{record.userType,jdbcType=CHAR},
       LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
-      HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+      HALL_ID = #{record.hallId,jdbcType=INTEGER},
       JOBS = #{record.jobs,jdbcType=VARCHAR},
       LOGIN_DATE = #{record.loginDate,jdbcType=TIMESTAMP},
       LOGIN_FLAG = #{record.loginFlag,jdbcType=VARCHAR},
@@ -628,9 +661,9 @@
       WATCH_CODE = #{record.watchCode,jdbcType=VARCHAR},
       WORK_POSITION = #{record.workPosition,jdbcType=VARCHAR},
       WORK_STATE = #{record.workState,jdbcType=VARCHAR},
-      WORK_TIME = #{record.workTime,jdbcType=DECIMAL},
+      WORK_TIME = #{record.workTime,jdbcType=INTEGER},
       ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
-      BIND_STATE = #{record.bindState,jdbcType=DECIMAL},
+      BIND_STATE = #{record.bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
       MY_WORK = #{record.myWork,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -689,7 +722,7 @@
         LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
       </if>
       <if test="hallId != null">
-        HALL_ID = #{hallId,jdbcType=DECIMAL},
+        HALL_ID = #{hallId,jdbcType=INTEGER},
       </if>
       <if test="jobs != null">
         JOBS = #{jobs,jdbcType=VARCHAR},
@@ -734,13 +767,13 @@
         WORK_STATE = #{workState,jdbcType=VARCHAR},
       </if>
       <if test="workTime != null">
-        WORK_TIME = #{workTime,jdbcType=DECIMAL},
+        WORK_TIME = #{workTime,jdbcType=INTEGER},
       </if>
       <if test="onDuty != null">
         ON_DUTY = #{onDuty,jdbcType=VARCHAR},
       </if>
       <if test="bindState != null">
-        BIND_STATE = #{bindState,jdbcType=DECIMAL},
+        BIND_STATE = #{bindState,jdbcType=INTEGER},
       </if>
       <if test="changeTime != null">
         CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
@@ -752,7 +785,7 @@
         PHOTO = #{photo,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
     update dw_employee_information
@@ -772,7 +805,7 @@
       MOBILE = #{mobile,jdbcType=VARCHAR},
       USER_TYPE = #{userType,jdbcType=CHAR},
       LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
-      HALL_ID = #{hallId,jdbcType=DECIMAL},
+      HALL_ID = #{hallId,jdbcType=INTEGER},
       JOBS = #{jobs,jdbcType=VARCHAR},
       LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
       LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
@@ -787,13 +820,13 @@
       WATCH_CODE = #{watchCode,jdbcType=VARCHAR},
       WORK_POSITION = #{workPosition,jdbcType=VARCHAR},
       WORK_STATE = #{workState,jdbcType=VARCHAR},
-      WORK_TIME = #{workTime,jdbcType=DECIMAL},
+      WORK_TIME = #{workTime,jdbcType=INTEGER},
       ON_DUTY = #{onDuty,jdbcType=VARCHAR},
-      BIND_STATE = #{bindState,jdbcType=DECIMAL},
+      BIND_STATE = #{bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
       MY_WORK = #{myWork,jdbcType=VARCHAR},
       PHOTO = #{photo,jdbcType=LONGVARCHAR}
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
     update dw_employee_information
@@ -813,7 +846,7 @@
       MOBILE = #{mobile,jdbcType=VARCHAR},
       USER_TYPE = #{userType,jdbcType=CHAR},
       LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
-      HALL_ID = #{hallId,jdbcType=DECIMAL},
+      HALL_ID = #{hallId,jdbcType=INTEGER},
       JOBS = #{jobs,jdbcType=VARCHAR},
       LOGIN_DATE = #{loginDate,jdbcType=TIMESTAMP},
       LOGIN_FLAG = #{loginFlag,jdbcType=VARCHAR},
@@ -828,11 +861,11 @@
       WATCH_CODE = #{watchCode,jdbcType=VARCHAR},
       WORK_POSITION = #{workPosition,jdbcType=VARCHAR},
       WORK_STATE = #{workState,jdbcType=VARCHAR},
-      WORK_TIME = #{workTime,jdbcType=DECIMAL},
+      WORK_TIME = #{workTime,jdbcType=INTEGER},
       ON_DUTY = #{onDuty,jdbcType=VARCHAR},
-      BIND_STATE = #{bindState,jdbcType=DECIMAL},
+      BIND_STATE = #{bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
       MY_WORK = #{myWork,jdbcType=VARCHAR}
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

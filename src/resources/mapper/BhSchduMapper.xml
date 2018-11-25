@@ -3,9 +3,9 @@
 <mapper namespace="com.zzqx.mvc.dao.BhSchduMapper">
   <resultMap id="BaseResultMap" type="com.zzqx.mvc.entity.BhSchdu">
     <id column="ID" jdbcType="VARCHAR" property="id" />
-    <result column="HALL_ID" jdbcType="DECIMAL" property="hallId" />
-    <result column="EMPLOYEE_ID" jdbcType="DECIMAL" property="employeeId" />
-    <result column="JOBS_ID" jdbcType="DECIMAL" property="jobsId" />
+    <result column="HALL_ID" jdbcType="INTEGER" property="hallId" />
+    <result column="EMPLOYEE_ID" jdbcType="INTEGER" property="employeeId" />
+    <result column="JOBS_ID" jdbcType="INTEGER" property="jobsId" />
     <result column="SCHEDU_DATE" jdbcType="TIMESTAMP" property="scheduDate" />
     <result column="MARK_COLOR" jdbcType="VARCHAR" property="markColor" />
     <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
@@ -106,8 +106,8 @@
     insert into dw_bh_schedu (ID, HALL_ID, EMPLOYEE_ID, 
       JOBS_ID, SCHEDU_DATE, MARK_COLOR, 
       CREATE_TIME, UPDATE_TIME)
-    values (#{id,jdbcType=VARCHAR}, #{hallId,jdbcType=DECIMAL}, #{employeeId,jdbcType=DECIMAL}, 
-      #{jobsId,jdbcType=DECIMAL}, #{scheduDate,jdbcType=TIMESTAMP}, #{markColor,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR}, #{hallId,jdbcType=INTEGER}, #{employeeId,jdbcType=INTEGER}, 
+      #{jobsId,jdbcType=INTEGER}, #{scheduDate,jdbcType=TIMESTAMP}, #{markColor,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.BhSchdu">
@@ -143,13 +143,13 @@
         #{id,jdbcType=VARCHAR},
       </if>
       <if test="hallId != null">
-        #{hallId,jdbcType=DECIMAL},
+        #{hallId,jdbcType=INTEGER},
       </if>
       <if test="employeeId != null">
-        #{employeeId,jdbcType=DECIMAL},
+        #{employeeId,jdbcType=INTEGER},
       </if>
       <if test="jobsId != null">
-        #{jobsId,jdbcType=DECIMAL},
+        #{jobsId,jdbcType=INTEGER},
       </if>
       <if test="scheduDate != null">
         #{scheduDate,jdbcType=TIMESTAMP},
@@ -172,18 +172,10 @@
       CREATE_TIME, UPDATE_TIME)
       values 
       <foreach collection="list" item="item" index="index" separator=",">
-        (#{item.id,jdbcType=VARCHAR}, #{item.hallId,jdbcType=DECIMAL}, #{item.employeeId,jdbcType=DECIMAL},
-        #{item.jobsId,jdbcType=DECIMAL}, #{item.scheduDate,jdbcType=TIMESTAMP}, #{item.markColor,jdbcType=VARCHAR},
+        (#{item.id,jdbcType=VARCHAR}, #{item.hallId,jdbcType=INTEGER}, #{item.employeeId,jdbcType=INTEGER},
+        #{item.jobsId,jdbcType=INTEGER}, #{item.scheduDate,jdbcType=TIMESTAMP}, #{item.markColor,jdbcType=VARCHAR},
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP})
       </foreach>
-    ON DUPLICATE KEY UPDATE
-      HALL_ID = VALUES (HALL_ID),
-      EMPLOYEE_ID = VALUES (EMPLOYEE_ID),
-      JOBS_ID = VALUES (JOBS_ID),
-      SCHEDU_DATE = VALUES (SCHEDU_DATE),
-      MARK_COLOR = VALUES (MARK_COLOR),
-      CREATE_TIME = VALUES (CREATE_TIME),
-      UPDATE_TIME = VALUES (UPDATE_TIME)
   </insert>
   
   <select id="countByExample" parameterType="com.zzqx.mvc.entity.BhSchduExample" resultType="java.lang.Long">
@@ -199,13 +191,13 @@
         ID = #{record.id,jdbcType=VARCHAR},
       </if>
       <if test="record.hallId != null">
-        HALL_ID = #{record.hallId,jdbcType=DECIMAL},
+        HALL_ID = #{record.hallId,jdbcType=INTEGER},
       </if>
       <if test="record.employeeId != null">
-        EMPLOYEE_ID = #{record.employeeId,jdbcType=DECIMAL},
+        EMPLOYEE_ID = #{record.employeeId,jdbcType=INTEGER},
       </if>
       <if test="record.jobsId != null">
-        JOBS_ID = #{record.jobsId,jdbcType=DECIMAL},
+        JOBS_ID = #{record.jobsId,jdbcType=INTEGER},
       </if>
       <if test="record.scheduDate != null">
         SCHEDU_DATE = #{record.scheduDate,jdbcType=TIMESTAMP},
@@ -227,9 +219,9 @@
   <update id="updateByExample" parameterType="map">
     update dw_bh_schedu
     set ID = #{record.id,jdbcType=VARCHAR},
-      HALL_ID = #{record.hallId,jdbcType=DECIMAL},
-      EMPLOYEE_ID = #{record.employeeId,jdbcType=DECIMAL},
-      JOBS_ID = #{record.jobsId,jdbcType=DECIMAL},
+      HALL_ID = #{record.hallId,jdbcType=INTEGER},
+      EMPLOYEE_ID = #{record.employeeId,jdbcType=INTEGER},
+      JOBS_ID = #{record.jobsId,jdbcType=INTEGER},
       SCHEDU_DATE = #{record.scheduDate,jdbcType=TIMESTAMP},
       MARK_COLOR = #{record.markColor,jdbcType=VARCHAR},
       CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
@@ -242,13 +234,13 @@
     update dw_bh_schedu
     <set>
       <if test="hallId != null">
-        HALL_ID = #{hallId,jdbcType=DECIMAL},
+        HALL_ID = #{hallId,jdbcType=INTEGER},
       </if>
       <if test="employeeId != null">
-        EMPLOYEE_ID = #{employeeId,jdbcType=DECIMAL},
+        EMPLOYEE_ID = #{employeeId,jdbcType=INTEGER},
       </if>
       <if test="jobsId != null">
-        JOBS_ID = #{jobsId,jdbcType=DECIMAL},
+        JOBS_ID = #{jobsId,jdbcType=INTEGER},
       </if>
       <if test="scheduDate != null">
         SCHEDU_DATE = #{scheduDate,jdbcType=TIMESTAMP},
@@ -267,9 +259,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.BhSchdu">
     update dw_bh_schedu
-    set HALL_ID = #{hallId,jdbcType=DECIMAL},
-      EMPLOYEE_ID = #{employeeId,jdbcType=DECIMAL},
-      JOBS_ID = #{jobsId,jdbcType=DECIMAL},
+    set HALL_ID = #{hallId,jdbcType=INTEGER},
+      EMPLOYEE_ID = #{employeeId,jdbcType=INTEGER},
+      JOBS_ID = #{jobsId,jdbcType=INTEGER},
       SCHEDU_DATE = #{scheduDate,jdbcType=TIMESTAMP},
       MARK_COLOR = #{markColor,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},

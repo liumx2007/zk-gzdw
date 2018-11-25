@@ -19,7 +19,7 @@ public interface BhSchduMapper {
 
     /**
      * 批量更新或插入
-     * @param example
+     * @param
      * @return
      */
     int batchInsertBhSchdu(List<BhSchdu> list);

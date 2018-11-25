@@ -1,16 +1,15 @@
 package com.zzqx.mvc.entity;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class BhSchdu {
     private String id;
 
-    private BigDecimal hallId;
+    private int hallId;
 
-    private BigDecimal employeeId;
+    private Integer employeeId;
 
-    private BigDecimal jobsId;
+    private Integer jobsId;
 
     private Date scheduDate;
 
@@ -28,27 +27,27 @@ public class BhSchdu {
         this.id = id == null ? null : id.trim();
     }
 
-    public BigDecimal getHallId() {
+    public int getHallId() {
         return hallId;
     }
 
-    public void setHallId(BigDecimal hallId) {
+    public void setHallId(int hallId) {
         this.hallId = hallId;
     }
 
-    public BigDecimal getEmployeeId() {
+    public Integer getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(BigDecimal employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 
-    public BigDecimal getJobsId() {
+    public Integer getJobsId() {
         return jobsId;
     }
 
-    public void setJobsId(BigDecimal jobsId) {
+    public void setJobsId(Integer jobsId) {
         this.jobsId = jobsId;
     }
 

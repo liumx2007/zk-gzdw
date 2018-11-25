@@ -2,9 +2,10 @@ package com.zzqx.mvc.dao;
 
 import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.entity.EmployeeInformationExample;
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface EmployeeInformationMapper {
     long countByExample(EmployeeInformationExample example);
@@ -14,6 +15,13 @@ public interface EmployeeInformationMapper {
     int deleteByPrimaryKey(BigDecimal id);
 
     int insert(EmployeeInformation record);
+
+    /**
+     * 批量更新或插入
+     * @param list
+     * @return
+     */
+    int batchInsert(@Param("list") List<EmployeeInformation> list);
 
     int insertSelective(EmployeeInformation record);
 
