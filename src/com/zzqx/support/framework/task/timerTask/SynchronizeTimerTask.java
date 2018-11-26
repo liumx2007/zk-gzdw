@@ -7,12 +7,18 @@ import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.BhSchduMapper;
 import com.zzqx.mvc.dao.EmployeeInformationMapper;
+import com.zzqx.mvc.dao.EmployeeJobsMapper;
 import com.zzqx.mvc.entity.BhSchdu;
 import com.zzqx.mvc.entity.EmployeeInformation;
+import com.zzqx.mvc.entity.EmployeeJobsExample;
+import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +31,9 @@ public class SynchronizeTimerTask {
     @Autowired
     EmployeeInformationMapper employeeInformationMapper;
     @Autowired
+    EmployeeJobsMapper employeeJobsMapper;
+
+    @Autowired
     private MessageService messageService;
     private String getData = "";
     /**
@@ -35,7 +44,7 @@ public class SynchronizeTimerTask {
         //todo getData 非空判断
         JSONObject upDataJson = JSONUtil.parseObj(getData);
         JSONArray schJsonArray = JSONUtil.parseArray(upDataJson.get("update"));
-//        List<BhSchdu> schduList = new ArrayList<>();
+//        List<BhSchdu> schduList = JSONUtil.toList(schJsonArray,BhSchdu.class );
         if(schJsonArray != null && schJsonArray.size()>0){
             for (int i = 0;i <schJsonArray.size() ; i++){
                 Object schObj = schJsonArray.get(i);
@@ -44,7 +53,10 @@ public class SynchronizeTimerTask {
                 //发送消息到腕表
 //                if(schdu.getCreateTime().getDate() == new Date().getDate()){
 //                    Message msg = new Message();
-//                    msg.setContent("请" + person.getName() + "到" + wPosition);
+//                    BigDecimal empId = BigDecimal.valueOf(schdu.getEmployeeId());
+//                    BigDecimal jobId = BigDecimal.valueOf(schdu.getJobsId());
+//                    employeeJobsMapper.();
+//                    msg.setContent("请" + employeeInformationMapper.selectByPrimaryKey(empId).getName() + "到" + wPosition);
 //                    msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 //                    msg.setCreator("admin");
 //                    msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);

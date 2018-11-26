@@ -5,6 +5,9 @@ import cn.hutool.json.JSONUtil;
 import com.zzqx.Global;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.BhSchduMapper;
+import com.zzqx.mvc.dao.EmployeeInformationMapper;
+import com.zzqx.mvc.dao.EmployeeJobsMapper;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.NewsContent;
 import com.zzqx.mvc.javabean.NewsImage;
@@ -24,6 +27,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -39,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -56,6 +61,12 @@ public class InterfaceController extends BaseController {
 	private ArrangeDetialService arrangeDetialService;
 	@Autowired
 	private WorkPositionService workPositionService;
+	@Autowired
+	private EmployeeInformationMapper employeeInformationMapper;
+	@Autowired
+	private EmployeeJobsMapper employeeJobsMapper;
+	@Autowired
+	private BhSchduMapper bhSchduMapper;
 	Map<String, WorkPosition> goingOnduty = new HashMap<String, WorkPosition>();
 
 
@@ -178,13 +189,21 @@ public class InterfaceController extends BaseController {
 //		person.setMy_work(getWork(person));
 //		personnelService.saveOrUpdate(person);
 		try{
-//			PropertiesHelper propertiesHelper = new PropertiesHelper("config.properties");
-//			String httpCore = propertiesHelper.readValue("url");
-//			HttpUtil.get(httpCore+"/api/employeeInformation/getJobByWatchCode?watchCode="+watchCode+"&hallId=2");
-			HttpUtil.get(CountInfo.GET_JOB_BY_WATCHCODE+watchCode);
+			String getData = HttpUtil.get(CountInfo.GET_JOB_BY_WATCHCODE+watchCode,2000);
 		}catch (Exception e){
-			return "";
+			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
+			EmployeeInformationExample ex = new EmployeeInformationExample();
+			EmployeeInformationExample.Criteria criteria = ex.createCriteria();
+			criteria.andWatchCodeEqualTo(watchCode);
+			List<EmployeeInformation> empList = employeeInformationMapper.selectByExample(ex);
+			EmployeeInformation emp = new EmployeeInformation();
+			if(empList != null && empList.size()>0){
+				emp = empList.get(0);
+			}
+			emp.setMyWork(getWork_new(emp).getJobsName());
+			employeeInformationMapper.updateByPrimaryKey(emp);
 		}
+
 		return "确认到岗";
 	}
 	/**
@@ -208,6 +227,23 @@ public class InterfaceController extends BaseController {
 			}
 		}
 		return perTemp.getMy_work();
+	}
+	/**
+	 * 获取今日岗位
+	 * @param -perTemp
+	 */
+	public EmployeeJobs getWork_new(EmployeeInformation employeeInformation) {
+		BhSchduExample bhSchduExample = new BhSchduExample();
+		BhSchduExample.Criteria criteria = bhSchduExample.createCriteria();
+		BigDecimal bigDecimal = new BigDecimal(employeeInformation.getId());
+		criteria.andEmployeeIdEqualTo(bigDecimal);
+		BhSchdu bhSchdu = bhSchduMapper.selectByExample(bhSchduExample).get(0);
+		EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
+		EmployeeJobsExample.Criteria jobCriteria = employeeJobsExample.createCriteria();
+		BigDecimal jobId = new BigDecimal(bhSchdu.getJobsId());
+		jobCriteria.andIdEqualTo(jobId);
+		EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
+		return employeeJobs;
 	}
 	/**
 	 *自动调度
@@ -283,39 +319,42 @@ public class InterfaceController extends BaseController {
 //		PropertiesHelper p = new PropertiesHelper("config.properties");
 //		String httpCore = p.readValue("url");
 		String s = null;
-		try{
-//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
-		}catch (Exception e){
-			return ;
-		}
-//		PersonVo personnels = null;
 		Personnel person = new Personnel();
-		if(!"".equals(s)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-			// todo error
-//			personnels = JSONUtil.toBean(object,PersonVo.class);
-			String name = object.get("name").toString();
-			person.setName(name);
-			person.setWatch_code(watchCode);
+		try{
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,2000);
+			if(!"".equals(s)){
+				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+				String name = object.get("name").toString();
+				person.setName(name);
+				person.setWatch_code(watchCode);
+			}
+		}catch (Exception e){
+			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
+			EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+			EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+			criteria.andWatchCodeEqualTo(watchCode);
+			EmployeeInformation employeeInformation = employeeInformationMapper.selectByExample(employeeInformationExample).get(0);
+			person.setName(employeeInformation.getName());
+			person.setWatch_code(employeeInformation.getWatchCode());
 		}
-//		Personnel person = new Personnel(personnels);
-		//岗位ID position
 		String position = request.getParameter("position");
 		if(position != null && !position.isEmpty() ){
-			//todo 查询岗位
-//			work = workPositionService.getById(position);
+			//查询岗位
+			String wPosition = "";
 			try {
 				s =  HttpUtil.get(CountInfo.JOB_BY_ID+position);
+				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+				wPosition = object.get("jobsName").toString();
 			}catch (Exception e){
-				return;
+				System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
+				EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
+				EmployeeJobsExample.Criteria criteria = employeeJobsExample.createCriteria();
+				BigDecimal jobId = new BigDecimal("position");
+				criteria.andIdEqualTo(jobId);
+				EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
+				wPosition = employeeJobs.getJobsName();
 			}
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-//			WorkPositionVo  workPositionVo = JSONUtil.toBean(object, WorkPositionVo.class);
-			String wPosition = object.get("jobsName").toString();
-//			work.setPosition_name(wPosition);
-//			msg.setContent("请" + person.getName() + "工号" + person.getJob_num() + "到" + work.getPosition_name());
-//			msg.setContent("请" + person.getName() + "到" + work.getPosition_name());
+
 			msg.setContent("请" + person.getName() + "到" + wPosition);
 			msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			msg.setCreator("admin");
@@ -347,7 +386,8 @@ public class InterfaceController extends BaseController {
 		try{
 			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
 		}catch (Exception e){
-			return ;
+			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
+
 		}
 		PersonVo personnels = null;
 		if(!"".equals(s)){
@@ -491,7 +531,7 @@ public class InterfaceController extends BaseController {
 	/**
 	 * 呼叫类型（呼叫班长、呼叫保安、集团业务）消息函数
 	 * 
-	 * @param type
+	 * @param -type
 	 */
 	@OpenAccess
 	@ResponseBody
@@ -504,7 +544,7 @@ public class InterfaceController extends BaseController {
 	/**
 	 * 处理紧急类型（治安、医疗、火警）消息函数
 	 * 
-	 * @param type
+	 * @param   -type
 	 */
 	@OpenAccess
 	@ResponseBody
@@ -519,7 +559,7 @@ public class InterfaceController extends BaseController {
 	/**
 	 * 请假反馈
 	 * 
-	 * @param type
+	 * @param -type
 	 */
 	@OpenAccess
 	@ResponseBody
@@ -567,7 +607,7 @@ public class InterfaceController extends BaseController {
 	/**
 	 * 直接给值长发消息
 	 * 
-	 * @param type
+	 * @param -type
 	 */
 	@OpenAccess
 	@ResponseBody
