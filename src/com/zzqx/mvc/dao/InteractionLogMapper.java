@@ -26,7 +26,6 @@ public interface InteractionLogMapper {
     List<InteractionLog> selectWithInteraction(InteractionLogDto interactionLogDto);
 
     //连表分页
-
     List<InteractionLog> selectWithInteractionTest(InteractionLogDto interactionLogDto);
 
     InteractionLog selectByPrimaryKey(String id);

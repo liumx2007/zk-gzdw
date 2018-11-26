@@ -26,6 +26,7 @@
     <script type="text/javascript" src="resources/js/jquery-easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="resources/js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="resources/js/jquery-easyui/plugins/jquery.parser.js"></script>
+    <script type="text/javascript" src="resources/js/time/moment.js"></script>
     <script type="text/javascript">
         $(function(){
             $("#log_table").datagrid({
@@ -61,7 +62,7 @@
             }
         };
         function  FamterTime(v,r,i) {
-            var date = Date.parse(v);
+           var date = moment(v).format("YYYY-MM-d HH-mm-ss");
             return date;
         }
         function getName(v,r,i) {
