@@ -150,6 +150,32 @@
           and i.interact_name like CONCAT('%',#{interactName},'%')
         </if>
   </select>
+  <!--连表有选择的查询数据  测试-->
+  <select id="selectWithInteractionTest" parameterType="com.zzqx.mvc.dto.InteractionLogDto" resultMap="getMap">
+    SELECT
+    <include refid="mcolumn"></include>
+    FROM tb_interaction_log l LEFT JOIN  tb_interaction i ON   l.interaction_id = i.id
+    WHERE 1=1
+    <if test="interactionId != null">
+      and l.interaction_id = #{interactionId,jdbcType=VARCHAR}
+    </if>
+    <if test="clickTime != null">
+      and  l.click_time = #{clickTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="sessionBusiness != null">
+      and l.session_business = #{sessionBusiness,jdbcType=VARCHAR}
+    </if>
+    <if test="sessionInteract != null">
+      and l.session_interact = #{sessionInteract,jdbcType=VARCHAR}
+    </if>
+    <if test="folderType != null">
+      and l.folder_type = #{folderType,jdbcType=INTEGER}
+    </if>
+    <if test="interactName != null">
+      and i.interact_name like CONCAT('%',#{interactName},'%')
+    </if>
+    limit #{limit0},#{limit1}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

@@ -18,6 +18,10 @@ public class InteractionLogDto {
 
     private String interactName;
 
+    private int  limit0;
+
+    private int  limit1;
+
     public String getId() {
         return id;
     }
@@ -72,5 +76,21 @@ public class InteractionLogDto {
 
     public void setInteractName(String interactName) {
         this.interactName = interactName;
+    }
+
+    public int getLimit0() {
+        return limit0;
+    }
+
+    public void setLimit0(int limit0) {
+        this.limit0 = limit0;
+    }
+
+    public int getLimit1() {
+        return limit1;
+    }
+
+    public void setLimit1(int limit1) {
+        this.limit1 = limit1;
     }
 }

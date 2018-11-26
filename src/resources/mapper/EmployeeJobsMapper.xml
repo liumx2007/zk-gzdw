@@ -93,6 +93,9 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultType="com.zzqx.mvc.entity.EmployeeJobs">
+    SELECT * From dw_employee_jobs WHERE ID = #{id}
+  </select>
   <delete id="deleteByExample" parameterType="com.zzqx.mvc.entity.EmployeeJobsExample">
     delete from dw_employee_jobs
     <if test="_parameter != null">

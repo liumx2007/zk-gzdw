@@ -29,16 +29,25 @@
     <script type="text/javascript">
         $(function(){
             $("#log_table").datagrid({
-                url: "interactionlog/list.do",
+                url: "interactionlog/list1.do",
                 idField: "id",
                 split: false,
                 fit: true,
                 border: 0,
                 frozenColumns: [[{field:'ck',checkbox:true}]],
+                pagination:true,
                 rownumbers: true,
 //                toolbar: "#bar",
             });
-            $('#log_table').datagrid().datagrid('getPager');
+            var p = $('#log_table').datagrid('getPager');
+            if (p){
+                $(p).pagination({
+                    pageList: [10,15,20],//可以设置每页记录条数的列表
+                    beforePageText: '第',//页数文本框前显示的汉字
+                    afterPageText: '页    共 {pages} 页',
+                    displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+                });
+            };
         });
         function getType(v,r,i) {
             if(v == 1){

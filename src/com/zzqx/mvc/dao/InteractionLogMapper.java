@@ -25,6 +25,10 @@ public interface InteractionLogMapper {
     //连表有选择查询
     List<InteractionLog> selectWithInteraction(InteractionLogDto interactionLogDto);
 
+    //连表分页
+
+    List<InteractionLog> selectWithInteractionTest(InteractionLogDto interactionLogDto);
+
     InteractionLog selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") InteractionLog record, @Param("example") InteractionLogExample example);

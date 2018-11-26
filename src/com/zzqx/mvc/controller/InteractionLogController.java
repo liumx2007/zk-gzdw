@@ -4,7 +4,9 @@ import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.dto.InteractionLogDto;
 import com.zzqx.mvc.entity.InteractionLog;
 import com.zzqx.mvc.javabean.R;
+import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.service.InteractionLogService;
+import com.zzqx.support.utils.StringHelper;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,12 +29,20 @@ public class InteractionLogController {
 
     @RequestMapping("list1")
     @ResponseBody
-    public R selectByEntity(InteractionLog interactionLog){
-        List<InteractionLog> logList = interactionLogService.selectByEntity(interactionLog);
+    public String selectByEntity(String page,String rows,InteractionLogDto interactionLogDto){
+        //分页后list
+        List<InteractionLog> logList = interactionLogService.selectWithInteractionTest(page,rows,interactionLogDto);
+        //数据总数
+        long total = (long)interactionLogService.selectWithInteraction(interactionLogDto).size();
+        ReturnData data = new ReturnData(total,logList);
+        cn.hutool.json.JSONArray array = new cn.hutool.json.JSONArray();
+        array.add(data);
+        String s = array.toString();
+        String result  = s.substring(1,s.length()-1);
+        return  result;
 //        JsonConfig jsonConfig = new JsonConfig();
 //        jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-//        return JSONArray.fromObject(logList, jsonConfig).toString();
-        return R.ok().put("interactionLogList" , logList);
+//        return data.toString(jsonConfig);
     }
 
     @RequestMapping("list")

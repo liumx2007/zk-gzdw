@@ -1,9 +1,12 @@
 package com.zzqx.mvc.entity;
 
 
+import com.jetsum.core.orm.entity.IdEntity;
+
 import java.util.Date;
 
-public class InteractionLog {
+public class InteractionLog  extends IdEntity{
+
     private String id;
 
     private String interactionId;
