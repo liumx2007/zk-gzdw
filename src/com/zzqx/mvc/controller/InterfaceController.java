@@ -342,14 +342,14 @@ public class InterfaceController extends BaseController {
 			//查询岗位
 			String wPosition = "";
 			try {
-				s =  HttpUtil.get(CountInfo.JOB_BY_ID+position);
+				s =  HttpUtil.get(CountInfo.JOB_BY_ID+position,2000);
 				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 				wPosition = object.get("jobsName").toString();
 			}catch (Exception e){
 				System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
 				EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
 				EmployeeJobsExample.Criteria criteria = employeeJobsExample.createCriteria();
-				BigDecimal jobId = new BigDecimal("position");
+				BigDecimal jobId = new BigDecimal(position);
 				criteria.andIdEqualTo(jobId);
 				EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
 				wPosition = employeeJobs.getJobsName();
@@ -367,7 +367,7 @@ public class InterfaceController extends BaseController {
 		messageService.saveOrUpdate(msg);
 		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, person.getWatch_code(), person);
 //		System.out.println(person.getName() + "调度到" + work.getPosition_name() );
-		goingOnduty.put(person.getWatch_code(), work);
+//		goingOnduty.put(person.getWatch_code(), work);
 	}
 	/**
 	 * 确认调度
@@ -384,7 +384,7 @@ public class InterfaceController extends BaseController {
 		String httpCore = p.readValue("url");
 		String s = null;
 		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,2000);
 		}catch (Exception e){
 			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
 
@@ -591,7 +591,7 @@ public class InterfaceController extends BaseController {
 		String s = null;
 		try{
 //			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+toWatchCode);
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+toWatchCode);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+toWatchCode,2000);
 		}catch (Exception e){
 			return "";
 		}
