@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @OpenAccess
-@RequestMapping("bhschdu")
+@RequestMapping("/bhschdu")
 public class BhSchduController {
 
         @Autowired
@@ -23,4 +23,5 @@ public class BhSchduController {
             BhSchdu bhSchdu = bhSchduMapper.selectByPrimaryKey(id);
             return R.ok().put("bhSchdu",bhSchdu);
         }
+
 }
