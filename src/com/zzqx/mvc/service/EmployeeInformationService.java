@@ -22,4 +22,8 @@ public interface EmployeeInformationService {
      * 获取未绑定人员列表  不同营业厅
      */
     List<EmployeeInformation> selectNoboding(EmployeeInformation employeeInformation);
+    /**
+     * 修改人员绑定状态id="+i+"&&bindState=0&watchCode="+uuid
+     */
+    int  updateById(EmployeeInformation employeeInformation);
 }

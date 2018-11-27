@@ -466,12 +466,16 @@ public class PersonnelController extends BaseController {
 			s = HttpUtil.get(CountInfo.GET_PERSON_LIST);
 		}catch (Exception e){
 			logger.error("连接中台失败");
+			//获取未绑定人员列表
 			EmployeeInformation employeeInformation = new EmployeeInformation();
 			employeeInformation.setBindState(bindStatus.shortValue());
 			employeeInformation.setHallId(CountInfo.HALL_ID);
-			employeeInformationService.selectNoboding(employeeInformation);
-			//todo 11-26
-			return "";
+			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectNoboding(employeeInformation);
+			if (employeeInformationList.size() > 0 ){
+				JSONArray array = new JSONArray();
+				array.add(employeeInformationList);
+				s  = array.toString().substring(1,array.toString().length()-1);
+			}
 		}
 		return  s;
 	}
@@ -504,15 +508,23 @@ public class PersonnelController extends BaseController {
 		String id = request.getParameter("id");
 		Integer i = Integer.parseInt(id);
 //		Personnel person = personnelService.getById(id);
-//		PropertiesHelper p = new PropertiesHelper("config.properties");
-//		String httpCore = p.readValue("url");
 		String re ="";
 		try{
-//			re = HttpUtil.get(httpCore+"/api/employeeInformation/updateWatch?id="+i+"&hallId=2&bindState=0&watchCode="+uuid);
 			re = HttpUtil.get(CountInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid);
+			if (re.contains("修改成功")){
+				return uuid;
+			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			return "";
+			//修改人员绑定状态id="+i+"&&bindState=0&watchCode="+uuid
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWatchCode(uuid);
+//			employeeInformation.setBindState((short)0);
+			employeeInformation.setId(i);
+			int flag = employeeInformationService.updateById(employeeInformation);
+			if (flag > 0){
+				return uuid;
+			}
 		}
 //		if (person != null) {
 //			if(person.getBind_status()==0){
@@ -530,10 +542,6 @@ public class PersonnelController extends BaseController {
 //			logger.error("人员信息不存在");
 //			return "fail";
 //		}
-
-		if (re.contains("修改成功")){
-			return uuid;
-		}
 		return "fail";
 	}
 	
@@ -547,21 +555,23 @@ public class PersonnelController extends BaseController {
 	@RequestMapping("getPersonnelWatchCode")
 	public String getPersonnelWatchCode(HttpServletRequest request) {
 		String uuid = request.getParameter("uuid");
-//		PropertiesHelper p = new PropertiesHelper("config.properties");
-//		String httpCore = p.readValue("url");
 		try{
-//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+uuid);
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+uuid,5000);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+uuid,2000);
+			if(!"".equals(s)){
+				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+				System.out.println(object.get("name").toString());
+				return object.get("name").toString();
+			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			return "";
-		}
-//		Personnel person = personnelService.getPersonnelWatchCode(uuid);
-//		Personnel personnels = null;
-		if(!"".equals(s)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-			System.out.println(object.get("name").toString());
-			return object.get("name").toString();
+			//根据WatchCode查人员
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWatchCode(uuid);
+			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectByWatchCode(employeeInformation);
+			if (employeeInformationList.size() > 0){
+				String  name = employeeInformationList.get(0).getName();
+				return name;
+			}
 		}
 		return "fail";
 	}
