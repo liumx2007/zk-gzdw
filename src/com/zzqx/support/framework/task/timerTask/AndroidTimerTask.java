@@ -1,9 +1,11 @@
 package com.zzqx.support.framework.task.timerTask;
 
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSONArray;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.BhSchduMapper;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.service.*;
 import com.zzqx.support.framework.mina.androidser.AndroidConstant;
@@ -19,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 @Transactional
 public class AndroidTimerTask {
@@ -33,6 +37,8 @@ public class AndroidTimerTask {
 	private ArrangeDetialService arrangeDetialService;
 	@Autowired
 	private WorkPositionService workPositionService;
+	@Autowired
+	private BhSchduMapper bhSchduMapper;
 	
 	List<Personnel> allPersons;
 	
@@ -112,50 +118,55 @@ public class AndroidTimerTask {
 		}
 	}
 	public void sendAutoMessage_new(){
-		//todo 清空岗位
+		// 清空岗位
 		try{
-			HttpUtil.get(CountInfo.UPDATE_MY_WORK_BY_HALLID);
+			String clearJobs = HttpUtil.get(CountInfo.UPDATE_MY_WORK_BY_HALLID);
 		}catch (Exception e){
-			return;
+			System.out.print("读取监控系统该数据失败，读取本地数据");
+
 		}
 		//获取今天排班信息
-		String schMsg = "";
+		List<BhSchdu> bhSchdus = new ArrayList<BhSchdu>();
 		try{
-//			PropertiesHelper p = new PropertiesHelper("config.properties");
-//			String httpCore = p.readValue("url");
-//			schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2");
-			schMsg = HttpUtil.get(CountInfo.GET_SCH_MSG);
+			String schMsg = HttpUtil.get(CountInfo.GET_SCH_MSG);
+			if(!"".equals(schMsg)){
+				JSONObject jsa = JSONObject.parseObject(schMsg);
+				Object Json = jsa.get("data");
+				JSONArray schJson = JSONUtil.parseArray(Json.toString());
+				bhSchdus = JSONUtil.toList(schJson,BhSchdu.class);
+			}
 		}catch (Exception e){
-			return ;
+			System.out.print("读取监控系统该数据失败，读取本地数据");
+			BhSchduExample bhSchduExample = new BhSchduExample();
+			BhSchduExample.Criteria criteria = bhSchduExample.createCriteria();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String now = sdf.format(new Date());
+			criteria.andScheduDateEqualTo(new Date(now));
+			bhSchdus = bhSchduMapper.selectByExample(bhSchduExample);
 		}
 		String wordStr = "";
-		if(!"".equals(schMsg)){
-			JSONObject jsa = JSONObject.parseObject(schMsg);
-			Object Json = jsa.get("data");
-			JSONArray schJson = JSONArray.parseArray(Json.toString());
-			for(int i = 0;i<schJson.size();i++){
-				JSONObject schTemp = schJson.getJSONObject(i);
-				//查询员工当天是否已经有日常信息
-				List<Message> messageList = messageService.find(Restrictions.eq("watch_code", schTemp.get("watchCode").toString()),
-						Restrictions.eq("type", AndroidConstant.MESSAGE_TYPE_NORMAL_KEY),
-						Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE));
-				Message msgTemp = null;
-				if (messageList != null && messageList.size() > 0) {
-					msgTemp = messageList.get(0);
-				}
-				if (msgTemp == null) {
-					//查询是否已经连接服务器
-					List<AndroidMinaSession> sessions = AndroidMinaManager.getClients();
-					for(AndroidMinaSession sTemp:sessions){
-						if(sTemp!=null){
-							if(sTemp.getWatchCode().equals(schTemp.get("watchCode").toString())){
-								/**
-								 * 插入日常消息
-								 */
-								personnelService.logicMsgCall(sTemp, AndroidConstant.MESSAGE_TYPE_NORMAL_KEY, schTemp.get("watchCode").toString(),
-										messageService);
-								SocketDataSender.sendAndroid(sTemp.getIoSession(), "AutoMessage");
-							}
+		for(int i = 0;i<bhSchdus.size();i++){
+			BhSchdu schTemp = bhSchdus.get(i);
+			//查询员工当天是否已经有日常信息
+			List<Message> messageList = messageService.find(Restrictions.eq("watch_code", schTemp.get("watchCode").toString()),
+					Restrictions.eq("type", AndroidConstant.MESSAGE_TYPE_NORMAL_KEY),
+					Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE));
+			Message msgTemp = null;
+			if (messageList != null && messageList.size() > 0) {
+				msgTemp = messageList.get(0);
+			}
+			if (msgTemp == null) {
+				//查询是否已经连接服务器
+				List<AndroidMinaSession> sessions = AndroidMinaManager.getClients();
+				for(AndroidMinaSession sTemp:sessions){
+					if(sTemp!=null){
+						if(sTemp.getWatchCode().equals(schTemp.){
+							/**
+							 * 插入日常消息
+							 */
+							personnelService.logicMsgCall(sTemp, AndroidConstant.MESSAGE_TYPE_NORMAL_KEY, schTemp.get("watchCode").toString(),
+									messageService);
+							SocketDataSender.sendAndroid(sTemp.getIoSession(), "AutoMessage");
 						}
 					}
 				}
