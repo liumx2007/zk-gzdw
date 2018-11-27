@@ -5,15 +5,9 @@ import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
-import com.zzqx.mvc.entity.ArrangeDetial;
-import com.zzqx.mvc.entity.Message;
-import com.zzqx.mvc.entity.Personnel;
-import com.zzqx.mvc.entity.Stat;
+import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.ReturnMessage;
-import com.zzqx.mvc.service.ArrangeDetialService;
-import com.zzqx.mvc.service.MessageService;
-import com.zzqx.mvc.service.PersonnelService;
-import com.zzqx.mvc.service.StatService;
+import com.zzqx.mvc.service.*;
 import com.zzqx.mvc.vo.PersonVo;
 import com.zzqx.support.framework.mina.androidser.AndroidConstant;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
@@ -64,6 +58,9 @@ public class PersonnelController extends BaseController {
 
 	@Autowired
 	private StatService statService;
+
+	@Autowired
+	EmployeeInformationService employeeInformationService;
 
 	String s = null;
 
@@ -274,39 +271,53 @@ public class PersonnelController extends BaseController {
 	public String watchUpdateWorkStatus(HttpServletRequest request) {
 		int statu = Integer.valueOf(request.getParameter("statu"));
 		String watchCode = request.getParameter("watchCode");
-//		PropertiesHelper pro = new PropertiesHelper("config.properties");
-//		String httpCore = pro.readValue("url");
 		try{
-//			s = HttpUtil.get(httpCore + "/api/employeeInformation/updateByWatchCode?workState="+statu+"&watchCode=" + watchCode);
 			s = HttpUtil.get(CountInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode);
+			if (!s.contains("修改成功")) {
+//			return "人员信息不存在";
+				return "修改状态失败。";
+			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			return "";
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWorkState(String.valueOf(statu));
+			employeeInformation.setWatchCode(watchCode);
+			int flag = employeeInformationService.updateByWatchCode(employeeInformation);
+			if (flag == 0){
+				return "修改状态失败。";
+			}
 		}
-
 //		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
 //		Personnel person = null;
-		if (!s.contains("修改成功")) {
-//			return "人员信息不存在";
-			return "修改状态失败。";
-		}
+//		if (!s.contains("修改成功")) {
+////			return "人员信息不存在";
+//			return "修改状态失败。";
+//		}
 //		else {
 //			logger.error("人员信息不存在");
 //			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
 //			return "人员信息不存在";
 //		}
+		Personnel person = new Personnel();
 		try{
-//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
 			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+			if(!"".equals(s)){
+				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+				person = JSONUtil.toBean(object,Personnel.class);
+				person.setWork_status(statu);
+			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			return "";
-		}
-		Personnel person = null;
-		if(!"".equals(s)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-			person = JSONUtil.toBean(object,Personnel.class);
-			person.setWork_status(statu);
+			//根据WatchCode查人员
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWatchCode(watchCode);
+			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectByWatchCode(employeeInformation);
+			if (employeeInformationList.size() > 0) {
+				Integer id = employeeInformationList.get(0).getId();
+				person.setId(String.valueOf(id));
+				person.setWork_status(statu);
+			}
+
 		}
 
 		String statDay = DateManager.date2Str(DateManager.date_sdf);
@@ -383,41 +394,51 @@ public class PersonnelController extends BaseController {
 	public String watchGetStatTime(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
 //		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
-//		PropertiesHelper pro = new PropertiesHelper("config.properties");
-//		String httpCore = pro.readValue("url");
 		String perStr = "";
+		PersonVo person = new PersonVo();
 		try{
-//			perStr = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
 			perStr = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+			if(!"".equals(perStr)){
+				cn.hutool.json.JSONObject object = JSONUtil.parseObj(perStr);
+				Object ob = object.get("changeTime");
+				Date ChangeT =null;
+				if (ob != null){
+					ChangeT = new Date(Long.valueOf(ob.toString()));
+				}else {
+					ChangeT = new Date();
+				}
+				person.setChangeTime(ChangeT);
+				String wStatus = object.get("workState").toString();
+				System.out.println(Integer.valueOf(wStatus));
+				person.setWorkState(Integer.parseInt(wStatus));
+			} else {
+				logger.error("人员信息不存在");
+				logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
+				return "人员信息不存在";
+			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			return "";
-		}
-//		Personnel person = null;
-		PersonVo person = new PersonVo();
-		if(!"".equals(perStr)){
-			cn.hutool.json.JSONObject object = JSONUtil.parseObj(perStr);
-			Object ob = object.get("changeTime");
-			Date ChangeT =null;
-			if (ob != null){
-				ChangeT = new Date(Long.valueOf(ob.toString()));
+			//根据WatchCode查人员
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWatchCode(watchCode);
+			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectByWatchCode(employeeInformation);
+			if (employeeInformationList.size() > 0){
+				Date ChangeT =null;
+				Date ChangeTime = employeeInformationList.get(0).getChangeTime();
+				if (ChangeTime != null){
+					ChangeT = ChangeTime;
+				}else {
+					ChangeT = new Date();
+				}
+				person.setChangeTime(ChangeT);
+				Integer WorkStatus = Integer.parseInt(employeeInformationList.get(0).getWorkState());
+				person.setWorkState(WorkStatus);
 			}else {
-				ChangeT = new Date();
+				logger.error("人员信息不存在");
+				logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
+				return "人员信息不存在";
 			}
-			person.setChangeTime(ChangeT);
-			String wStatus = object.get("workState").toString();
-			System.out.println(Integer.valueOf(wStatus));
-			person.setWorkState(Integer.parseInt(wStatus));
-//			person = JSONUtil.toBean(object,PersonVo.class);
-//			person.setWork_status(statu);
-		}
-//		if (personList != null && personList.size() > 0) {
-//			person = personList.get(0);
-//		}
-		else {
-			logger.error("人员信息不存在");
-			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
-			return "人员信息不存在";
+
 		}
 
 		Date changeTime = person.getChangeTime();
@@ -436,18 +457,20 @@ public class PersonnelController extends BaseController {
 	@ResponseBody
 	@RequestMapping("getPersonByBindStatus")
 	public String getPerson(HttpServletRequest request) {
-//		Integer bindStatus = Integer.valueOf(request.getParameter("bindStatus"));
+		Integer bindStatus = Integer.valueOf(request.getParameter("bindStatus"));
 //		Query query = personnelService.createQuery("from Personnel t where t.bind_status = ?", bindStatus);
 //		List<Personnel> list = query.list();
 //		JSONArray json = JSONArray.fromObject(list);
 //		return json.toString();
-//		PropertiesHelper p = new PropertiesHelper("config.properties");
-//		String httpCore = p.readValue("url");
 		try{
-//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getWatchList?hallId=2");
 			s = HttpUtil.get(CountInfo.GET_PERSON_LIST);
 		}catch (Exception e){
 			logger.error("连接中台失败");
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setBindState(bindStatus.shortValue());
+			employeeInformation.setHallId(CountInfo.HALL_ID);
+			employeeInformationService.selectNoboding(employeeInformation);
+			//todo 11-26
 			return "";
 		}
 		return  s;

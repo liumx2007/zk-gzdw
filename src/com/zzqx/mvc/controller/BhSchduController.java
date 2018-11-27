@@ -1,5 +1,7 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.crypto.digest.Digester;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.dao.BhSchduMapper;
 import com.zzqx.mvc.entity.BhSchdu;
@@ -23,5 +25,4 @@ public class BhSchduController {
             BhSchdu bhSchdu = bhSchduMapper.selectByPrimaryKey(id);
             return R.ok().put("bhSchdu",bhSchdu);
         }
-
 }

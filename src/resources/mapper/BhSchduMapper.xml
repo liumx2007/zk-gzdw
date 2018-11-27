@@ -165,7 +165,7 @@
       </if>
     </trim>
   </insert>
-  <!--批量插入或更新-->
+  <!--批量插入-->
   <insert id="batchInsertBhSchdu" parameterType="java.util.List">
      insert into dw_bh_schedu (ID, HALL_ID, EMPLOYEE_ID,
       JOBS_ID, SCHEDU_DATE, MARK_COLOR,

@@ -2,7 +2,7 @@ package com.zzqx.mvc.commons;
 
 public class CountInfo {
     //中台服务器Ip
-    public static final String SERVER_IP = "http://192.168.0.2:8090";
+    public static final String SERVER_IP = "http://192.168.43.46:8090";
     //营业厅id
     public static final Integer HALL_ID = 2;
     /**
