@@ -1,8 +1,0 @@
-五月 25, 2018 1:51:40 下午 net.sf.json.JSONObject toBean
-警告: Tried to assign property localMac:java.lang.String to bean of class com.zzqx.Config
-五月 25, 2018 1:51:40 下午 net.sf.json.JSONObject toBean
-警告: Tried to assign property appPath:java.lang.String to bean of class com.zzqx.Config
-五月 25, 2018 1:51:40 下午 net.sf.json.JSONObject toBean
-警告: Tried to assign property chromePath:java.lang.String to bean of class com.zzqx.Config
-五月 25, 2018 1:51:40 下午 net.sf.json.JSONObject toBean
-警告: Tried to assign property localIp:java.lang.String to bean of class com.zzqx.Config
