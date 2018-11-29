@@ -320,4 +320,11 @@
       folder_type = #{folderType,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="getUpdateOne" parameterType="com.zzqx.mvc.entity.InteractionLog" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_interaction_log
+    WHERE status = 0
+    limit   1
+  </select>
 </mapper>

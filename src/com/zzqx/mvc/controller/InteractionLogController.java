@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 @OpenAccess
@@ -59,6 +60,7 @@ public class InteractionLogController {
     @RequestMapping("save")
     @ResponseBody
     public R insertSelective(InteractionLog interactionLog){
+        interactionLog.setClickTime(new Date());
         Integer i = interactionLogService.insertSelective(interactionLog);
         return R.ok();
     }

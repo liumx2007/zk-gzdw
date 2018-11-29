@@ -2,7 +2,7 @@ package com.zzqx.mvc.commons;
 
 public class CountInfo {
     //中台服务器Ip
-    public static final String SERVER_IP = "http://192.168.43.46:8090";
+    public static final String SERVER_IP = "http://192.168.43.124:8090";
     //营业厅id
     public static final Integer HALL_ID = 2;
     /**
@@ -55,5 +55,10 @@ public class CountInfo {
      * http://192.168.43.46:8090/api/synchronousData/getList?hallId=2
      */
     public static final String GET_SYNC_DAYA = SERVER_IP+"/api/synchronousData/getList?hallId="+HALL_ID;
+    /* *
+     * 上传环境数据
+     * http://192.168.0.109:8090/api/cloudViewEnvironment/save
+     */
+    public static final String POST_ENVIRONMENT_DATA = SERVER_IP+"/api/cloudViewEnvironment/save?hallId="+HALL_ID;
 
 }

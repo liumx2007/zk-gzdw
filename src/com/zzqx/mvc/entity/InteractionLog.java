@@ -21,7 +21,18 @@ public class InteractionLog  extends IdEntity{
 
     private  Interaction interaction;
 
+    private  Integer status;
+
 //    private String interactName;
+
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;

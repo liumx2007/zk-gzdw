@@ -15,4 +15,8 @@ public interface InteractionLogService {
     List<InteractionLog> selectWithInteractionTest(String page,String rows, InteractionLogDto interactionLogDto);
 
     Integer insertSelective(InteractionLog interactionLog);
+
+    InteractionLog getUpdateOne();
+
+    void update(InteractionLog interactionLog);
 }

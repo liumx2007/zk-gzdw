@@ -240,4 +240,14 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="getUpdateOne" parameterType="com.zzqx.mvc.entity.EnvironmentExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_environment
+    WHERE status = 0
+    ORDER BY
+    create_time
+    DESC
+    limit   1
+  </select>
 </mapper>

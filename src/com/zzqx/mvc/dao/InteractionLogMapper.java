@@ -37,4 +37,6 @@ public interface InteractionLogMapper {
     int updateByPrimaryKeySelective(InteractionLog record);
 
     int updateByPrimaryKey(InteractionLog record);
+
+    InteractionLog getUpdateOne();
 }

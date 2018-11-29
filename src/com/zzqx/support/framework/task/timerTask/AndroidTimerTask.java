@@ -148,29 +148,29 @@ public class AndroidTimerTask {
 		for(int i = 0;i<bhSchdus.size();i++){
 			BhSchdu schTemp = bhSchdus.get(i);
 			//查询员工当天是否已经有日常信息
-			List<Message> messageList = messageService.find(Restrictions.eq("watch_code", schTemp.get("watchCode").toString()),
-					Restrictions.eq("type", AndroidConstant.MESSAGE_TYPE_NORMAL_KEY),
-					Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE));
-			Message msgTemp = null;
-			if (messageList != null && messageList.size() > 0) {
-				msgTemp = messageList.get(0);
-			}
-			if (msgTemp == null) {
+//			List<Message> messageList = messageService.find(Restrictions.eq("watch_code", schTemp.get("watchCode").toString()),
+//					Restrictions.eq("type", AndroidConstant.MESSAGE_TYPE_NORMAL_KEY),
+//					Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE));
+//			Message msgTemp = null;
+//			if (messageList != null && messageList.size() > 0) {
+//				msgTemp = messageList.get(0);
+//			}
+//			if (msgTemp == null) {
 				//查询是否已经连接服务器
 				List<AndroidMinaSession> sessions = AndroidMinaManager.getClients();
-				for(AndroidMinaSession sTemp:sessions){
-					if(sTemp!=null){
-						if(sTemp.getWatchCode().equals(schTemp.){
-							/**
-							 * 插入日常消息
-							 */
-							personnelService.logicMsgCall(sTemp, AndroidConstant.MESSAGE_TYPE_NORMAL_KEY, schTemp.get("watchCode").toString(),
-									messageService);
-							SocketDataSender.sendAndroid(sTemp.getIoSession(), "AutoMessage");
-						}
-					}
-				}
-			}
+//				for(AndroidMinaSession sTemp:sessions){
+//					if(sTemp!=null){
+//						if(sTemp.getWatchCode().equals(schTemp.){
+//							/**
+//							 * 插入日常消息
+//							 */
+//							personnelService.logicMsgCall(sTemp, AndroidConstant.MESSAGE_TYPE_NORMAL_KEY, schTemp.get("watchCode").toString(),
+//									messageService);
+//							SocketDataSender.sendAndroid(sTemp.getIoSession(), "AutoMessage");
+//						}
+//					}
+//				}
+//			}
 		}
 	}
 }

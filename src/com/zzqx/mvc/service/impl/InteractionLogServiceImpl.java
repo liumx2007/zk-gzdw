@@ -55,4 +55,14 @@ public class InteractionLogServiceImpl  implements InteractionLogService {
         return interactionLogMapper.insertSelective(interactionLog);
     }
 
+    @Override
+    public InteractionLog getUpdateOne() {
+        return interactionLogMapper.getUpdateOne();
+    }
+
+    @Override
+    public void update(InteractionLog interactionLog) {
+        interactionLogMapper.updateByPrimaryKey(interactionLog);
+    }
+
 }
