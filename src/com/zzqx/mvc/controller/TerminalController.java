@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.zzqx.mvc.entity.Group;
+import com.zzqx.mvc.entity.Terminal;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -21,8 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.entity.Content;
-import com.zzqx.mvc.entity.Group;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.entity.TerminalContent;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.javabean.TerminalInfo;
@@ -46,7 +46,7 @@ public class TerminalController extends BaseController {
 	private ContentService contentService;
 	@Autowired
 	private TerminalContentService terminalContentService;
-	
+
 	@OpenAccess
 	@ResponseBody
 	@RequestMapping("group")

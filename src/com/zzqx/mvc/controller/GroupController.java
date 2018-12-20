@@ -3,14 +3,15 @@ package com.zzqx.mvc.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.entity.Group;
+import com.zzqx.mvc.entity.Terminal;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zzqx.mvc.entity.Group;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.mvc.service.GroupService;
@@ -141,5 +142,14 @@ public class GroupController extends BaseController {
 		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 		JSONArray jsonArray = JSONArray.fromObject(groups, jsonConfig);
 		return jsonArray.toString();
+	}
+
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("getAllGroup")
+	public String getAllGroup() {
+		List<Group> groups = groupService.getAll();
+
+		return null;
 	}
 }

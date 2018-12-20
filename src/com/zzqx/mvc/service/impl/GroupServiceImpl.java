@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.zzqx.mvc.dao.GroupDao;
+import com.zzqx.mvc.entity.Group;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -14,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jetsum.core.orm.entity.Page;
-import com.zzqx.mvc.dao.GroupDao;
-import com.zzqx.mvc.entity.Group;
 import com.zzqx.mvc.service.GroupService;
 import com.zzqx.support.utils.StringHelper;
 

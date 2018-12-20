@@ -1,6 +1,7 @@
 package com.zzqx.support.framework.mina;
 import java.util.List;
 
+import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.service.GroupService;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -9,7 +10,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zzqx.mvc.SpringContext;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.machine.hardware.HardwareHandler;

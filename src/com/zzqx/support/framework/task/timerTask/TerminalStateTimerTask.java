@@ -2,11 +2,11 @@ package com.zzqx.support.framework.task.timerTask;
 
 import java.util.List;
 
+import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.support.utils.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.support.framework.mina.MinaManager;
 import com.zzqx.support.framework.mina.MinaSession;

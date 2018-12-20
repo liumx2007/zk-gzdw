@@ -5,9 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.List;
 
+import com.zzqx.mvc.entity.Terminal;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.mina.core.session.IoSession;
 import org.hibernate.criterion.Restrictions;
@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.zzqx.Global;
 import com.zzqx.mvc.SpringContext;
 import com.zzqx.mvc.entity.Personnel;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.support.framework.mina.Mina;
 import com.zzqx.support.framework.mina.MinaManager;

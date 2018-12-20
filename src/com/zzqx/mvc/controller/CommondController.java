@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.zzqx.mvc.entity.Group;
+import com.zzqx.mvc.entity.Terminal;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.entity.Content;
-import com.zzqx.mvc.entity.Group;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.ContentService;
 import com.zzqx.mvc.service.GroupService;
