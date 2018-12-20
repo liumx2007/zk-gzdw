@@ -11,19 +11,20 @@ import com.jetsum.core.orm.entity.IdEntity;
 @Table(name = "tb_yj")
 public class Yj extends IdEntity {
 	
-	private String content;
-	private String name;
-	private String phone;
-	private String bh;
-	private Integer type;
-	private Date addTime;
-	private Integer isShow;
+	private String content; 	//内容
+	private String name; 	//姓名
+	private String phone;	//电话
+	private String bh;	//户号
+	private Integer type;	//留言类型
+	private Date addTime;	//留言时间
+	private Integer isShow;	//是否显示状态
 	private Integer flag;
 	private Date flagTime;
-	private String feedback;
-	private Date feedbackTime;
-	private Integer hasFk;
+	private String feedback;	//反馈内容
+	private Date feedbackTime;	//反馈时间
+	private Integer hasFk;		 //反馈状态（1、反馈、0、未反馈）
 	private Integer status;
+	private int upStatus;  //是否上传（1、已上传  0、未上传）
 	
 	public String getBh() {
 		return bh;
@@ -102,5 +103,13 @@ public class Yj extends IdEntity {
 	}
 	public void setFeedbackTime(Date feedbackTime) {
 		this.feedbackTime = feedbackTime;
+	}
+
+	public int getUpStatus() {
+		return upStatus;
+	}
+
+	public void setUpStatus(int upStatus) {
+		this.upStatus = upStatus;
 	}
 }

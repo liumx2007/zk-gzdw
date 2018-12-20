@@ -9,6 +9,7 @@
     <result column="pm" jdbcType="DOUBLE" property="pm" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, hall_id, temperature, humidity, pm, create_time, status
+    id, hall_id, temperature, humidity, pm, create_time, status ，area
   </sql>
   <select id="selectByExample" parameterType="com.zzqx.mvc.entity.EnvironmentExample" resultMap="BaseResultMap">
     select
@@ -104,10 +105,10 @@
   <insert id="insert" parameterType="com.zzqx.mvc.entity.Environment">
     insert into tb_environment (id, hall_id, temperature, 
       humidity, pm, create_time, 
-      status)
+      status，area)
     values (#{id,jdbcType=VARCHAR}, #{hallId,jdbcType=INTEGER}, #{temperature,jdbcType=DOUBLE}, 
       #{humidity,jdbcType=DOUBLE}, #{pm,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER})
+      #{status,jdbcType=INTEGER},#{area,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.Environment">
     insert into tb_environment
@@ -133,6 +134,9 @@
       <if test="status != null">
         status,
       </if>
+      <if test="area != null">
+        area,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -155,6 +159,9 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -188,6 +195,9 @@
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
       </if>
+      <if test="record.area != null">
+        area = #{record.area,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -201,7 +211,8 @@
       humidity = #{record.humidity,jdbcType=DOUBLE},
       pm = #{record.pm,jdbcType=DOUBLE},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      status = #{record.status,jdbcType=INTEGER}
+      status = #{record.status,jdbcType=INTEGER},
+      area = #{record.area,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -227,6 +238,9 @@
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -237,7 +251,8 @@
       humidity = #{humidity,jdbcType=DOUBLE},
       pm = #{pm,jdbcType=DOUBLE},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      area = #{area,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="getUpdateOne" parameterType="com.zzqx.mvc.entity.EnvironmentExample" resultMap="BaseResultMap">

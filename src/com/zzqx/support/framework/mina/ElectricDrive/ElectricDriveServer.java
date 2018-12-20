@@ -94,12 +94,11 @@ public class ElectricDriveServer extends IoHandlerAdapter{
     }
 
     public void boardcast(String message) {
-//        if(clientTypes != null) {
+
             List<ElectricDriveSession> list = ElectricDriveManager.getClients();
             list.forEach(minaSession->{
                 System.out.println("广播："+message);
                 minaSession.getIoSession().write(message);
             });
-//        }
     }
 }

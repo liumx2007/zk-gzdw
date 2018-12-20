@@ -27,5 +27,6 @@ public interface EnvironmentMapper {
     int updateByPrimaryKeySelective(Environment record);
 
     int updateByPrimaryKey(Environment record);
+
     Environment getUpdateOne();
 }
