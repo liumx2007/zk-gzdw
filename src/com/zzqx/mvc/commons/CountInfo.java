@@ -127,9 +127,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG01&1");
+                        put("device_on","DCMSG_GY_HJ_DG01&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG01&0");
+                        put("device_off","DCMSG_GY_HJ_DG01&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("2","1","0","",
@@ -137,9 +137,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG02&1");
+                        put("device_on","DCMSG_GY_HJ_DG02&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG02&0");
+                        put("device_off","DCMSG_GY_HJ_DG02&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("3","1","0","",
@@ -147,9 +147,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG03&1");
+                        put("device_on","DCMSG_GY_HJ_DG03&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG03&0");
+                        put("device_off","DCMSG_GY_HJ_DG03&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("4","1","0","",
@@ -157,9 +157,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG04&1");
+                        put("device_on","DCMSG_GY_HJ_DG04&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG04&0");
+                        put("device_off","DCMSG_GY_HJ_DG04&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("5","1","0","",
@@ -167,9 +167,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG05&1");
+                        put("device_on","DCMSG_GY_HJ_DG05&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG05&0");
+                        put("device_off","DCMSG_GY_HJ_DG05&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("6","1","0","",
@@ -177,9 +177,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG06&1");
+                        put("device_on","DCMSG_GY_HJ_DG06&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG06&0");
+                        put("device_off","DCMSG_GY_HJ_DG06&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("7","1","0","",
@@ -187,9 +187,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG07&1");
+                        put("device_on","DCMSG_GY_HJ_DG07&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG07&0");
+                        put("device_off","DCMSG_GY_HJ_DG07&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("8","1","0","",
@@ -197,9 +197,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG08&1");
+                        put("device_on","DCMSG_GY_HJ_DG08&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG08&0");
+                        put("device_off","DCMSG_GY_HJ_DG08&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("9","1","0","",
@@ -207,9 +207,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG09&1");
+                        put("device_on","DCMSG_GY_HJ_DG09&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG09&0");
+                        put("device_off","DCMSG_GY_HJ_DG09&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("10","1","0","",
@@ -217,9 +217,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG10&1");
+                        put("device_on","DCMSG_GY_HJ_DG10&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG10&0");
+                        put("device_off","DCMSG_GY_HJ_DG10&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("11","1","0","",
@@ -227,9 +227,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG11&1");
+                        put("device_on","DCMSG_GY_HJ_DG11&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG11&0");
+                        put("device_off","DCMSG_GY_HJ_DG11&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("12","1","0","",
@@ -237,9 +237,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DG12&1");
+                        put("device_on","DCMSG_GY_HJ_DG12&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DG12&0");
+                        put("device_off","DCMSG_GY_HJ_DG12&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("13","4","0","",
@@ -247,9 +247,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DY01&1");
+                        put("device_on","DCMSG_GY_HJ_DY01&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DY01&0");
+                        put("device_off","DCMSG_GY_HJ_DY01&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("14","4","0","",
@@ -257,9 +257,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DY02&1");
+                        put("device_on","DCMSG_GY_HJ_DY02&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DY02&0");
+                        put("device_off","DCMSG_GY_HJ_DY02&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("15","1","0","",
@@ -267,9 +267,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_HJ_DY03&1");
+                        put("device_on","DCMSG_GY_HJ_DY03&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_HJ_DY03&0");
+                        put("device_off","DCMSG_GY_HJ_DY03&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("16","1","0","",
@@ -277,9 +277,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_BAT_DG&1");
+                        put("device_on","DCMSG_GY_BAT_DG&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_BAT_DG&*0");
+                        put("device_off","DCMSG_GY_BAT_DG&*0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("17","1","0","",
@@ -287,9 +287,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_BAT_DY&1");
+                        put("device_on","DCMSG_GY_BAT_DY&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_BAT_DY&2");
+                        put("device_off","DCMSG_GY_BAT_DY&2@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("18","1","0","",
@@ -297,9 +297,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_BAT1&1");
+                        put("device_on","DCMSG_GY_BAT1&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_BAT1&0");
+                        put("device_off","DCMSG_GY_BAT1&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("19","1","0","",
@@ -307,9 +307,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_BAT2&1");
+                        put("device_on","DCMSG_GY_BAT2&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_BAT2&0");
+                        put("device_off","DCMSG_GY_BAT2&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("20","1","0","",
@@ -317,9 +317,9 @@ public class CountInfo {
                 new HashMap<String,String>(){
                     {
                         //设备开
-                        put("device_on","DCMSG_GY_BAT3&1");
+                        put("device_on","DCMSG_GY_BAT3&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_BAT3&0");
+                        put("device_off","DCMSG_GY_BAT3&0@");
                     }
                 }));
     }
