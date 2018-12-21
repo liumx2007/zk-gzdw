@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.zzqx.mvc.dao.TerminalDao;
+import com.zzqx.mvc.entity.Group;
+import com.zzqx.mvc.entity.Terminal;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -14,9 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jetsum.core.orm.entity.Page;
-import com.zzqx.mvc.dao.TerminalDao;
-import com.zzqx.mvc.entity.Group;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.support.utils.StringHelper;
 

@@ -1,3 +1,4 @@
+
 package com.zzqx.mvc.controller;
 
 import cn.hutool.http.HttpUtil;
@@ -645,3 +646,4 @@ public class InterfaceController extends BaseController {
 		return JSON.toJSONString(CountInfo.DEVICE_LIST);
 	}
 }
+

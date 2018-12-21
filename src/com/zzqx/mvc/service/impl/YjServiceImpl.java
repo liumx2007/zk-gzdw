@@ -11,6 +11,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jetsum.core.orm.entity.Page;
@@ -64,6 +65,8 @@ public class YjServiceImpl implements YjService {
 	public void saveOrUpdate(Yj yj) {
 		yjDao.saveOrUpdate(yj);
 		yjDao.flush();
+		//todo 数据上传  监控系统接口
+
 	}
 
 	@Override
@@ -94,5 +97,10 @@ public class YjServiceImpl implements YjService {
 	@Override
 	public Query createQuery(String hql, Map<String, ?> map) {
 		return yjDao.createQuery(hql, map);
+	}
+
+	//todo
+	public  String test(){
+			throw new RuntimeException();
 	}
 }

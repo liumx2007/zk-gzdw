@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.zzqx.mvc.entity.Group;
+import com.zzqx.mvc.entity.Terminal;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.entity.Content;
-import com.zzqx.mvc.entity.Group;
-import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.ContentService;
 import com.zzqx.mvc.service.GroupService;
@@ -119,7 +119,7 @@ public class CommondController extends BaseController {
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping("send")
-	public String send(String[] toTCPServer,String[] toUDPServer, String[] con, String[] flash, String[] client, String[] play, String[] com, String[] pc, HttpServletRequest request) {
+	public String send(String[] toTCPServer,String[] toUDPServer, String[] con, String[] flash, String client, String[] play, String[] com, String[] pc, HttpServletRequest request) {
 		ReturnMessage message = new ReturnMessage(ReturnMessage.MESSAGE_SUCCESS, "发送成功！");
 		if(toTCPServer != null && toTCPServer.length > 0) {//发送给Socket服务器
 			Stream.of(toTCPServer).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
@@ -176,14 +176,19 @@ public class CommondController extends BaseController {
 					sender.sendToTerminal(ipOrCodeName, msg);
 				});
 		}
-		if(client != null && client.length > 0) {//客户端控制
-			Stream.of(client).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
+		if(client != null && client != "") {//客户端控制
+//			String test = "自己,VOL_MAX;99,VOL_MAX";
+			Stream.of(client).flatMap(cmds-> Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd -> cmd.contains(",")).forEach(cmd -> {
 					String ipOrCodeName = cmd.substring(0, cmd.indexOf(","));
 					String msg = cmd.substring(cmd.indexOf(",")+1, cmd.length());
 					SocketDataSender sender = new SocketDataSender();
 					sender.sendToClient(ipOrCodeName, msg);
 				});
+//			String ipOrCodeName = client[0];
+//			String msg = client[1];
+//			SocketDataSender socketDataSender = new SocketDataSender();
+//			socketDataSender.sendToClient(ipOrCodeName,msg);
 		}
 		if(play != null && play.length > 0) {//播放指定内容
 			Stream.of(play).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)

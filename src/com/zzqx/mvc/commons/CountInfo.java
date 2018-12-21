@@ -1,3 +1,4 @@
+
 package com.zzqx.mvc.commons;
 
 import com.zzqx.mvc.entity.OtherDeviceEntity;
@@ -324,3 +325,4 @@ public class CountInfo {
     }
 
 }
+
