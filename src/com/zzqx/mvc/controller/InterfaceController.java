@@ -2,6 +2,7 @@ package com.zzqx.mvc.controller;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.zzqx.Global;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
@@ -632,5 +633,15 @@ public class InterfaceController extends BaseController {
 		messageService.saveOrUpdate(msg);
 		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_ANSWER_KEY, person.getWatch_code(), person);
 		return "反馈成功";
+	}
+	/**
+	 * 获取灯光、空调等设备列表
+	 *
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("getOtherDevice")
+	public String getOtherDevice(HttpServletRequest request) {
+		return JSON.toJSONString(CountInfo.DEVICE_LIST);
 	}
 }

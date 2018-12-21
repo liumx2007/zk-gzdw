@@ -75,7 +75,7 @@ public class EnvironmentTimerTask {
 				System.out.println("环境数据："+environment.getTemperature()+"上传失败");
 			}
 		}else{
-			System.out.print("没有数据。。");
+			System.out.print("没有未上传的环境数据。。。。。");
 		}
 	}
 	/**
@@ -102,7 +102,7 @@ public class EnvironmentTimerTask {
 				System.out.println("交互数据："+interactionLog.getId()+"上传失败");
 			}
 		}else{
-			System.out.print("没有数据。。");
+			System.out.println("没有未上传的交互数据。。。。。");
 		}
 	}
 }
