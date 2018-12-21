@@ -73,11 +73,11 @@ function submit() {
 	<form id="lform">
 	  	<h2>用户名：</h2>
 	  	<label>
-	    	<input placeholder="情输入用户名" type="text" name="userName" id="userName" class="txt_input txt_input2">
+	    	<input placeholder="请输入用户名" type="text" name="userName" id="userName" class="txt_input txt_input2">
 	  	</label>
 	  	<h2>密码：</h2>
 	  	<label>
-	    	<input placeholder="情输入密码" type="password" name="password" id="password" class="txt_input">
+	    	<input placeholder="请输入密码" type="password" name="password" id="password" class="txt_input">
 	  	</label>
 	  	<div class="rem_sub">
 	  		<span id="message" style="color: red;"></span>
