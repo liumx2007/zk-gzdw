@@ -645,5 +645,29 @@ public class InterfaceController extends BaseController {
 	public String getOtherDevice(HttpServletRequest request) {
 		return JSON.toJSONString(CountInfo.DEVICE_LIST);
 	}
+	/**
+	 * 测试
+	 *
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("tempTestOn")
+	public String tempTestOn(HttpServletRequest request) {
+		SocketDataSender s  = new SocketDataSender();
+		s.sendToTCPServer("173.60.1.2",7000,"DCMSG_GY_HJ_DG09&1");
+		return JSON.toJSONString(CountInfo.DEVICE_LIST);
+	}
+	/**
+	 * 测试
+	 *
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("tempTestOff")
+	public String tempTestOff(HttpServletRequest request) {
+		SocketDataSender s  = new SocketDataSender();
+		s.sendToTCPServer("173.60.1.2",7000,"DCMSG_GY_HJ_DG09&0");
+		return JSON.toJSONString(CountInfo.DEVICE_LIST);
+	}
 }
 
