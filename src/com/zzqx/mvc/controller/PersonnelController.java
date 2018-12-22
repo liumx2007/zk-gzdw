@@ -1,10 +1,13 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.Hutool;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dto.EmployeeInformationDto;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.*;
@@ -462,15 +465,18 @@ public class PersonnelController extends BaseController {
 //		List<Personnel> list = query.list();
 //		JSONArray json = JSONArray.fromObject(list);
 //		return json.toString();
+		List<EmployeeInformation> employeeInformationList;
 		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_LIST);
+			s = HttpUtil.get(CountInfo.GET_PERSON_LIST,2000);
+			cn.hutool.json.JSONArray json = JSONUtil.parseArray(JSONUtil.parseObj(s).get("data"));
+			employeeInformationList = JSONUtil.toList(json,EmployeeInformation.class);
 		}catch (Exception e){
 			logger.error("连接中台失败");
 			//获取未绑定人员列表
 			EmployeeInformation employeeInformation = new EmployeeInformation();
 			employeeInformation.setBindState(bindStatus.shortValue());
 			employeeInformation.setHallId(CountInfo.HALL_ID);
-			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectNoboding(employeeInformation);
+			employeeInformationList = employeeInformationService.selectNoboding(employeeInformation);
 			if (employeeInformationList.size() > 0 ){
 				JSONArray array = new JSONArray();
 				array.add(employeeInformationList);

@@ -119,9 +119,9 @@ public class CommondController extends BaseController {
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping("send")
-	public String send(String[] toTCPServer,String[] toUDPServer, String[] con, String[] flash, String client, String[] play, String[] com, String[] pc, HttpServletRequest request) {
+	public String send(String toTCPServer,String toUDPServer, String con, String flash, String client, String play, String com, String pc, HttpServletRequest request) {
 		ReturnMessage message = new ReturnMessage(ReturnMessage.MESSAGE_SUCCESS, "发送成功！");
-		if(toTCPServer != null && toTCPServer.length > 0) {//发送给Socket服务器
+		if(toTCPServer != null && toTCPServer != "") {//发送给Socket服务器
 			Stream.of(toTCPServer).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd->cmd.split(",").length >= 3).forEach(cmd -> {
 				String ip = cmd.split(",")[0];
@@ -140,7 +140,7 @@ public class CommondController extends BaseController {
 				}
 			});
 		}
-		if(toUDPServer != null && toUDPServer.length > 0) {//发送给Sokcet服务器
+		if(toUDPServer != null && toUDPServer != "") {//发送给Sokcet服务器
 			Stream.of(toUDPServer).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 					.filter(cmd->cmd.split(",").length >= 3).forEach(cmd -> {
 				String ip = cmd.split(",")[0];
@@ -159,7 +159,7 @@ public class CommondController extends BaseController {
 				}
 			});
 		}
-		if(con != null && con.length > 0) {//工控指令
+		if(con != null && con != "") {//工控指令
 			Stream.of(con).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd->cmd.contains(",")).forEach(cmd -> {
 				String deviceCode = cmd.substring(0, cmd.indexOf(","));
@@ -167,7 +167,7 @@ public class CommondController extends BaseController {
 				IPC.getInstance().send(deviceCode, operation);
 			});
 		}
-		if(flash != null && flash.length > 0) {//转发
+		if(flash != null && flash != "") {//转发
 			Stream.of(flash).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd -> cmd.contains(",")).forEach(cmd -> {
 					String ipOrCodeName = cmd.substring(0, cmd.indexOf(","));
@@ -190,7 +190,7 @@ public class CommondController extends BaseController {
 //			SocketDataSender socketDataSender = new SocketDataSender();
 //			socketDataSender.sendToClient(ipOrCodeName,msg);
 		}
-		if(play != null && play.length > 0) {//播放指定内容
+		if(play != null && play != "") {//播放指定内容
 			Stream.of(play).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 			.filter(cmd -> cmd.contains(",")).forEach(cmd -> {
 				String ipOrCodeName = cmd.substring(0, cmd.indexOf(","));
@@ -238,7 +238,7 @@ public class CommondController extends BaseController {
 				}
 			});
 		}
-		if(com != null && com.length > 0) {//向串口写数据
+		if(com != null && com != "") {//向串口写数据
 			Stream.of(com).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd -> cmd.split(",").length == 6).forEach(cmd -> {
 					String[] config = cmd.split(",");
@@ -253,7 +253,7 @@ public class CommondController extends BaseController {
 					_com.close();
 				});
 		}
-		if(pc != null && pc.length > 0) {//PC控制
+		if(pc != null && pc != "") {//PC控制
 			List<String> openIpList = new ArrayList<>();
 			List<String> closeIpList = new ArrayList<>();
 			List<String> openCodeNameList = new ArrayList<>();

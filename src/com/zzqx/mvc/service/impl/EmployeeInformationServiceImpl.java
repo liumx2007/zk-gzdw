@@ -2,6 +2,7 @@ package com.zzqx.mvc.service.impl;
 
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.EmployeeInformationMapper;
+import com.zzqx.mvc.dto.EmployeeInformationDto;
 import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.entity.EmployeeInformationExample;
 import com.zzqx.mvc.service.EmployeeInformationService;
@@ -56,5 +57,13 @@ public class EmployeeInformationServiceImpl implements EmployeeInformationServic
         em.setBindState((short)0);
         em.setWatchCode(employeeInformation.getWatchCode());
         return employeeInformationMapper.updateByExampleSelective(em,employeeInformationExample);
+    }
+
+    @Override
+    public List<EmployeeInformationDto> selectAll(EmployeeInformation employeeInformation) {
+        EmployeeInformationExample employeeInformationExample  = new EmployeeInformationExample();
+        EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+        criteria.andBindStateEqualTo(employeeInformation.getBindState());
+        return employeeInformationMapper.selectAll(employeeInformationExample);
     }
 }

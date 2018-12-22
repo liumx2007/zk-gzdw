@@ -1,5 +1,6 @@
 package com.zzqx.mvc.dao;
 
+import com.zzqx.mvc.dto.EmployeeInformationDto;
 import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.entity.EmployeeInformationExample;
 import org.apache.ibatis.annotations.Param;
@@ -42,4 +43,8 @@ public interface EmployeeInformationMapper {
     int updateByPrimaryKeyWithBLOBs(EmployeeInformation record);
 
     int updateByPrimaryKey(EmployeeInformation record);
+
+    List<EmployeeInformationDto> selectAll(EmployeeInformationExample employeeInformationExample);
+
+
 }
