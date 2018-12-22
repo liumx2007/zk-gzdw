@@ -140,7 +140,9 @@ public class CommondController extends BaseController {
 				}
 			});
 		}
+
 		if(toUDPServer != null && toUDPServer != "") {//发送给Sokcet服务器
+
 			Stream.of(toUDPServer).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 					.filter(cmd->cmd.split(",").length >= 3).forEach(cmd -> {
 				String ip = cmd.split(",")[0];
@@ -159,7 +161,9 @@ public class CommondController extends BaseController {
 				}
 			});
 		}
+
 		if(con != null && con != "") {//工控指令
+
 			Stream.of(con).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd->cmd.contains(",")).forEach(cmd -> {
 				String deviceCode = cmd.substring(0, cmd.indexOf(","));
@@ -167,7 +171,9 @@ public class CommondController extends BaseController {
 				IPC.getInstance().send(deviceCode, operation);
 			});
 		}
+
 		if(flash != null && flash != "") {//转发
+
 			Stream.of(flash).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd -> cmd.contains(",")).forEach(cmd -> {
 					String ipOrCodeName = cmd.substring(0, cmd.indexOf(","));
@@ -190,7 +196,9 @@ public class CommondController extends BaseController {
 //			SocketDataSender socketDataSender = new SocketDataSender();
 //			socketDataSender.sendToClient(ipOrCodeName,msg);
 		}
+
 		if(play != null && play != "") {//播放指定内容
+
 			Stream.of(play).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 			.filter(cmd -> cmd.contains(",")).forEach(cmd -> {
 				String ipOrCodeName = cmd.substring(0, cmd.indexOf(","));
@@ -238,7 +246,9 @@ public class CommondController extends BaseController {
 				}
 			});
 		}
+
 		if(com != null && com != "") {//向串口写数据
+
 			Stream.of(com).flatMap(cmds->Stream.of(cmds.split(";"))).filter(StringHelper::isNotBlank)
 				.filter(cmd -> cmd.split(",").length == 6).forEach(cmd -> {
 					String[] config = cmd.split(",");
@@ -253,7 +263,9 @@ public class CommondController extends BaseController {
 					_com.close();
 				});
 		}
+
 		if(pc != null && pc != "") {//PC控制
+
 			List<String> openIpList = new ArrayList<>();
 			List<String> closeIpList = new ArrayList<>();
 			List<String> openCodeNameList = new ArrayList<>();

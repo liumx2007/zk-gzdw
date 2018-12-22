@@ -654,7 +654,7 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("tempTestOn")
 	public String tempTestOn(HttpServletRequest request) {
 		SocketDataSender s  = new SocketDataSender();
-		s.sendToTCPServer("173.60.1.2",7000,"DCMSG_GY_HJ_DG09&1");
+		s.sendToTCPServer("173.60.1.2",7000,"DCMSG_GY_HJ_DG09&1@");
 		return JSON.toJSONString(CountInfo.DEVICE_LIST);
 	}
 	/**
@@ -666,7 +666,7 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("tempTestOff")
 	public String tempTestOff(HttpServletRequest request) {
 		SocketDataSender s  = new SocketDataSender();
-		s.sendToTCPServer("173.60.1.2",7000,"DCMSG_GY_HJ_DG09&0");
+		s.sendToTCPServer("173.60.1.2",7000,"DCMSG_GY_HJ_DG09&0@");
 		return JSON.toJSONString(CountInfo.DEVICE_LIST);
 	}
 }

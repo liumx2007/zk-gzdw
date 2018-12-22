@@ -7,8 +7,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.zzqx.mvc.dao.TerminalDao;
+import com.zzqx.mvc.dao.TerminalMybatisMapper;
 import com.zzqx.mvc.entity.Group;
 import com.zzqx.mvc.entity.Terminal;
+import com.zzqx.mvc.entity.TerminalMybatis;
+import com.zzqx.mvc.entity.TerminalMybatisExample;
+import com.zzqx.mvc.vo.TerminalVo;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -26,6 +30,9 @@ public class TerminalServiceImpl implements TerminalService {
 	
 	@Autowired
 	private TerminalDao terminalDao;
+
+	@Autowired
+	TerminalMybatisMapper terminalMybatisMapper;
 	
 	@Override
 	public void delete(String... ids) {
@@ -97,4 +104,12 @@ public class TerminalServiceImpl implements TerminalService {
 	public List<Terminal> getByGroup(Group group) {
 		return terminalDao.find("from Terminal where group = ? order by serialNumber", group);
 	}
+
+	@Override
+	public List<TerminalMybatis> getList() {
+		TerminalMybatisExample terminalMybatisExample = new TerminalMybatisExample();
+		List<TerminalMybatis> list =terminalMybatisMapper.selectByExample(terminalMybatisExample);
+		return list;
+	}
+
 }

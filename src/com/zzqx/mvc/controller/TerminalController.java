@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.zzqx.mvc.entity.Group;
-import com.zzqx.mvc.entity.Terminal;
+import com.zzqx.mvc.entity.*;
+import com.zzqx.mvc.vo.TerminalVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zzqx.mvc.annotation.OpenAccess;
-import com.zzqx.mvc.entity.Content;
-import com.zzqx.mvc.entity.TerminalContent;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.javabean.TerminalInfo;
 import com.zzqx.mvc.service.ContentService;
@@ -439,5 +437,16 @@ public class TerminalController extends BaseController {
 			});
 		}
 		return JSONArray.fromObject(terminalInfoList).toString();
+	}
+
+
+	/**
+	 * 获取所有设备
+	 */
+	@OpenAccess
+	@RequestMapping("terminalList")
+	@ResponseBody
+	public List<TerminalMybatis> getList(){
+		return terminalService.getList();
 	}
 }
