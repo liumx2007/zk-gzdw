@@ -279,7 +279,7 @@ public class CountInfo {
                         //设备开
                         put("device_on","DCMSG_GY_BAT_DG&1@");
                         //设备关
-                        put("device_off","DCMSG_GY_BAT_DG&*0@");
+                        put("device_off","DCMSG_GY_BAT_DG&0@");
                     }
                 }));
         DEVICE_LIST.add(new OtherDeviceEntity("17","1","0","",
