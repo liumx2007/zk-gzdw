@@ -66,7 +66,9 @@ public class EnvironmentTimerTask {
 						+ "&humidity=" + environment.getHumidity()
 						+ "&pm=" + environment.getPm()
 						+ "&createTime=" + environment.getCreateTime().getTime()
-						+ "&id=" + environment.getId();
+						+ "&id=" + environment.getId()
+						+ "&hallId=" + environment.getHallId()
+						+ "&area=" + environment.getArea();
 				String str = HttpUtil.get(url, 3000);
 				if (str.contains("成功")) {
 					environment.setStatus(1);

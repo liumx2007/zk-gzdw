@@ -30,4 +30,9 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     public void update(Environment environment) {
         environmentMapper.updateByPrimaryKey(environment);
     }
+
+    @Override
+    public int saveEvo(Environment environment) {
+        return environmentMapper.insertSelective(environment);
+    }
 }

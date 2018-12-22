@@ -111,6 +111,9 @@
       #{status,jdbcType=INTEGER},#{area,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zzqx.mvc.entity.Environment">
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into tb_environment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

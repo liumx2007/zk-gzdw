@@ -17,4 +17,9 @@ public interface EnvironmentService {
     void save(Environment environment);
 
     void update(Environment environment);
+
+    /**
+     * 存设备采集数据 接口
+     */
+    int saveEvo(Environment environment);
 }
