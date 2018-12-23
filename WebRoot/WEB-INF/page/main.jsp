@@ -121,6 +121,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <img src="resources/images/desktop/liti-xitong-desktop-14.png">
                 <div>交互体验数据</div></a>
         </li>
+        <li>
+            <a href="javascript:void(0);" onclick="openWindow('cmd','cmd/cmd');">
+                <img src="resources/images/desktop/liti-xitong-desktop-14.png">
+                <div>指令集</div></a>
+        </li>
     </ul>
 </div>
 <div id="sbgl" class="easyui-window" title="设备中心" data-options="iconCls:'icon-pcs',minimizable:false,shadow:true,closed:true" style="width:920px;height:600px;overflow:hidden">
@@ -160,6 +165,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<iframe width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 </div>
 <div id="interactionLog" class="easyui-window" title="交互体验数据" data-options="iconCls:'icon-comment',minimizable:false,shadow:true,closed:true" style="width:550px;height:600px;overflow:hidden">
+    <iframe width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+</div>
+<div id="cmd" class="easyui-window" title="指令集" data-options="iconCls:'icon-comment',minimizable:false,shadow:true,closed:true" style="width:1000px;height:600px;overflow:hidden">
     <iframe width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 </div>
 <a id="photos" class="example-image-link" data-lightbox="example-set" style="display:none;"></a>

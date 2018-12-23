@@ -41,9 +41,6 @@ public class InteractionLogController {
         String s = array.toString();
         String result  = s.substring(1,s.length()-1);
         return  result;
-//        JsonConfig jsonConfig = new JsonConfig();
-//        jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-//        return data.toString(jsonConfig);
     }
 
     @RequestMapping("list")

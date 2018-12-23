@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/11/27 0027.
  */
@@ -34,5 +36,13 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     @Override
     public int saveEvo(Environment environment) {
         return environmentMapper.insertSelective(environment);
+    }
+
+    @Override
+    public List<Environment> getByArea(String  area) {
+        EnvironmentExample environmentExample = new EnvironmentExample();
+        EnvironmentExample.Criteria criteria = environmentExample.createCriteria();
+        criteria.andAreaEqualTo(area);
+        return environmentMapper.selectByExample(environmentExample);
     }
 }

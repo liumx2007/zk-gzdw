@@ -105,7 +105,7 @@
   <insert id="insert" parameterType="com.zzqx.mvc.entity.Environment">
     insert into tb_environment (id, hall_id, temperature, 
       humidity, pm, create_time, 
-      status，area)
+      status, area)
     values (#{id,jdbcType=VARCHAR}, #{hallId,jdbcType=INTEGER}, #{temperature,jdbcType=DOUBLE}, 
       #{humidity,jdbcType=DOUBLE}, #{pm,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER},#{area,jdbcType=VARCHAR})
