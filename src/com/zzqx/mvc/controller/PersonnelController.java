@@ -1,13 +1,10 @@
 package com.zzqx.mvc.controller;
 
-import cn.hutool.Hutool;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
-import com.zzqx.mvc.dto.EmployeeInformationDto;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.*;
@@ -275,7 +272,7 @@ public class PersonnelController extends BaseController {
 		int statu = Integer.valueOf(request.getParameter("statu"));
 		String watchCode = request.getParameter("watchCode");
 		try{
-			s = HttpUtil.get(CountInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode);
+			s = HttpUtil.get(CountInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode,1500);
 			if (!s.contains("修改成功")) {
 //			return "人员信息不存在";
 				return "修改状态失败。";
@@ -303,7 +300,7 @@ public class PersonnelController extends BaseController {
 //		}
 		Personnel person = new Personnel();
 		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,1500);
 			if(!"".equals(s)){
 				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 				person = JSONUtil.toBean(object,Personnel.class);
@@ -400,7 +397,7 @@ public class PersonnelController extends BaseController {
 		String perStr = "";
 		PersonVo person = new PersonVo();
 		try{
-			perStr = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode);
+			perStr = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,1500);
 			if(!"".equals(perStr)){
 				cn.hutool.json.JSONObject object = JSONUtil.parseObj(perStr);
 				Object ob = object.get("changeTime");
@@ -516,7 +513,7 @@ public class PersonnelController extends BaseController {
 //		Personnel person = personnelService.getById(id);
 		String re ="";
 		try{
-			re = HttpUtil.get(CountInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid);
+			re = HttpUtil.get(CountInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid,1500);
 			if (re.contains("修改成功")){
 				return uuid;
 			}
