@@ -276,15 +276,24 @@ public class PersonnelController extends BaseController {
 			if (!s.contains("修改成功")) {
 //			return "人员信息不存在";
 				return "修改状态失败。";
+			}else{
+				return "修改状态成功。";
 			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
 			EmployeeInformation employeeInformation = new EmployeeInformation();
-			employeeInformation.setWorkState(String.valueOf(statu));
 			employeeInformation.setWatchCode(watchCode);
+			employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+			if(employeeInformation.getWorkState().equals(statu+"")){
+				return "状态无变化";
+			}
+			employeeInformation.setWorkState(String.valueOf(statu));
+			employeeInformation.setChangeTime(new Date());
 			int flag = employeeInformationService.updateByWatchCode(employeeInformation);
 			if (flag == 0){
 				return "修改状态失败。";
+			}else{
+				return "修改状态成功。";
 			}
 		}
 //		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
@@ -298,89 +307,97 @@ public class PersonnelController extends BaseController {
 //			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
 //			return "人员信息不存在";
 //		}
-		Personnel person = new Personnel();
-		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,1500);
-			if(!"".equals(s)){
-				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-				person = JSONUtil.toBean(object,Personnel.class);
-				person.setWork_status(statu);
-			}
-		}catch (Exception e){
-			logger.error("连接中台失败");
-			//根据WatchCode查人员
-			EmployeeInformation employeeInformation = new EmployeeInformation();
-			employeeInformation.setWatchCode(watchCode);
-			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectByWatchCode(employeeInformation);
-			if (employeeInformationList.size() > 0) {
-				Integer id = employeeInformationList.get(0).getId();
-				person.setId(String.valueOf(id));
-				person.setWork_status(statu);
-			}
 
-		}
 
-		String statDay = DateManager.date2Str(DateManager.date_sdf);
-		List<Stat> statList = statService.find(Restrictions.eq("statDay", statDay),
-				Restrictions.eq("person_id", person.getId()));
-		Stat stat = null;
-		if (statList != null && statList.size() > 0) {
-			stat = statList.get(0);
-		}
-		Date statTime = DateManager.str2Date(DateManager.date2Str(DateManager.datetimeFormat),
-				DateManager.datetimeFormat);
-		Date storageTime = null;
-		if (stat != null) {
-			stat.setUpdate_time(DateManager.getDate());
-			if (stat.getBusy_time() != null) {
-				storageTime = stat.getBusy_time();
-			} else if (stat.getLeave_time() != null) {
-				storageTime = stat.getLeave_time();
-			} else if (stat.getFree_time() != null) {
-				storageTime = stat.getFree_time();
-			}
-			if (storageTime != null) {
-				int duration = DateManager.dateDiff('s', DateManager.DateToCalendar(statTime),
-						DateManager.DateToCalendar(storageTime));
-				if (person.getWork_status() == AndroidConstant.PERSONNEL_STATE_BUSYNESS_KEY.intValue()) {// 忙碌
-					stat.setStatu_busy(stat.getStatu_busy() + duration);
-				} else if (person.getWork_status() == AndroidConstant.PERSONNEL_STATE_TEMP_KEY.intValue()) {// 暂离
-					stat.setStatu_leave(stat.getStatu_leave() + duration);
-				} else if (person.getWork_status() == AndroidConstant.PERSONNEL_STATE_FREE_KEY.intValue()) {// 空闲
-					stat.setStatu_free(stat.getStatu_free() + duration);
-				}
-			}
-		} else {
-			stat = new Stat();
-			stat.setStatDay(statDay);
-			stat.setPerson_id(person.getId());
-			stat.setUpdate_time(DateManager.getDate());
-			stat.setCreate_time(DateManager.getDate());
-			stat.setStatu_busy(0);
-			stat.setStatu_free(0);
-			stat.setStatu_leave(0);
-		}
-		if(statu==person.getWork_status()){
-			return "状态无变化";
-		}
-		if (statu == AndroidConstant.PERSONNEL_STATE_BUSYNESS_KEY.intValue()) {// 忙碌
-			stat.setBusy_time(statTime);
-			stat.setLeave_time(null);
-			stat.setFree_time(null);
-		} else if (statu == AndroidConstant.PERSONNEL_STATE_TEMP_KEY.intValue()) {// 暂离
-			stat.setLeave_time(statTime);
-			stat.setBusy_time(null);
-			stat.setFree_time(null);
-		} else if (statu == AndroidConstant.PERSONNEL_STATE_FREE_KEY.intValue()) {// 空闲
-			stat.setFree_time(statTime);
-			stat.setLeave_time(null);
-			stat.setBusy_time(null);
-		}
-		statService.saveOrUpdate(stat);
-//		person.setWork_status(statu);
-//		person.setChange_time(new Date());
-//		personnelService.saveOrUpdate(person);
-		return "状态修改成功";
+
+//		Personnel person = new Personnel();
+//		try{
+//			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,1500);
+//			if(!"".equals(s)){
+//				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+//				person = JSONUtil.toBean(object,Personnel.class);
+//				person.setWork_status(statu);
+//			}
+//		}catch (Exception e){
+//			logger.error("连接中台失败");
+//			//根据WatchCode查人员
+//			EmployeeInformation employeeInformation = new EmployeeInformation();
+//			employeeInformation.setWatchCode(watchCode);
+//			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectByWatchCode(employeeInformation);
+//			if (employeeInformationList.size() > 0) {
+//				Integer id = employeeInformationList.get(0).getId();
+//				person.setId(String.valueOf(id));
+//				person.setWork_status(Integer.parseInt(employeeInformationList.get(0).getWorkState()));
+//			}
+//
+//		}
+//
+//		String statDay = DateManager.date2Str(DateManager.date_sdf);
+//		List<Stat> statList = statService.find(Restrictions.eq("statDay", statDay),
+//				Restrictions.eq("person_id", person.getId()));
+//		Stat stat = null;
+//		if (statList != null && statList.size() > 0) {
+//			stat = statList.get(0);
+//		}
+//		Date statTime = DateManager.str2Date(DateManager.date2Str(DateManager.datetimeFormat),
+//				DateManager.datetimeFormat);
+//		Date storageTime = null;
+//		if (stat != null) {
+//			stat.setUpdate_time(DateManager.getDate());
+//			if (stat.getBusy_time() != null) {
+//				storageTime = stat.getBusy_time();
+//			} else if (stat.getLeave_time() != null) {
+//				storageTime = stat.getLeave_time();
+//			} else if (stat.getFree_time() != null) {
+//				storageTime = stat.getFree_time();
+//			}
+//			if (storageTime != null) {
+//				int duration = DateManager.dateDiff('s', DateManager.DateToCalendar(statTime),
+//						DateManager.DateToCalendar(storageTime));
+//				if (person.getWork_status() == AndroidConstant.PERSONNEL_STATE_BUSYNESS_KEY.intValue()) {// 忙碌
+//					stat.setStatu_busy(stat.getStatu_busy() + duration);
+//				} else if (person.getWork_status() == AndroidConstant.PERSONNEL_STATE_TEMP_KEY.intValue()) {// 暂离
+//					stat.setStatu_leave(stat.getStatu_leave() + duration);
+//				} else if (person.getWork_status() == AndroidConstant.PERSONNEL_STATE_FREE_KEY.intValue()) {// 空闲
+//					stat.setStatu_free(stat.getStatu_free() + duration);
+//				}
+//			}
+//		} else {
+//			stat = new Stat();
+//			stat.setStatDay(statDay);
+//			stat.setPerson_id(person.getId());
+//			stat.setUpdate_time(DateManager.getDate());
+//			stat.setCreate_time(DateManager.getDate());
+//			stat.setStatu_busy(0);
+//			stat.setStatu_free(0);
+//			stat.setStatu_leave(0);
+//		}
+//		if(statu==person.getWork_status()){
+//			return "状态无变化";
+//		}
+//		if (statu == AndroidConstant.PERSONNEL_STATE_BUSYNESS_KEY.intValue()) {// 忙碌
+//			stat.setBusy_time(statTime);
+//			stat.setLeave_time(null);
+//			stat.setFree_time(null);
+//		} else if (statu == AndroidConstant.PERSONNEL_STATE_TEMP_KEY.intValue()) {// 暂离
+//			stat.setLeave_time(statTime);
+//			stat.setBusy_time(null);
+//			stat.setFree_time(null);
+//		} else if (statu == AndroidConstant.PERSONNEL_STATE_FREE_KEY.intValue()) {// 空闲
+//			stat.setFree_time(statTime);
+//			stat.setLeave_time(null);
+//			stat.setBusy_time(null);
+//		}
+//		statService.saveOrUpdate(stat);
+////		person.setWork_status(statu);
+////		person.setChange_time(new Date());
+////		personnelService.saveOrUpdate(person);
+//		EmployeeInformation employeeInformation = new EmployeeInformation();
+//		employeeInformation.setWatchCode(watchCode);
+//		employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+//		employeeInformation.setWorkState(statu+"");
+//		employeeInformationService.updateById(employeeInformation);
+//		return "状态修改成功";
 	}
 
 	/**

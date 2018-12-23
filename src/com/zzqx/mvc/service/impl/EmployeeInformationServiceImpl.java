@@ -26,9 +26,9 @@ public class EmployeeInformationServiceImpl implements EmployeeInformationServic
         EmployeeInformationExample employeeInformationExample  = new EmployeeInformationExample();
         EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
         criteria.andWatchCodeEqualTo(employeeInformation.getWatchCode());
-        EmployeeInformation em = new EmployeeInformation();
-        em.setWorkState(employeeInformation.getWorkState());
-        return employeeInformationMapper.updateByExampleSelective(em,employeeInformationExample);
+//        EmployeeInformation em = new EmployeeInformation();
+//        em.setWorkState(employeeInformation.getWorkState());
+        return employeeInformationMapper.updateByExampleSelective(employeeInformation,employeeInformationExample);
     }
 
     @Override
