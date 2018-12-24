@@ -70,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, hall_id, temperature, humidity, pm, create_time, status ，area
+    id, hall_id, temperature, humidity, pm, create_time, status ,area
   </sql>
   <select id="selectByExample" parameterType="com.zzqx.mvc.entity.EnvironmentExample" resultMap="BaseResultMap">
     select

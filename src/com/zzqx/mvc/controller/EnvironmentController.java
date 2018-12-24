@@ -39,6 +39,7 @@ public class EnvironmentController {
     @ResponseBody
     public R getByArea(){
         List<Environment> environmentList = environmentService.getByArea("01");
+//        Environment environment = environmentList.get(0);
         return R.ok().put("data",environmentList);
     }
 }

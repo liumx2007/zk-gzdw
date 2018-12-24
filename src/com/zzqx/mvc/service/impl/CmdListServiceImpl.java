@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,6 +45,11 @@ public class CmdListServiceImpl implements CmdListService {
     @Override
     public CmdListVo getById(String id) {
         CmdList cmdList = cmdListMapper.selectByPrimaryKey(id);
+        List<String> list2 = new ArrayList<>();
+        String[] strings = cmdList.getDirectList().split(",");
+        for (String item: strings){
+            list2.add(item);
+        }
         CmdListVo cmdListVo = new CmdListVo();
         try {
             BeanUtils.copyProperties(cmdListVo,cmdList);
@@ -55,6 +61,14 @@ public class CmdListServiceImpl implements CmdListService {
         CmdExample cmdExample =new CmdExample();
         List<Cmd> cmds = cmdMapper.selectByExample(cmdExample);
         cmdListVo.setCmdList(cmds);
+        //没有设置的指令集合
+        List<String>  list1 = new ArrayList<>();
+        cmds.forEach(data-> {
+            list1.add(data.getDirect());
+        });
+        list1.removeAll(list2);
+        System.out.print(list1);
+//        cmdListVo.setDirectTest(list1);
         return cmdListVo;
     }
 

@@ -87,12 +87,35 @@
                     var eidtData = object.data;
                     $("#directListName_edit").val(eidtData.directListName);
                     $("#description_edit").val(eidtData.description);
+                    //指令集合
+                    var array = new Array();
+                    var directList = eidtData.directList;
+                    array = directList.split(",");
+                    console.log(array.length);
                     myData = object.data.cmdList;
+                    //指令差集数据
+                    var directOr = object.data.directTest;
+                    //合集
                     $.each(myData,function (index,item) {
-                        var checkbox=$("<input type='checkbox' class='check_item' />");
-                        var  lable = $("<label></label>").append(item.description);
-                        var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
-                        $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+                        for (var i=0;i<array.length;i++){
+                            if(array[i] == item.direct){
+//                                alert(1);
+                                var checkbox=$("<input type='checkbox' class='check_item' />").attr("checked",true);
+                                var  lable = $("<label></label>").append(item.description);
+                                var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
+                                $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+                            }
+                        }
+
+                    })
+                    //差集
+                    $.each(directOr,function (index,item) {
+
+                            var checkbox=$("<input type='checkbox' class='check_item' />");
+                            var  lable = $("<label></label>").append(item.description);
+                            var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
+                            $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+
                     })
                 }, error: function(msg) {
 
@@ -252,7 +275,15 @@
                     <div class="form-group">
                         <label >指令集合：</label>
                         <div id="direct_list_edit">
-
+                            <%--<div id="direct_list_edit_1">--%>
+                                <%----%>
+                            <%--</div>--%>
+                            <%--<div id="direct_list_edit_2">--%>
+                                <%----%>
+                            <%--</div>--%>
+                            <%--<div id="direct_list_edit_3">--%>
+                                <%----%>
+                            <%--</div>--%>
                         </div>
                     </div>
                     <div class="form-group">
@@ -288,11 +319,11 @@
             data:"directListName="+directListName+"&description="+description+"&directList="+encodeURIComponent(directId),
             success: function(object){
                 console.log(object);
+                $('#cmd_list_table').datagrid("reload");
             }, error: function(msg) {
 
             }
         });
         $("#myModal").modal('hide');
-        $('#cmd_list_table').datagrid("reload");
     });
 </script>

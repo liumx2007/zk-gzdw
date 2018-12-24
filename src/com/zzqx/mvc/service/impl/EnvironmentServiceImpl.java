@@ -43,6 +43,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
         EnvironmentExample environmentExample = new EnvironmentExample();
         EnvironmentExample.Criteria criteria = environmentExample.createCriteria();
         criteria.andAreaEqualTo(area);
+        environmentExample.setOrderByClause("create_time DESC");
         return environmentMapper.selectByExample(environmentExample);
     }
 }
