@@ -2,6 +2,7 @@ package com.zzqx.mvc.service;
 
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.CmdList;
+import com.zzqx.mvc.vo.CmdListVo;
 
 import java.util.List;
 
@@ -14,6 +15,14 @@ public interface CmdListService {
 
     List<CmdList> getListCount(CmdListDto cmdListDto);
 
+    /**
+     * 根据主键查询
+     */
+    CmdListVo getById(String id );
+    /**
+     * 页面使用的单个数据
+     */
+//    CmdListVo getCmdVoById(String  id);
     /**
      * 有选择的插入数据
      */

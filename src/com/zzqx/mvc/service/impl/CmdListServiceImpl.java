@@ -1,20 +1,31 @@
 package com.zzqx.mvc.service.impl;
 
 import com.zzqx.mvc.dao.CmdListMapper;
+import com.zzqx.mvc.dao.CmdMapper;
 import com.zzqx.mvc.dto.CmdListDto;
+import com.zzqx.mvc.entity.Cmd;
+import com.zzqx.mvc.entity.CmdExample;
 import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.service.CmdListService;
+import com.zzqx.mvc.vo.CmdListVo;
+import com.zzqx.support.utils.StringHelper;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
 public class CmdListServiceImpl implements CmdListService {
     @Autowired
     CmdListMapper cmdListMapper;
+    @Autowired
+    CmdMapper cmdMapper;
+
     @Override
     public List<CmdList> getList(CmdListDto cmdListDto) {
         int pageNo = cmdListDto.getLimit0() == 0?1:cmdListDto.getLimit0();
@@ -29,6 +40,33 @@ public class CmdListServiceImpl implements CmdListService {
     public List<CmdList> getListCount(CmdListDto cmdListDto) {
         return cmdListMapper.getListCount(cmdListDto);
     }
+
+    @Override
+    public CmdListVo getById(String id) {
+        CmdList cmdList = cmdListMapper.selectByPrimaryKey(id);
+        CmdListVo cmdListVo = new CmdListVo();
+        try {
+            BeanUtils.copyProperties(cmdListVo,cmdList);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        CmdExample cmdExample =new CmdExample();
+        List<Cmd> cmds = cmdMapper.selectByExample(cmdExample);
+        cmdListVo.setCmdList(cmds);
+        return cmdListVo;
+    }
+
+//    @Override
+//    public CmdListVo getCmdVoById(String id) {
+//       CmdList cmdList =  cmdListMapper.selectByPrimaryKey(id);
+//       String[] stings = cmdList.getDirectList().split(",");
+//       for (String  item:stings){
+//
+//       }
+//        return null;
+//    }
 
     @Override
     public int insertSelect(CmdList cmdList) {
