@@ -1,5 +1,6 @@
 package com.zzqx.mvc.controller;
 
+import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.javabean.R;
@@ -18,6 +19,18 @@ import java.util.List;
 public class CmdListController {
     @Autowired
     CmdListService cmdListService;
+
+
+    /**
+     *ipad使用接口
+     */
+    @OpenAccess
+    @RequestMapping("all")
+    @ResponseBody
+    public R allData(){
+        List<CmdList> cmdLists = cmdListService.allList();
+        return R.ok().put("data",cmdLists);
+    }
 
     @RequestMapping("list")
     @ResponseBody

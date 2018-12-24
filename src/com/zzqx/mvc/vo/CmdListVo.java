@@ -7,9 +7,9 @@ import java.util.List;
 
 public class CmdListVo extends CmdList {
 
-    List<Cmd> cmdList;
+    List<Cmd> cmdList;//tcp指令集合
 
-    List<String> directTest;
+    List<Cmd> ClientList;//Client指令集合
 
     public List<Cmd> getCmdList() {
         return cmdList;
@@ -19,11 +19,11 @@ public class CmdListVo extends CmdList {
         this.cmdList = cmdList;
     }
 
-    public List<String> getDirectTest() {
-        return directTest;
+    public List<Cmd> getClientList() {
+        return ClientList;
     }
 
-    public void setDirectTest(List<String> directTest) {
-        this.directTest = directTest;
+    public void setClientList(List<Cmd> clientList) {
+        ClientList = clientList;
     }
 }

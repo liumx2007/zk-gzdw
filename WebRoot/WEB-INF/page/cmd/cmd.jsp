@@ -91,30 +91,24 @@
                     var array = new Array();
                     var directList = eidtData.directList;
                     array = directList.split(",");
-                    console.log(array.length);
                     myData = object.data.cmdList;
-                    //指令差集数据
-                    var directOr = object.data.directTest;
-                    //合集
                     $.each(myData,function (index,item) {
                         for (var i=0;i<array.length;i++){
                             if(array[i] == item.direct){
-//                                alert(1);
                                 var checkbox=$("<input type='checkbox' class='check_item' />").attr("checked",true);
                                 var  lable = $("<label></label>").append(item.description);
                                 var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
                                 $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+                                break;
+                            }else {
+                                var checkbox=$("<input type='checkbox' class='check_item' />");
+                                var  lable = $("<label></label>").append(item.description);
+                                var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
+                                $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+                                break;
                             }
+
                         }
-
-                    })
-                    //差集
-                    $.each(directOr,function (index,item) {
-
-                            var checkbox=$("<input type='checkbox' class='check_item' />");
-                            var  lable = $("<label></label>").append(item.description);
-                            var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
-                            $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
 
                     })
                 }, error: function(msg) {
@@ -150,10 +144,10 @@
             $("#direct_list").empty();
             $.ajax({
                 type: "GET",
-                url: "r/cmd/list",
+                url: "r/cmd/listByType",
                 dataType : "json",
                 success: function(object){
-                    myData = object.data;
+                    myData = object.data.cmdList;
                     $.each(myData,function (index,item) {
                         var checkbox=$("<input type='checkbox' class='check_item' />");
                         var  lable = $("<label></label>").append(item.description);
@@ -235,8 +229,18 @@
                         <input type="text" class="form-control" id="directListName"  name="directListName">
                     </div>
                     <div class="form-group">
-                        <label >指令集合：</label>
+                        <label >toTCPServer指令集合：</label>
+                        <div class="form-group">
+                            <label for="ip">ip:</label>
+                            <input type="text" class="form-control" id="ip" placeholder="ip">
+                            <label for="port">port:</label>
+                            <input type="text" class="form-control" id="port" placeholder="port">
+                        </div>
                         <div id="direct_list">
+
+                        </div>
+                        <label >client指令集合：</label>
+                        <div id="direct_list_client">
 
                         </div>
                     </div>
@@ -273,17 +277,15 @@
                         <input type="text" class="form-control" id="directListName_edit" name="directListName" >
                     </div>
                     <div class="form-group">
-                        <label >指令集合：</label>
+                        <label >toTCPServer指令集合：</label>
+                        <div class="row">
+                            <label for="ip_edit">ip:</label>
+                            <input type="text" class="form-control" id="ip_edit" placeholder="ip">
+                            <label for="port_edit">port:</label>
+                            <input type="text" class="form-control" id="port_edit" placeholder="port">
+                        </div>
                         <div id="direct_list_edit">
-                            <%--<div id="direct_list_edit_1">--%>
-                                <%----%>
-                            <%--</div>--%>
-                            <%--<div id="direct_list_edit_2">--%>
-                                <%----%>
-                            <%--</div>--%>
-                            <%--<div id="direct_list_edit_3">--%>
-                                <%----%>
-                            <%--</div>--%>
+
                         </div>
                     </div>
                     <div class="form-group">
@@ -304,19 +306,34 @@
 </html>
 <script type="text/javascript">
     $("#add_save").click(function () {
-        var  directId = "";
+        var allData = "test=test";
+        //toTCPServer指令
+        var  tcpList = "";
+        var  ip = $("#ip").val();
+        var port = $("#port").val();
             //遍历选中的指令的id
           $.each($(".check_item:checked"),function () {
-                directId += $(this).parent("div").find("label:eq(1)").text()+",";
+              tcpList += $(this).parent("div").find("label:eq(1)").text()+",";
             })
-        directId = directId.substring(0, directId.length-1);
-        console.log(directId);
+        tcpList =  'toTCPServer=' +ip+","+port +","+ tcpList.substring(0, tcpList.length-1);
+        //client指令
+        var clientList = "";
+        //pc指令
+        var pcList = "";
+
+        if (tcpList != ""){
+            allData += "&"+tcpList;
+        }else if(clientList != ""){
+            allData +="&"+clientList;
+        }else  if (pcList != ""){
+            allData += "&"+pcList;
+        }
           var  directListName = $("#directListName").val();
           var  description = $("#description").val();
         $.ajax({
             type: "POST",
             url: "r/cmdList/save",
-            data:"directListName="+directListName+"&description="+description+"&directList="+encodeURIComponent(directId),
+            data:"directListName="+directListName+"&description="+description+"&directList="+encodeURIComponent(allData),
             success: function(object){
                 console.log(object);
                 $('#cmd_list_table').datagrid("reload");

@@ -1,12 +1,15 @@
 package com.zzqx.mvc.service.impl;
 
+import com.zzqx.mvc.commons.CmdInfo;
 import com.zzqx.mvc.dao.CmdListMapper;
 import com.zzqx.mvc.dao.CmdMapper;
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.Cmd;
 import com.zzqx.mvc.entity.CmdExample;
 import com.zzqx.mvc.entity.CmdList;
+import com.zzqx.mvc.entity.CmdListExample;
 import com.zzqx.mvc.service.CmdListService;
+import com.zzqx.mvc.service.CmdService;
 import com.zzqx.mvc.vo.CmdListVo;
 import com.zzqx.support.utils.StringHelper;
 import org.apache.commons.beanutils.BeanUtils;
@@ -26,6 +29,15 @@ public class CmdListServiceImpl implements CmdListService {
     CmdListMapper cmdListMapper;
     @Autowired
     CmdMapper cmdMapper;
+    @Autowired
+    CmdService cmdService;
+
+    @Override
+    public List<CmdList> allList( ) {
+        CmdListExample cmdListExample = new CmdListExample();
+//        CmdListExample.Criteria criteria = cmdListExample.createCriteria();
+        return cmdListMapper.selectByExample(cmdListExample);
+    }
 
     @Override
     public List<CmdList> getList(CmdListDto cmdListDto) {
@@ -45,12 +57,7 @@ public class CmdListServiceImpl implements CmdListService {
     @Override
     public CmdListVo getById(String id) {
         CmdList cmdList = cmdListMapper.selectByPrimaryKey(id);
-        List<String> list2 = new ArrayList<>();
-        String[] strings = cmdList.getDirectList().split(",");
-        for (String item: strings){
-            list2.add(item);
-        }
-        CmdListVo cmdListVo = new CmdListVo();
+        CmdListVo cmdListVo = cmdService.getAllDataByType();
         try {
             BeanUtils.copyProperties(cmdListVo,cmdList);
         } catch (IllegalAccessException e) {
@@ -58,17 +65,6 @@ public class CmdListServiceImpl implements CmdListService {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        CmdExample cmdExample =new CmdExample();
-        List<Cmd> cmds = cmdMapper.selectByExample(cmdExample);
-        cmdListVo.setCmdList(cmds);
-        //没有设置的指令集合
-        List<String>  list1 = new ArrayList<>();
-        cmds.forEach(data-> {
-            list1.add(data.getDirect());
-        });
-        list1.removeAll(list2);
-        System.out.print(list1);
-//        cmdListVo.setDirectTest(list1);
         return cmdListVo;
     }
 

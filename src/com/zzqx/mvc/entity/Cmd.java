@@ -3,7 +3,7 @@ package com.zzqx.mvc.entity;
 public class Cmd {
     private String id;
 
-    private String type;
+    private String type; //tcp、client、pc、udp、com、play
 
     private String direct;
 

@@ -2,11 +2,17 @@ package com.zzqx.mvc.service;
 
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.CmdList;
+import com.zzqx.mvc.entity.CmdListExample;
 import com.zzqx.mvc.vo.CmdListVo;
 
 import java.util.List;
 
 public interface CmdListService {
+
+    /**
+     * 全部数据
+     */
+    List<CmdList> allList( );
 
     /**
      * 分页数据List
