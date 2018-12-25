@@ -1,10 +1,7 @@
 package com.zzqx.mvc.controller;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -638,5 +635,60 @@ public class CommondController extends BaseController {
 			sender.sendToClient(terminal.getCodeName(), model);
 		}
 		return new ReturnMessage(ReturnMessage.MESSAGE_SUCCESS, "设置成功！").toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping("powerOffByMac")
+	public String powerOffByMac(String mac, HttpServletRequest request) {
+		ReturnMessage message = new ReturnMessage();
+		if(mac == null || "".equals(mac)) {
+			message.setType(ReturnMessage.MESSAGE_ERROR);
+			message.setMessage("关闭失败！");
+			return message.toString();
+		}
+		AsyncContext context = request.startAsync();
+		List<String> list = Arrays.asList(mac.split(","));
+		context.start(()->TerminalManager.poweroffBatch(list));
+		context.complete();
+		message.setType(ReturnMessage.MESSAGE_SUCCESS);
+		message.setMessage("正在关闭...");
+		return message.toString();
+	}
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping("powerOnByMac")
+	public String poweron(String mac, HttpServletRequest request) {
+		ReturnMessage message = new ReturnMessage();
+		if(mac == null || "".equals(mac)) {
+			message.setType(ReturnMessage.MESSAGE_ERROR);
+			message.setMessage("启动失败！");
+			return message.toString();
+		}
+		AsyncContext context = request.startAsync();
+		List<String> list = Arrays.asList(mac.split(","));
+		context.start(()->TerminalManager.poweronBatch(list));
+		context.complete();
+		message.setType(ReturnMessage.MESSAGE_SUCCESS);
+		message.setMessage("正在启动...");
+		return message.toString();
+	}
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping("rebootByMac")
+	public String reboot(String mac, HttpServletRequest request) {
+		ReturnMessage message = new ReturnMessage();
+		if(mac == null ||  "".equals(mac)) {
+			message.setType(ReturnMessage.MESSAGE_ERROR);
+			message.setMessage("重启失败！");
+			return message.toString();
+		}
+		AsyncContext context = request.startAsync();
+		List<String> list = Arrays.asList(mac.split(","));
+		context.start(()->TerminalManager.rebootBatch(list));
+		context.complete();
+		message.setType(ReturnMessage.MESSAGE_SUCCESS);
+		message.setMessage("正在重启...");
+		return message.toString();
 	}
 }
