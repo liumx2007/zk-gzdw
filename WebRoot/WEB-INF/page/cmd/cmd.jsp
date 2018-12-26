@@ -57,16 +57,6 @@
             };
         });
 
-//        function getName(v,r,i) {
-//            var obj  = eval(v);
-//            return obj.cmdListName;
-//        };
-//        function getCmdList(v,r,i) {
-//
-//        };
-//        function getDescription(v,r,i) {
-//
-//        }
         //操作列
         function cz(value, row, index) {
             var cz =
@@ -76,9 +66,12 @@
         }
         //编辑
         function edit(id) {
+            //隐藏标签
+            $("#edit_id").val(id);
             $("#form_edit").form("clear");
             //请求单个指令集合
             $("#direct_list_edit").empty();
+            $("#direct_list_client_edit").empty();
             $.ajax({
                 type: "GET",
                 url: "r/cmdList/one",
@@ -87,29 +80,42 @@
                     var eidtData = object.data;
                     $("#directListName_edit").val(eidtData.directListName);
                     $("#description_edit").val(eidtData.description);
+                    //ip,port
+//                    var directList = eidtData.directList;
+//                    $("#ip_edit").val( directList.split(",")[0]);
+//                    $("#port_edit").val(directList.split(",")[1]);
                     //指令集合
                     var array = new Array();
                     var directList = eidtData.directList;
                     array = directList.split(",");
                     myData = object.data.cmdList;
                     $.each(myData,function (index,item) {
-                        for (var i=0;i<array.length;i++){
-                            if(array[i] == item.direct){
-                                var checkbox=$("<input type='checkbox' class='check_item' />").attr("checked",true);
-                                var  lable = $("<label></label>").append(item.description);
-                                var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
-                                $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
-                                break;
-                            }else {
-                                var checkbox=$("<input type='checkbox' class='check_item' />");
-                                var  lable = $("<label></label>").append(item.description);
-                                var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
-                                $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
-                                break;
-                            }
-
-                        }
-
+                            var checkbox=$("<input type='checkbox' class='check_item_edit' />");
+                            var  lable = $("<label></label>").append(item.description);
+                            var  input = $("<label style='display:none' class='id_class_edit'></label>").append(item.direct);
+                            $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+//                        for (var i=0;i<array.length;i++){
+//                            if(array[i] == item.direct){
+//                                var checkbox=$("<input type='checkbox' class='check_item_edit' />").attr("checked",true);
+//                                var  lable = $("<label></label>").append(item.description);
+//                                var  input = $("<label style='display:none' class='id_class_edit'></label>").append(item.direct);
+//                                $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+//                                break;
+//                            }else {
+//                                var checkbox=$("<input type='checkbox' class='check_item_edit' />");
+//                                var  lable = $("<label></label>").append(item.description);
+//                                var  input = $("<label style='display:none' class='id_class_edit'></label>").append(item.direct);
+//                                $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_edit");
+//                                break;
+//                            }
+//                        }
+                    })
+                    var  clientList = eidtData.clientList;
+                    $.each(clientList,function (index,item) {
+                        var checkbox=$("<input type='checkbox' class='check_item_client_edit' />");
+                        var  lable = $("<label></label>").append(item.description);
+                        var  input = $("<label style='display:none' class='id_class_client_edit'></label>").append(item.direct);
+                        $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_client_edit");
                     })
                 }, error: function(msg) {
 
@@ -137,11 +143,49 @@
                 }
             });
         }
+        //批量删除
+        function clear() {
+            var rows = $('#cmd_list_table').datagrid("getSelections");
+            var ids = "";
+            for(var index=0;index<rows.length;index++) {
+                if(rows[index].id == "1") {
+                    continue;
+                }
+                if (ids == "") {
+                    ids = "id=" + rows[index].id;
+                } else {
+                    ids += "&id=" + rows[index].id;
+                }
+            }
+            if(ids != "") {
+                $.messager.confirm('提示', '是否删除选中数据?', function (r) {
+                    if(r){
+                        $.ajax({
+                            type: "POST",
+                            url: "r/cmdList/deleteByIds",
+                            data: ids,
+                            dataType : "json",
+                            success: function(object){
+                                if(object.msg=="操作成功") {
+                                    $('#cmd_list_table').datagrid("reload");
+                                    $("#cmd_list_table").datagrid("clearSelections");
+                                }
+                                window.parent.showMessage(object);
+                            },
+                            error: function(msg) {
+                                window.parent.showMessage({type:'error',message:"<span style='color:red;'>删除失败！</span>"});
+                            }
+                        });
+                    }
+                });
+            }
+        }
         //添加按钮
         function add() {
             $("#form_add").form("clear");
             //请求单个指令集合
             $("#direct_list").empty();
+            $("#direct_list_client").empty();
             $.ajax({
                 type: "GET",
                 url: "r/cmd/listByType",
@@ -153,6 +197,13 @@
                         var  lable = $("<label></label>").append(item.description);
                         var  input = $("<label style='display:none' class='id_class'></label>").append(item.direct);
                         $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list");
+                    });
+                    var clientList = object.data.clientList;
+                    $.each(clientList,function (index,item) {
+                        var checkbox=$("<input type='checkbox' class='check_item_client' />");
+                        var  lable = $("<label></label>").append(item.description);
+                        var  input = $("<label style='display:none' class='id_class_client'></label>").append(item.direct);
+                        $("<div></div>").append(checkbox).append(lable).append(input).appendTo("#direct_list_client");
                     })
                 }, error: function(msg) {
 
@@ -160,10 +211,7 @@
             });
             modelOpen();
         }
-        //批量删除
-        function clear() {
 
-        }
         //添加模态框
         function modelOpen() {
             $("#myModal").modal({
@@ -182,7 +230,7 @@
 </head>
 
 <body>
-
+<input type="hidden" name="" id="edit_id" />
 <table id="cmd_list_table" toolbar="#tb">
     <thead>
     <tr>
@@ -278,13 +326,17 @@
                     </div>
                     <div class="form-group">
                         <label >toTCPServer指令集合：</label>
-                        <div class="row">
+                        <div class="form-group">
                             <label for="ip_edit">ip:</label>
                             <input type="text" class="form-control" id="ip_edit" placeholder="ip">
                             <label for="port_edit">port:</label>
                             <input type="text" class="form-control" id="port_edit" placeholder="port">
                         </div>
                         <div id="direct_list_edit">
+
+                        </div>
+                        <label >client指令集合：</label>
+                        <div id="direct_list_client_edit">
 
                         </div>
                     </div>
@@ -296,7 +348,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" >保存</button>
+                <button type="button" id="edit_save" class="btn btn-primary" >保存</button>
             </div>
         </div>
     </div>
@@ -305,24 +357,30 @@
 </body>
 </html>
 <script type="text/javascript">
+    //添加保存
     $("#add_save").click(function () {
         var allData = "test=test";
         //toTCPServer指令
         var  tcpList = "";
         var  ip = $("#ip").val();
         var port = $("#port").val();
-            //遍历选中的指令的id
+            //遍历选中的指令的
           $.each($(".check_item:checked"),function () {
               tcpList += $(this).parent("div").find("label:eq(1)").text()+",";
             })
-        tcpList =  'toTCPServer=' +ip+","+port +","+ tcpList.substring(0, tcpList.length-1);
+        tcpList = tcpList.substring(0, tcpList.length-1);
         //client指令
         var clientList = "";
+        //遍历选中的client指令的
+        $.each($(".check_item_client:checked"),function () {
+            clientList += $(this).parent("div").find("label:eq(1)").text()+";";
+        })
+        clientList = clientList.substring(0, clientList.length-1);
         //pc指令
         var pcList = "";
 
         if (tcpList != ""){
-            allData += "&"+tcpList;
+            allData += "&toTCPServer="+ ip+","+port +","+tcpList;
         }else if(clientList != ""){
             allData +="&"+clientList;
         }else  if (pcList != ""){
@@ -342,5 +400,50 @@
             }
         });
         $("#myModal").modal('hide');
+    });
+    //编辑保存
+    $("#edit_save").click(function () {
+        var allData = "test=test";
+        //toTCPServer指令
+        var  tcpList = "";
+        var  ip = $("#ip_edit").val();
+        var port = $("#port_edit").val();
+        //遍历选中的指令的
+        $.each($(".check_item_edit:checked"),function () {
+            tcpList += $(this).parent("div").find("label:eq(1)").text()+",";
+        })
+        tcpList = tcpList.substring(0, tcpList.length-1);
+        //client指令
+        var clientList = "";
+        //遍历选中的client指令的
+        $.each($(".check_item_client_edit:checked"),function () {
+            clientList += $(this).parent("div").find("label:eq(1)").text()+";";
+        })
+        clientList = clientList.substring(0, clientList.length-1);
+        //pc指令
+        var pcList = "";
+
+        if (tcpList != ""){
+            allData += "&toTCPServer="+ ip+","+port +","+tcpList;
+        }else if(clientList != ""){
+            allData +="&"+clientList;
+        }else  if (pcList != ""){
+            allData += "&"+pcList;
+        }
+        var  directListName = $("#directListName_edit").val();
+        var  description = $("#description_edit").val();
+        var cId = $("#edit_id").val();
+        $.ajax({
+            type: "POST",
+            url: "r/cmdList/edit",
+            data:"id="+cId+"&directListName="+directListName+"&description="+description+"&directList="+encodeURIComponent(allData),
+            success: function(object){
+                console.log(object);
+                $('#cmd_list_table').datagrid("reload");
+            }, error: function(msg) {
+
+            }
+        });
+        $("#myModal_edit").modal('hide');
     });
 </script>

@@ -1,26 +1,25 @@
 package com.zzqx.mvc.service.impl;
 
-import com.zzqx.mvc.commons.CmdInfo;
+
 import com.zzqx.mvc.dao.CmdListMapper;
 import com.zzqx.mvc.dao.CmdMapper;
 import com.zzqx.mvc.dto.CmdListDto;
-import com.zzqx.mvc.entity.Cmd;
-import com.zzqx.mvc.entity.CmdExample;
+
 import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.entity.CmdListExample;
 import com.zzqx.mvc.service.CmdListService;
 import com.zzqx.mvc.service.CmdService;
 import com.zzqx.mvc.vo.CmdListVo;
-import com.zzqx.support.utils.StringHelper;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Stream;
+
 
 @Service
 @Transactional
@@ -65,6 +64,7 @@ public class CmdListServiceImpl implements CmdListService {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+
         return cmdListVo;
     }
 

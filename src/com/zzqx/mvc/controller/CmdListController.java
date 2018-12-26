@@ -32,6 +32,13 @@ public class CmdListController {
         return R.ok().put("data",cmdLists);
     }
 
+    /**
+     * 分页数据
+     * @param page
+     * @param rows
+     * @param cmdListDto
+     * @return
+     */
     @RequestMapping("list")
     @ResponseBody
     public String selectWithCmdList(String page,String rows,CmdListDto cmdListDto){
@@ -65,6 +72,16 @@ public class CmdListController {
         return R.ok();
     }
     /**
+     * 批量删除
+     */
+    //todo cmdList批量删除
+    @RequestMapping("deleteByIds")
+    @ResponseBody
+    public R deleteByIds(){
+        
+        return R.ok();
+    }
+    /**
      * 保存
      */
     @RequestMapping("save")
@@ -76,6 +93,12 @@ public class CmdListController {
     /**
      * 更新
      */
-
+    @RequestMapping("edit")
+    @ResponseBody
+    public R updateById(CmdList cmdList){
+        int s = cmdListService.updateSelect(cmdList);
+        System.out.print(s);
+        return R.ok();
+    }
 
 }

@@ -7,9 +7,29 @@ import java.util.List;
 
 public class CmdListVo extends CmdList {
 
+    private String ip;
+
+    private String port;
+
     List<Cmd> cmdList;//tcp指令集合
 
-    List<Cmd> ClientList;//Client指令集合
+    List<Cmd> clientList;//Client指令集合
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
 
     public List<Cmd> getCmdList() {
         return cmdList;
@@ -20,10 +40,10 @@ public class CmdListVo extends CmdList {
     }
 
     public List<Cmd> getClientList() {
-        return ClientList;
+        return clientList;
     }
 
     public void setClientList(List<Cmd> clientList) {
-        ClientList = clientList;
+        this.clientList = clientList;
     }
 }
