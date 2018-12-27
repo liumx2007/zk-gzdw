@@ -43,4 +43,9 @@ public interface CmdListService {
      * 根据主键删除
      */
     int deleteByPrimaryKey(String id);
+
+    /**
+     * 主键批量删除
+     */
+    int deleteByIds(String ids);
 }

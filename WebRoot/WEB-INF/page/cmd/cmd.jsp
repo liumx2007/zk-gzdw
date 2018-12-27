@@ -81,9 +81,8 @@
                     $("#directListName_edit").val(eidtData.directListName);
                     $("#description_edit").val(eidtData.description);
                     //ip,port
-//                    var directList = eidtData.directList;
-//                    $("#ip_edit").val( directList.split(",")[0]);
-//                    $("#port_edit").val(directList.split(",")[1]);
+                    $("#ip_edit").val(eidtData.ip);
+                    $("#port_edit").val(eidtData.port);
                     //指令集合
                     var array = new Array();
                     var directList = eidtData.directList;

@@ -12,6 +12,7 @@ import com.zzqx.mvc.service.CmdService;
 import com.zzqx.mvc.vo.CmdListVo;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +65,17 @@ public class CmdListServiceImpl implements CmdListService {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
+        //检测是否有toTCPServer字符
+        String s = cmdList.getDirectList();
+        boolean flag = StringUtils.contains(s,"toTCPServer=");
+        if (flag){
+            String data = s.substring(22);
+            System.out.print(data);
+            String ip = data.split(",")[0];
+            String port = data.split(",")[1];
+            cmdListVo.setIp(ip);
+            cmdListVo.setPort(port);
+        }
         return cmdListVo;
     }
 
@@ -91,5 +102,11 @@ public class CmdListServiceImpl implements CmdListService {
     @Override
     public int deleteByPrimaryKey(String id) {
         return cmdListMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int deleteByIds(String ids) {
+        
+        return 0;
     }
 }

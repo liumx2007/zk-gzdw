@@ -78,7 +78,7 @@ public class CmdListController {
     @RequestMapping("deleteByIds")
     @ResponseBody
     public R deleteByIds(){
-        
+
         return R.ok();
     }
     /**
