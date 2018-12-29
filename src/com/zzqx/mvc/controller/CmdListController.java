@@ -1,11 +1,14 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.http.HttpUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.service.CmdListService;
+import com.zzqx.mvc.vo.CmdListOneVo;
 import com.zzqx.mvc.vo.CmdListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +25,28 @@ public class CmdListController {
 
 
     /**
+     *ipad 处理send方法请求接口
+     */
+    @OpenAccess
+    @RequestMapping("send")
+    @ResponseBody
+    public R send(String directListName){
+        List<CmdList> lists = cmdListService.allList(directListName);
+        CmdList cmdList = lists.get(0);
+        String directList = cmdList.getDirectList();
+        HttpUtil.get(CountInfo.LOCALHOST+"/server/cmd/send?"+directList);
+        return R.ok();
+    }
+
+    /**
      *ipad使用接口
      */
     @OpenAccess
     @RequestMapping("all")
     @ResponseBody
     public R allData(){
-        List<CmdList> cmdLists = cmdListService.allList();
+        String s = "";
+        List<CmdList> cmdLists = cmdListService.allList(s);
         return R.ok().put("data",cmdLists);
     }
 
@@ -77,8 +95,8 @@ public class CmdListController {
     //todo cmdList批量删除
     @RequestMapping("deleteByIds")
     @ResponseBody
-    public R deleteByIds(){
-
+    public R deleteByIds(String ids){
+        System.out.print(ids);
         return R.ok();
     }
     /**
@@ -100,5 +118,6 @@ public class CmdListController {
         System.out.print(s);
         return R.ok();
     }
+
 
 }

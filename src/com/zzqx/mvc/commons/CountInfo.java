@@ -14,6 +14,10 @@ public class CountInfo {
     //营业厅id
     public static final Integer HALL_ID = 2;
     /**
+     * 本机的ip及port
+     */
+    public static  final  String LOCALHOST = "http://127.0.0.1:8091";
+    /**
      * 根据腕表编码查询人员
      */
     public static final String GET_PERSON_BY_WATCHCODE = SERVER_IP + "/api/employeeInformation/getListByWatch?";
@@ -94,29 +98,7 @@ public class CountInfo {
      *设备操状态关
      */
     public static final String DEVICE_STATE_OFF = "0";
-    /**
-     *设备操作<参数，操作代码>
-     */
-    public static final Map<String,String > DEVICE_OPERATION = new HashMap<String,String>(){
-        {
-            //设备开
-            put("device_on","");
-            //设备关
-            put("device_off","");
-            //空调温度提高
-            put("temperature_up","");
-            //空调温度降低
-            put("temperature_down","");
-            //空调风速提高
-            put("windSpeed_up","");
-            //空调风速降低
-            put("windSpeed_down","");
-            //空调模式——制冷
-            put("condition_cold","");
-            //空调模式——制暖
-            put("condition_worm","");
-        }
-    };
+
     /**
      * 设备列表
      */

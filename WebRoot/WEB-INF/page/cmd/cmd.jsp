@@ -57,6 +57,7 @@
             };
         });
 
+
         //操作列
         function cz(value, row, index) {
             var cz =
@@ -142,43 +143,7 @@
                 }
             });
         }
-        //批量删除
-        function clear() {
-            var rows = $('#cmd_list_table').datagrid("getSelections");
-            var ids = "";
-            for(var index=0;index<rows.length;index++) {
-                if(rows[index].id == "1") {
-                    continue;
-                }
-                if (ids == "") {
-                    ids = "id=" + rows[index].id;
-                } else {
-                    ids += "&id=" + rows[index].id;
-                }
-            }
-            if(ids != "") {
-                $.messager.confirm('提示', '是否删除选中数据?', function (r) {
-                    if(r){
-                        $.ajax({
-                            type: "POST",
-                            url: "r/cmdList/deleteByIds",
-                            data: ids,
-                            dataType : "json",
-                            success: function(object){
-                                if(object.msg=="操作成功") {
-                                    $('#cmd_list_table').datagrid("reload");
-                                    $("#cmd_list_table").datagrid("clearSelections");
-                                }
-                                window.parent.showMessage(object);
-                            },
-                            error: function(msg) {
-                                window.parent.showMessage({type:'error',message:"<span style='color:red;'>删除失败！</span>"});
-                            }
-                        });
-                    }
-                });
-            }
-        }
+
         //添加按钮
         function add() {
             $("#form_add").form("clear");
@@ -209,6 +174,10 @@
                 }
             });
             modelOpen();
+        }
+        //批量删除
+        function clear() {
+            console.log("jjjjjjjjjj");
         }
 
         //添加模态框
@@ -248,7 +217,7 @@
         <%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>--%>
         <%--<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>--%>
         <%--<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>--%>
-        <a href="javascript:void(0);" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="clear()">删除</a>
+        <%--<a href="javascript:void(0);" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="clear()">删除</a>--%>
     </div>
     <%--<div>--%>
         <%--Date From: <input class="easyui-datebox" style="width:80px">--%>

@@ -2,7 +2,6 @@ package com.zzqx.mvc.service;
 
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.CmdList;
-import com.zzqx.mvc.entity.CmdListExample;
 import com.zzqx.mvc.vo.CmdListVo;
 
 import java.util.List;
@@ -10,9 +9,9 @@ import java.util.List;
 public interface CmdListService {
 
     /**
-     * 全部数据
+     * 全部数据and指令名字条件查询
      */
-    List<CmdList> allList( );
+    List<CmdList> allList(String directName);
 
     /**
      * 分页数据List

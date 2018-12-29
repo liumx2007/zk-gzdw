@@ -33,9 +33,12 @@ public class CmdListServiceImpl implements CmdListService {
     CmdService cmdService;
 
     @Override
-    public List<CmdList> allList( ) {
+    public List<CmdList> allList(String directName) {
         CmdListExample cmdListExample = new CmdListExample();
-//        CmdListExample.Criteria criteria = cmdListExample.createCriteria();
+        if (directName != null || directName != "") {
+            CmdListExample.Criteria criteria = cmdListExample.createCriteria();
+            criteria.andDirectListNameEqualTo(directName);
+        }
         return cmdListMapper.selectByExample(cmdListExample);
     }
 
@@ -106,7 +109,7 @@ public class CmdListServiceImpl implements CmdListService {
 
     @Override
     public int deleteByIds(String ids) {
-        
+
         return 0;
     }
 }
