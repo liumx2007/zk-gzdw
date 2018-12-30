@@ -39,6 +39,7 @@
     <result column="BIND_STATE" jdbcType="INTEGER" property="bindState" />
     <result column="CHANGE_TIME" jdbcType="TIMESTAMP" property="changeTime" />
     <result column="MY_WORK" jdbcType="VARCHAR" property="myWork" />
+    <result column="TEMP_WORK" jdbcType="VARCHAR" property="tempWork" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zzqx.mvc.entity.EmployeeInformation">
     <result column="PHOTO" jdbcType="LONGVARCHAR" property="photo" />
@@ -106,7 +107,7 @@
     AVERAGE_PROCESS_TIME, EMPLOYEE_STATE, EMPLOYEE_SEX, EMPLOYEE_EDUCATION, EMAIL, PHONE, 
     MOBILE, USER_TYPE, LOGIN_IP, HALL_ID, JOBS, LOGIN_DATE, LOGIN_FLAG, CREATE_BY, CREATE_TIME, 
     UPDATE_BY, UPDATE_TIME, REMARKS, DEL_FLAG, EMPLOYEE_BIRTHDAY, MONITOR_FLAG, WATCH_CODE, 
-    WORK_POSITION, WORK_STATE, WORK_TIME, ON_DUTY, BIND_STATE, CHANGE_TIME, MY_WORK
+    WORK_POSITION, WORK_STATE, WORK_TIME, ON_DUTY, BIND_STATE, CHANGE_TIME, MY_WORK, TEMP_WORK
   </sql>
   <sql id="Blob_Column_List">
     PHOTO
@@ -172,7 +173,7 @@
       EMPLOYEE_BIRTHDAY, MONITOR_FLAG, WATCH_CODE, 
       WORK_POSITION, WORK_STATE, WORK_TIME, 
       ON_DUTY, BIND_STATE, CHANGE_TIME, 
-      MY_WORK, PHOTO)
+      MY_WORK, PHOTO, TEMP_WORK)
     values (#{id,jdbcType=INTEGER}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{employeeId,jdbcType=VARCHAR}, #{employeeAccount,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{employeeAge,jdbcType=VARCHAR}, #{businessToday,jdbcType=VARCHAR}, #{averageProcessTime,jdbcType=VARCHAR}, 
@@ -185,7 +186,7 @@
       #{employeeBirthday,jdbcType=TIMESTAMP}, #{monitorFlag,jdbcType=CHAR}, #{watchCode,jdbcType=VARCHAR}, 
       #{workPosition,jdbcType=VARCHAR}, #{workState,jdbcType=VARCHAR}, #{workTime,jdbcType=INTEGER}, 
       #{onDuty,jdbcType=VARCHAR}, #{bindState,jdbcType=INTEGER}, #{changeTime,jdbcType=TIMESTAMP}, 
-      #{myWork,jdbcType=VARCHAR}, #{photo,jdbcType=LONGVARCHAR})
+      #{myWork,jdbcType=VARCHAR}, #{photo,jdbcType=LONGVARCHAR}, #{tempWork})
   </insert>
   <!--批量更新或插入-->
   <insert id="batchInsert" parameterType="java.util.List">
@@ -337,6 +338,9 @@
       <if test="photo != null">
         PHOTO,
       </if>
+      <if test="tempWork != null">
+        TEMP_WORK,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -452,6 +456,9 @@
       </if>
       <if test="photo != null">
         #{photo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tempWork != null">
+        #{tempWork,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -578,6 +585,9 @@
       <if test="record.photo != null">
         PHOTO = #{record.photo,jdbcType=LONGVARCHAR},
       </if>
+      <if test="record.tempWork != null">
+        TEMP_WORK = #{record.tempWork,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -622,7 +632,8 @@
       BIND_STATE = #{record.bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
       MY_WORK = #{record.myWork,jdbcType=VARCHAR},
-      PHOTO = #{record.photo,jdbcType=LONGVARCHAR}
+      PHOTO = #{record.photo,jdbcType=LONGVARCHAR},
+      TEMP_WORK = #{record.tempWork,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -665,7 +676,8 @@
       ON_DUTY = #{record.onDuty,jdbcType=VARCHAR},
       BIND_STATE = #{record.bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{record.changeTime,jdbcType=TIMESTAMP},
-      MY_WORK = #{record.myWork,jdbcType=VARCHAR}
+      MY_WORK = #{record.myWork,jdbcType=VARCHAR},
+      TEMP_WORK = #{record.tempWork,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -784,6 +796,9 @@
       <if test="photo != null">
         PHOTO = #{photo,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tempWork != null">
+        TEMP_WORK = #{tempWork,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
@@ -825,7 +840,8 @@
       BIND_STATE = #{bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
       MY_WORK = #{myWork,jdbcType=VARCHAR},
-      PHOTO = #{photo,jdbcType=LONGVARCHAR}
+      PHOTO = #{photo,jdbcType=LONGVARCHAR},
+      TEMP_WORK = #{tempWork,jdbcType=LONGVARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
@@ -865,7 +881,8 @@
       ON_DUTY = #{onDuty,jdbcType=VARCHAR},
       BIND_STATE = #{bindState,jdbcType=INTEGER},
       CHANGE_TIME = #{changeTime,jdbcType=TIMESTAMP},
-      MY_WORK = #{myWork,jdbcType=VARCHAR}
+      MY_WORK = #{myWork,jdbcType=VARCHAR},
+      TEMP_WORK = #{tempWork,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -8,7 +8,6 @@ import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.service.CmdListService;
-import com.zzqx.mvc.vo.CmdListOneVo;
 import com.zzqx.mvc.vo.CmdListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

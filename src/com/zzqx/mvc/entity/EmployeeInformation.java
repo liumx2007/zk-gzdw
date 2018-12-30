@@ -80,6 +80,8 @@ public class EmployeeInformation {
 
     private String photo;
 
+    private String tempWork;
+
     public Integer getId() {
         return id;
     }
@@ -382,5 +384,13 @@ public class EmployeeInformation {
 
     public void setPhoto(String photo) {
         this.photo = photo == null ? null : photo.trim();
+    }
+
+    public String getTempWork() {
+        return tempWork;
+    }
+
+    public void setTempWork(String tempWork) {
+        this.tempWork = tempWork;
     }
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CountInfo {
     //中台服务器Ip
-    public static final String SERVER_IP = "http://192.168.43.124:8090";
+    public static final String SERVER_IP = "http://10.174.12.44:8091";
     //营业厅id
     public static final Integer HALL_ID = 2;
     /**
