@@ -435,7 +435,7 @@ public class InterfaceController extends BaseController {
 		msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		msg.setCreator("admin");
 		msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
-		msg.setTitle("调度信息");
+		msg.setTitle("归岗信息");
 		msg.setType(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY);
 		msg.setWatch_code(employeeInformation.getWatchCode());
 		msg.setOrdertime(new Date());
