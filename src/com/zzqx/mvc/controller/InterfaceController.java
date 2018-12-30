@@ -85,6 +85,17 @@ public class InterfaceController extends BaseController {
 		List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(new EmployeeInformationExample());
 		return employeeInformationList;
 	}
+	/**
+	 * 平板根据id获取人员
+	 * @param request
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("pad/getEmpById")
+	public EmployeeInformation getEmpById(BigDecimal id,HttpServletRequest request) {
+		EmployeeInformation employeeInformation = employeeInformationMapper.selectByPrimaryKey(id);
+		return employeeInformation;
+	}
 	List<AndroidMinaSession> sessions = AndroidMinaManager.getClients();
 	@OpenAccess
 	@ResponseBody
