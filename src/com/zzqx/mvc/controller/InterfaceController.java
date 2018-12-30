@@ -410,7 +410,6 @@ public class InterfaceController extends BaseController {
 		employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
 		employeeInformation.setTempWork(work);
 		employeeInformationService.updateById(employeeInformation);
-
 	}
 	/**
 	 * 确认归岗

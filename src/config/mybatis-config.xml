@@ -9,6 +9,7 @@
     </settings>
     <typeAliases>
         <package name="com.zzqx.mvc.entity"/>
+        <package name="com.zzqx.mvc.vo"/>
     </typeAliases>
     <!-- pagehelper分页拦截器插件配置 -->
     <!--<plugins>-->

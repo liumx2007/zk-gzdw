@@ -2,6 +2,7 @@ package com.zzqx.mvc.service;
 
 import com.zzqx.mvc.dto.CmdListDto;
 import com.zzqx.mvc.entity.CmdList;
+import com.zzqx.mvc.vo.CmdListOneVo;
 import com.zzqx.mvc.vo.CmdListVo;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public interface CmdListService {
      * 页面使用的单个数据
      */
 //    CmdListVo getCmdVoById(String  id);
+
+    /**
+     * 排除directList的全部数据
+     */
+    List<CmdListOneVo> getListExcludeDirectList();
     /**
      * 有选择的插入数据
      */
@@ -47,4 +53,6 @@ public interface CmdListService {
      * 主键批量删除
      */
     int deleteByIds(String ids);
+
+
 }

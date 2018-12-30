@@ -9,6 +9,7 @@ import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.entity.CmdListExample;
 import com.zzqx.mvc.service.CmdListService;
 import com.zzqx.mvc.service.CmdService;
+import com.zzqx.mvc.vo.CmdListOneVo;
 import com.zzqx.mvc.vo.CmdListVo;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,7 +36,7 @@ public class CmdListServiceImpl implements CmdListService {
     @Override
     public List<CmdList> allList(String directName) {
         CmdListExample cmdListExample = new CmdListExample();
-        if (directName != null || directName != "") {
+        if (  !"".equals(directName)) {
             CmdListExample.Criteria criteria = cmdListExample.createCriteria();
             criteria.andDirectListNameEqualTo(directName);
         }
@@ -80,6 +81,11 @@ public class CmdListServiceImpl implements CmdListService {
             cmdListVo.setPort(port);
         }
         return cmdListVo;
+    }
+
+    @Override
+    public List<CmdListOneVo> getListExcludeDirectList() {
+        return cmdListMapper.getListExcludeDirectList();
     }
 
 //    @Override

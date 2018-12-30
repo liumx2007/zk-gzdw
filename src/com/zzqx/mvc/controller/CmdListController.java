@@ -8,6 +8,7 @@ import com.zzqx.mvc.entity.CmdList;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.service.CmdListService;
+import com.zzqx.mvc.vo.CmdListOneVo;
 import com.zzqx.mvc.vo.CmdListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,12 @@ public class CmdListController {
         List<CmdList> lists = cmdListService.allList(directListName);
         CmdList cmdList = lists.get(0);
         String directList = cmdList.getDirectList();
-        HttpUtil.get(CountInfo.LOCALHOST+"/server/cmd/send?"+directList);
-        return R.ok();
+        try {
+            HttpUtil.get(CountInfo.LOCALHOST+"/server/r/cmd/send?"+directList);
+            return R.ok();
+        }catch (Exception e){
+            return R.error("网络不通");
+        }
     }
 
     /**
@@ -44,8 +49,9 @@ public class CmdListController {
     @RequestMapping("all")
     @ResponseBody
     public R allData(){
-        String s = "";
-        List<CmdList> cmdLists = cmdListService.allList(s);
+//        String s = "";
+//        List<CmdList> cmdLists = cmdListService.allList(s);
+        List<CmdListOneVo> cmdLists = cmdListService.getListExcludeDirectList();
         return R.ok().put("data",cmdLists);
     }
 
