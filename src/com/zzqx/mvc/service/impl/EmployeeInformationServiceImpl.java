@@ -51,10 +51,10 @@ public class EmployeeInformationServiceImpl implements EmployeeInformationServic
         EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
         BigDecimal bd = new BigDecimal(employeeInformation.getId());
         criteria.andHallIdEqualTo(CountInfo.HALL_ID).andIdEqualTo(bd);
-        EmployeeInformation em = new EmployeeInformation();
-        em.setBindState((short)0);
-        em.setWatchCode(employeeInformation.getWatchCode());
-        return employeeInformationMapper.updateByExampleSelective(em,employeeInformationExample);
+//        EmployeeInformation em = new EmployeeInformation();
+//        em.setBindState((short)0);
+//        em.setWatchCode(employeeInformation.getWatchCode());
+        return employeeInformationMapper.updateByExampleSelective(employeeInformation,employeeInformationExample);
     }
 
     @Override

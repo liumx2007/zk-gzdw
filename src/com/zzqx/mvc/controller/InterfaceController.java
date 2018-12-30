@@ -66,13 +66,25 @@ public class InterfaceController extends BaseController {
 	@Autowired
 	private EmployeeInformationMapper employeeInformationMapper;
 	@Autowired
+	private EmployeeInformationService employeeInformationService;
+	@Autowired
 	private EmployeeJobsMapper employeeJobsMapper;
 	@Autowired
 	private BhSchduMapper bhSchduMapper;
 	Map<String, WorkPosition> goingOnduty = new HashMap<String, WorkPosition>();
 
 
-	
+	/**
+	 * 平板获取所有人员
+	 * @param request
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("pad/getAllEmp")
+	public List<EmployeeInformation> getAllEmp(HttpServletRequest request) {
+		List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(new EmployeeInformationExample());
+		return employeeInformationList;
+	}
 	List<AndroidMinaSession> sessions = AndroidMinaManager.getClients();
 	@OpenAccess
 	@ResponseBody
@@ -308,7 +320,7 @@ public class InterfaceController extends BaseController {
 	@OpenAccess
 	@ResponseBody
 	@RequestMapping("interface_onduty")
-	public void dispatchTemp(HttpServletRequest request) {
+	public String dispatchTemp(HttpServletRequest request) {
 		WorkPosition work = null;
 //		Personnel person = new Personnel();
 		Message msg = new Message();
@@ -370,6 +382,7 @@ public class InterfaceController extends BaseController {
 		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, person.getWatch_code(), person);
 //		System.out.println(person.getName() + "调度到" + work.getPosition_name() );
 //		goingOnduty.put(person.getWatch_code(), work);
+		return "已发送调度信息";
 	}
 	/**
 	 * 确认调度
@@ -380,81 +393,58 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("confirmGoOnDuty")
 	public void confirmGoOnDuty(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
-//		String ondutyType = request.getParameter("ondutyType");
-//		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
-		PropertiesHelper p = new PropertiesHelper("config.properties");
-		String httpCore = p.readValue("url");
-		String s = null;
-		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,2000);
-		}catch (Exception e){
-			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
+		String work = request.getParameter("position");
+		EmployeeInformation employeeInformation = new EmployeeInformation();
+		employeeInformation.setWatchCode(watchCode);
+		employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+		employeeInformation.setTempWork(work);
+		employeeInformationService.updateById(employeeInformation);
 
-		}
-		PersonVo personnels = null;
-		if(!"".equals(s)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-			personnels = JSONUtil.toBean(object,PersonVo.class);
-		}
-		Personnel person = new Personnel(personnels);
+	}
+	/**
+	 * 确认归岗
+	 * @param request
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("confirmBackToWork")
+	public void confirmBackToWork(HttpServletRequest request) {
+		String watchCode = request.getParameter("watchCode");
+		EmployeeInformation employeeInformation = new EmployeeInformation();
+		employeeInformation.setWatchCode(watchCode);
+		employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+		employeeInformation.setTempWork("");
+		employeeInformationService.updateById(employeeInformation);
 
-		if(goingOnduty.get(watchCode)!=null){
-			person.setMy_work(goingOnduty.get(watchCode));
-			personnelService.saveOrUpdate(person);
-			goingOnduty.remove(watchCode);
-			//永久调度 同时更改日常信息
-			List<Integer> status = new ArrayList<Integer>();
-			status.add(AndroidConstant.MESSAGE_STATE_READ_KEY);
-			status.add(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
-			List<Message> list = messageService.find(Restrictions.eq("watch_code",watchCode),
-								Restrictions.in("statu", status),
-								Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE),
-								Restrictions.eq("type", AndroidConstant.MESSAGE_TYPE_NORMAL_KEY));
-			Message normalMsg = list.get(0);
-			normalMsg.setContent(person.getName() + "工号" + person.getJob_num() + "今日工作岗位为" + person.getMy_work().getPosition_name());
-			normalMsg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
-//			normalMsg.setOrdertime(new Date());
-			messageService.saveOrUpdate(normalMsg);
-			//永久调度更改排班岗位
-			Query datesQuery = arrangeDateService.createQuery("from ArrangeDate d where date_format(d.arrange_date,'%Y-%m-%d')=?", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-			ArrangeDate Date = null;
-			if(datesQuery.list().size()>0){
-				Date = (ArrangeDate) datesQuery.list().get(0);
-			}else{
-				return;
-			}
-			Query detialQuery = arrangeDetialService.createQuery("from ArrangeDetial d where d.arrange_date_id.id=?", Date.getId());
-			List<ArrangeDetial> arrangeList = detialQuery.list();
-			for(ArrangeDetial ad :arrangeList){
-				if(ad.getPerson_id().equals(person.getId())){
-					ad.setPosition(person.getMy_work().getId());
-					arrangeDetialService.saveOrUpdate(ad);
-				}else if(ad.getPerson_id().contains("," + person.getId())){
-					ad.setPerson_id(ad.getPerson_id().replace("," + person.getId(), ""));
-					arrangeDetialService.saveOrUpdate(ad);
-					ArrangeDetial arrangeDetial = new ArrangeDetial();
-					arrangeDetial.setArrange_date_id(ad.getArrange_date_id());
-					arrangeDetial.setCreate_time(ad.getCreate_time());
-					arrangeDetial.setPart(ad.getPart());
-					arrangeDetial.setPerson_id(person.getId());
-					arrangeDetial.setPosition(person.getMy_work().getId());
-					arrangeDetial.setUpdata_time(ad.getUpdata_time());
-					arrangeDetialService.saveOrUpdate(arrangeDetial);
-				}else if(ad.getPerson_id().contains(person.getId())){
-					ad.setPerson_id(ad.getPerson_id().replace(person.getId(), ""));
-					arrangeDetialService.saveOrUpdate(ad);
-					ArrangeDetial arrangeDetial = new ArrangeDetial();
-					arrangeDetial.setArrange_date_id(ad.getArrange_date_id());
-					arrangeDetial.setCreate_time(ad.getCreate_time());
-					arrangeDetial.setPart(ad.getPart());
-					arrangeDetial.setPerson_id(person.getId());
-					arrangeDetial.setPosition(person.getMy_work().getId());
-					arrangeDetial.setUpdata_time(ad.getUpdata_time());
-					arrangeDetialService.saveOrUpdate(arrangeDetial);
-				}
-			}
-		}
-		
+	}
+	/**
+	 * 归岗
+	 * @param request
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("backToWork")
+	public String backToWork(HttpServletRequest request) {
+		String watchCode = request.getParameter("watchCode");
+		EmployeeInformation employeeInformation = new EmployeeInformation();
+		employeeInformation.setWatchCode(watchCode);
+		employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+		//发送归岗信息
+		Message msg = new Message();
+		msg.setContent("请" + employeeInformation.getName() + "回到原岗位。("+employeeInformation.getMyWork()+")");
+		msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		msg.setCreator("admin");
+		msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
+		msg.setTitle("调度信息");
+		msg.setType(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY);
+		msg.setWatch_code(employeeInformation.getWatchCode());
+		msg.setOrdertime(new Date());
+		messageService.saveOrUpdate(msg);
+		Personnel personnel = new Personnel();
+		personnel.setName(employeeInformation.getName());
+		personnel.setWatch_code(employeeInformation.getWatchCode());
+		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, watchCode, personnel);
+		return "已发送归岗信息";
 	}
 	@OpenAccess
 	@ResponseBody
