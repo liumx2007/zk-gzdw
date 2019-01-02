@@ -1,6 +1,8 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dto.CmdListDto;
@@ -25,7 +27,7 @@ public class CmdListController {
 
 
     /**
-     *ipad 处理send方法请求接口
+     *ipad 处理send方法请求接口(暂时不启用)
      */
     @OpenAccess
     @RequestMapping("send")
@@ -35,7 +37,8 @@ public class CmdListController {
         CmdList cmdList = lists.get(0);
         String directList = cmdList.getDirectList();
         try {
-            HttpUtil.get(CountInfo.LOCALHOST+"/server/r/cmd/send?"+directList);
+            String  urlString  = URLUtil.decode(directList);
+            HttpUtil.get(CountInfo.LOCALHOST+urlString);
             return R.ok();
         }catch (Exception e){
             return R.error("网络不通");
@@ -49,9 +52,9 @@ public class CmdListController {
     @RequestMapping("all")
     @ResponseBody
     public R allData(){
-//        String s = "";
-//        List<CmdList> cmdLists = cmdListService.allList(s);
-        List<CmdListOneVo> cmdLists = cmdListService.getListExcludeDirectList();
+        String s = "";
+        List<CmdList> cmdLists = cmdListService.allList(s);
+//        List<CmdListOneVo> cmdLists = cmdListService.getListExcludeDirectList();
         return R.ok().put("data",cmdLists);
     }
 

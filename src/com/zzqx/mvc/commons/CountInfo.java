@@ -16,7 +16,7 @@ public class CountInfo {
     /**
      * 本机的ip及port
      */
-    public static  final  String LOCALHOST = "http://127.0.0.1:8091";
+    public static  final  String LOCALHOST = "http://127.0.0.1:8091/server/r/cmd/send?";
     /**
      * 根据腕表编码查询人员
      */
