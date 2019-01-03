@@ -11,6 +11,13 @@ public class CmdList extends IdEntity {
 
     private String description;
 
+    private String tcpIp;
+
+    private String tcpPort;
+
+    private String tcpSource;
+
+
     public String getId() {
         return id;
     }
@@ -41,5 +48,29 @@ public class CmdList extends IdEntity {
 
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
+    }
+
+    public String getTcpIp() {
+        return tcpIp;
+    }
+
+    public void setTcpIp(String tcpIp) {
+        this.tcpIp = tcpIp;
+    }
+
+    public String getTcpPort() {
+        return tcpPort;
+    }
+
+    public void setTcpPort(String tcpPort) {
+        this.tcpPort = tcpPort;
+    }
+
+    public String getTcpSource() {
+        return tcpSource;
+    }
+
+    public void setTcpSource(String tcpSource) {
+        this.tcpSource = tcpSource;
     }
 }

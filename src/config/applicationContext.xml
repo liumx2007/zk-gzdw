@@ -157,7 +157,7 @@
 
     <!-- Android Mina服务端配置  begin -->
     <bean id="ioAndroidAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor" init-method="bind" destroy-method="unbind" lazy-init="false">
-        <property name="defaultLocalAddress" value=":34564" />
+        <property name="defaultLocalAddress" value=":34562" />
         <property name="handler" ref="androidMinaServer" />
         <!-- <property name="filterChainBuilder" ref="androidfilterChainBuilder" /> -->
         <property name="filterChainBuilder" ref="androidfilterChainBuilder" />

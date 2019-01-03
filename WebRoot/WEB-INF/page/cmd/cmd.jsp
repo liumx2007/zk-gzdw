@@ -65,9 +65,9 @@
                 "<a href='javascript:void(0)' onclick='del(\""+row.id+"\");' style='margin-right:5px;'>删除</a>";
             return cz;
         }
-        //编辑
+        //编辑按钮
         function edit(id) {
-            //隐藏标签
+            //隐藏标签-设置主键
             $("#edit_id").val(id);
             $("#form_edit").form("clear");
             //请求单个指令集合
@@ -82,8 +82,10 @@
                     $("#directListName_edit").val(eidtData.directListName);
                     $("#description_edit").val(eidtData.description);
                     //ip,port
-                    $("#ip_edit").val(eidtData.ip);
-                    $("#port_edit").val(eidtData.port);
+//                    $("#ip_edit").val(eidtData.ip);
+//                    $("#port_edit").val(eidtData.port);
+                    $("#ip_edit").val(eidtData.tcpIp);
+                    $("#port_edit").val(eidtData.tcpPort);
                     //指令集合
                     var array = new Array();
                     var directList = eidtData.directList;
@@ -327,6 +329,7 @@
 <script type="text/javascript">
     //添加保存
     $("#add_save").click(function () {
+        /////////页面拼接形式start
         var allData = "test=test";
         //toTCPServer指令
         var  tcpList = "";
@@ -354,12 +357,14 @@
         }else  if (pcList != ""){
             allData += "&"+pcList;
         }
+        /////////页面拼接形式end
           var  directListName = $("#directListName").val();
           var  description = $("#description").val();
+//          var tcpList1 = "tcp,"+tcpList;
         $.ajax({
             type: "POST",
             url: "r/cmdList/save",
-            data:"directListName="+directListName+"&description="+description+"&directList="+encodeURIComponent(allData),
+            data:"tcpIp="+ip+"&tcpPort="+port+"&directListName="+directListName+"&description="+description+"&tcpSource="+encodeURIComponent(tcpList),
             success: function(object){
                 console.log(object);
                 $('#cmd_list_table').datagrid("reload");
@@ -371,6 +376,7 @@
     });
     //编辑保存
     $("#edit_save").click(function () {
+        ///////第一版页面拼接指令Start
         var allData = "test=test";
         //toTCPServer指令
         var  tcpList = "";
@@ -398,13 +404,14 @@
         }else  if (pcList != ""){
             allData += "&"+pcList;
         }
+        ///////第一版页面拼接指令end
         var  directListName = $("#directListName_edit").val();
         var  description = $("#description_edit").val();
         var cId = $("#edit_id").val();
         $.ajax({
             type: "POST",
             url: "r/cmdList/edit",
-            data:"id="+cId+"&directListName="+directListName+"&description="+description+"&directList="+encodeURIComponent(allData),
+            data:"id="+cId+"&tcpIp="+ip+"&tcpPort="+port+"&directListName="+directListName+"&description="+description+"&tcpSource="+encodeURIComponent(tcpList),
             success: function(object){
                 console.log(object);
                 $('#cmd_list_table').datagrid("reload");

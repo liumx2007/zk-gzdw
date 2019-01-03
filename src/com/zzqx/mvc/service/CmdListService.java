@@ -54,10 +54,7 @@ public interface CmdListService {
      */
     int deleteByIds(String ids);
 
-    /**
-     * 指令发送接口
-     */
-    void send(String directListName);
+
 
 
 }
