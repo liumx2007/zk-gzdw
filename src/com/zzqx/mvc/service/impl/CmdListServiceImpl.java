@@ -137,7 +137,7 @@ public class CmdListServiceImpl implements CmdListService {
             s += cmdList.getTcpIp()+","+cmdList.getTcpPort()+","+ item+";";
         }
         String source = s.substring(0,s.length()-1);
-        source = "toTCPServer="+source;
+//        source = "toTCPServer="+source;
         cmdList.setDirectList(source);
         //todo 其他指令的拼接
         return cmdList;

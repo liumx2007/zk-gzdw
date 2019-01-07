@@ -522,7 +522,14 @@ public class PersonnelController extends BaseController {
 //		Personnel person = personnelService.getById(id);
 		String re ="";
 		try{
+			//修改中台数据
 			re = HttpUtil.get(CountInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid,1500);
+			//todo 19-1-7 修改本地数据
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWatchCode(uuid);
+//			employeeInformation.setBindState((short)0);
+			employeeInformation.setId(i);
+			employeeInformationService.updateById(employeeInformation);
 			if (re.contains("修改成功")){
 				return uuid;
 			}

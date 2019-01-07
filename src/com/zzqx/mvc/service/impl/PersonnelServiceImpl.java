@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jetsum.core.orm.entity.Page;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.PersonnelDao;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.service.*;
@@ -45,6 +46,9 @@ public class PersonnelServiceImpl implements PersonnelService {
 	private WorkPositionService workPositionService;
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+			BhSchduService bhSchduService;
+
 
 	String s = "";
 
@@ -257,9 +261,11 @@ public class PersonnelServiceImpl implements PersonnelService {
 //				List<Personnel> personnels = personnelDao.find(Restrictions.eq("watch_code", watchCode));
 
 				try{
-					PropertiesHelper p = new PropertiesHelper("config.properties");
-					String httpCore = p.readValue("url");
-					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode);
+//					PropertiesHelper p = new PropertiesHelper("config.properties");
+//					String httpCore = p.readValue("url");
+					String httpCore = CountInfo.SERVER_IP;
+					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode,2000);
+
 				}catch (Exception e){
 					return false;
 				}
@@ -279,12 +285,21 @@ public class PersonnelServiceImpl implements PersonnelService {
 //					sb.append(personnel.getJob_num());
 					//获取拍板信息
 					String schMsg = "";
+					//todo 查询本地排班
+
 					try{
-						PropertiesHelper p = new PropertiesHelper("config.properties");
-						String httpCore = p.readValue("url");
-						schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2");
+//						PropertiesHelper p = new PropertiesHelper("config.properties");
+//						String httpCore = p.readValue("url");
+						String httpCore = CountInfo.SERVER_IP;
+						schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2",2000);
 					}catch (Exception e){
-						return false;
+//						return false;
+						//本地排版信息
+						List<BhSchdu> list = bhSchduService.selectByExample();
+						cn.hutool.json.JSONArray jsonArray = new cn.hutool.json.JSONArray();
+						jsonArray.add(list);
+						String s = jsonArray.toString();
+						schMsg  = s.substring(1,s.length()-1);
 					}
 					String wordStr = "";
 					if(!"".equals(schMsg)){

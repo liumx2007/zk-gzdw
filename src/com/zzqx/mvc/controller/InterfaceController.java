@@ -333,7 +333,6 @@ public class InterfaceController extends BaseController {
 //		Personnel person = new Personnel();
 		Message msg = new Message();
 		String watchCode = request.getParameter("watchCode");
-
 //		String personId = request.getParameter("personId");
 //		if(!personId.isEmpty() && personId != null){
 //			person = personnelService.getById(personId);
@@ -358,7 +357,6 @@ public class InterfaceController extends BaseController {
 			}
 		}catch (Exception e){
 			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
-
 		}
 		String position = request.getParameter("position");
 		if(position != null && !position.isEmpty() ){
@@ -366,8 +364,10 @@ public class InterfaceController extends BaseController {
 			String wPosition = "";
 			EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
 			EmployeeJobsExample.Criteria criteriae = employeeJobsExample.createCriteria();
+			//todo 修改 19-1-7
 			BigDecimal jobId = new BigDecimal(position);
 			criteriae.andIdEqualTo(jobId);
+//			criteriae.andJobsNameEqualTo(position);
 			EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
 			wPosition = employeeJobs.getJobsName();
 			try {
@@ -376,9 +376,7 @@ public class InterfaceController extends BaseController {
 				wPosition = object.get("jobsName").toString();
 			}catch (Exception e){
 				System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
-
 			}
-
 			msg.setContent("请" + person.getName() + "到" + wPosition);
 			msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			msg.setCreator("admin");

@@ -123,6 +123,6 @@ public class SynchronizeTimerTask {
             employeeInformationMapper.deleteByExample(null);
             employeeInformationMapper.batchInsert(employeeInformationList);
         }
-  
+
     }
 }
