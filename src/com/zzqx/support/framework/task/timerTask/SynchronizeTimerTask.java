@@ -49,7 +49,7 @@ public class SynchronizeTimerTask {
                 Object schObj = schJsonArray.get(i);
                 BhSchdu schdu = JSONUtil.toBean(schObj.toString(),BhSchdu.class);
                 bhSchduMapper.updateByPrimaryKey(schdu);
-                //发送消息到腕表
+                //发送消息到腕表v
                 if(schdu.getCreateTime().getDate() == new Date().getDate()){
                     Message msg = new Message();
                     BigDecimal empId = BigDecimal.valueOf(schdu.getEmployeeId());
