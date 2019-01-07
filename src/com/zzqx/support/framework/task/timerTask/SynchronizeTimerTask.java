@@ -8,11 +8,10 @@ import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.BhSchduMapper;
 import com.zzqx.mvc.dao.EmployeeInformationMapper;
 import com.zzqx.mvc.dao.EmployeeJobsMapper;
-import com.zzqx.mvc.entity.BhSchdu;
-import com.zzqx.mvc.entity.EmployeeInformation;
-import com.zzqx.mvc.entity.EmployeeJobsExample;
-import com.zzqx.mvc.entity.Message;
+import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.service.MessageService;
+import com.zzqx.support.framework.mina.androidser.AndroidConstant;
+import com.zzqx.support.utils.net.SocketDataSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,22 +50,25 @@ public class SynchronizeTimerTask {
                 BhSchdu schdu = JSONUtil.toBean(schObj.toString(),BhSchdu.class);
                 bhSchduMapper.updateByPrimaryKey(schdu);
                 //发送消息到腕表
-//                if(schdu.getCreateTime().getDate() == new Date().getDate()){
-//                    Message msg = new Message();
-//                    BigDecimal empId = BigDecimal.valueOf(schdu.getEmployeeId());
-//                    BigDecimal jobId = BigDecimal.valueOf(schdu.getJobsId());
-//                    employeeJobsMapper.();
-//                    msg.setContent("请" + employeeInformationMapper.selectByPrimaryKey(empId).getName() + "到" + wPosition);
-//                    msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-//                    msg.setCreator("admin");
-//                    msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
-//                    msg.setTitle("调度信息");
-//                    msg.setType(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY);
-//                    msg.setWatch_code(person.getWatch_code());
-//                    msg.setOrdertime(new Date());
-//                    messageService.saveOrUpdate(msg);
-//                    SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, person.getWatch_code(), person);
-//                }
+                if(schdu.getCreateTime().getDate() == new Date().getDate()){
+                    Message msg = new Message();
+                    BigDecimal empId = BigDecimal.valueOf(schdu.getEmployeeId());
+                    EmployeeJobs employeeJobs = employeeJobsMapper.selectById(schdu.getJobsId());
+                    EmployeeInformation employeeInformation = employeeInformationMapper.selectByPrimaryKey(empId);
+                    msg.setContent("请" + employeeInformation.getName() + "到" + employeeJobs.getJobsName());
+                    msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                    msg.setCreator("admin");
+                    msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
+                    msg.setTitle("调度信息");
+                    msg.setType(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY);
+                    msg.setWatch_code(employeeInformation.getWatchCode());
+                    msg.setOrdertime(new Date());
+                    messageService.saveOrUpdate(msg);
+                    Personnel person = new Personnel();
+                    person.setName(employeeInformation.getName());
+                    person.setWatch_code(employeeInformation.getWatchCode());
+                    SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, employeeInformation.getWatchCode(), person);
+                }
             }
         }
     }
