@@ -3,8 +3,10 @@ package com.zzqx.support.framework.mina.androidser;
 import cn.hutool.http.HttpUtil;
 import com.zzqx.mvc.SpringContext;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.entity.Personnel;
+import com.zzqx.mvc.service.EmployeeInformationService;
 import com.zzqx.mvc.service.MessageService;
 import com.zzqx.mvc.service.PersonnelService;
 import com.zzqx.support.utils.DateManager;
@@ -18,6 +20,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -30,6 +33,8 @@ import java.util.List;
 public class AndroidMinaServer extends IoHandlerAdapter {
 
 	private static Logger logger = LoggerFactory.getLogger(AndroidMinaServer.class);
+	@Autowired
+	private EmployeeInformationService employeeInformationService;
 
 	String s = null;
 
@@ -86,24 +91,27 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 				AndroidMinaSession minaSession = AndroidMinaManager.get(session);
 				minaSession.setWatchCode(msgs);
 				AndroidMinaManager.add(minaSession);
+				EmployeeInformation employeeInformation = new EmployeeInformation();
+				employeeInformation.setWatchCode(msgs);
+				employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
 				PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 //				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
 				try{
 //					PropertiesHelper p = new PropertiesHelper("config.properties");
 //					String httpCore = p.readValue("url");
 //					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
-					s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+msgs);
+					s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+msgs,2000);
 				}catch (Exception e){
 					return ;
 				}
-				Personnel personnels = new Personnel();
+//				Personnel personnels = new Personnel();
 				if(!"".equals(s)){
 					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 //					personnels = JSONUtil.toBean(object,Personnel.class);=
-					personnels.setBind_status(Integer.parseInt(object.get("bindState").toString()));
+					employeeInformation.setBindState(Short.parseShort(object.get("bindState").toString()));
 				}
-				if (personnels != null ) {
-					if (personnels.getBind_status() == AndroidConstant.PERSON_BIND_STATUS_BOUND_KEY) {
+				if (employeeInformation != null ) {
+					if (employeeInformation.getBindState()+0 == AndroidConstant.PERSON_BIND_STATUS_BOUND_KEY) {
 						String statDay = DateManager.date2Str(DateManager.date_sdf);
 						MessageService messageService = (MessageService) SpringContext.getBean("messageService");
 						List<Message> messageList = messageService.find(Restrictions.eq("watch_code", msgs),
