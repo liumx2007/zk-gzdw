@@ -210,23 +210,20 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("onduty/confirm")
 	public String ondutyConfirm(HttpServletRequest request) {
 		String watchCode = request.getParameter("watchCode");
-//		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
-//		person.setMy_work(getWork(person));
-//		personnelService.saveOrUpdate(person);
+		EmployeeInformationExample ex = new EmployeeInformationExample();
+		EmployeeInformationExample.Criteria criteria = ex.createCriteria();
+		criteria.andWatchCodeEqualTo(watchCode);
+		List<EmployeeInformation> empList = employeeInformationMapper.selectByExample(ex);
+		EmployeeInformation emp = new EmployeeInformation();
+		if(empList != null && empList.size()>0){
+			emp = empList.get(0);
+		}
+		emp.setMyWork(getWork_new(emp).getJobsName());
+		employeeInformationMapper.updateByPrimaryKey(emp);
 		try{
 			String getData = HttpUtil.get(CountInfo.GET_JOB_BY_WATCHCODE+watchCode,2000);
 		}catch (Exception e){
 			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
-			EmployeeInformationExample ex = new EmployeeInformationExample();
-			EmployeeInformationExample.Criteria criteria = ex.createCriteria();
-			criteria.andWatchCodeEqualTo(watchCode);
-			List<EmployeeInformation> empList = employeeInformationMapper.selectByExample(ex);
-			EmployeeInformation emp = new EmployeeInformation();
-			if(empList != null && empList.size()>0){
-				emp = empList.get(0);
-			}
-			emp.setMyWork(getWork_new(emp).getJobsName());
-			employeeInformationMapper.updateByPrimaryKey(emp);
 		}
 
 		return "确认到岗";
@@ -345,6 +342,12 @@ public class InterfaceController extends BaseController {
 //		String httpCore = p.readValue("url");
 		String s = null;
 		Personnel person = new Personnel();
+		EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+		EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+		criteria.andWatchCodeEqualTo(watchCode);
+		EmployeeInformation employeeInformation = employeeInformationMapper.selectByExample(employeeInformationExample).get(0);
+		person.setName(employeeInformation.getName());
+		person.setWatch_code(employeeInformation.getWatchCode());
 		try{
 			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,2000);
 			if(!"".equals(s)){
@@ -355,29 +358,25 @@ public class InterfaceController extends BaseController {
 			}
 		}catch (Exception e){
 			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
-			EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
-			EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
-			criteria.andWatchCodeEqualTo(watchCode);
-			EmployeeInformation employeeInformation = employeeInformationMapper.selectByExample(employeeInformationExample).get(0);
-			person.setName(employeeInformation.getName());
-			person.setWatch_code(employeeInformation.getWatchCode());
+
 		}
 		String position = request.getParameter("position");
 		if(position != null && !position.isEmpty() ){
 			//查询岗位
 			String wPosition = "";
+			EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
+			EmployeeJobsExample.Criteria criteriae = employeeJobsExample.createCriteria();
+			BigDecimal jobId = new BigDecimal(position);
+			criteriae.andIdEqualTo(jobId);
+			EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
+			wPosition = employeeJobs.getJobsName();
 			try {
 				s =  HttpUtil.get(CountInfo.JOB_BY_ID+position,2000);
 				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 				wPosition = object.get("jobsName").toString();
 			}catch (Exception e){
 				System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
-				EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
-				EmployeeJobsExample.Criteria criteria = employeeJobsExample.createCriteria();
-				BigDecimal jobId = new BigDecimal(position);
-				criteria.andIdEqualTo(jobId);
-				EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
-				wPosition = employeeJobs.getJobsName();
+
 			}
 
 			msg.setContent("请" + person.getName() + "到" + wPosition);

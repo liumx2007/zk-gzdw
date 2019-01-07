@@ -64,4 +64,9 @@ public class EmployeeInformationServiceImpl implements EmployeeInformationServic
         criteria.andBindStateEqualTo(employeeInformation.getBindState());
         return employeeInformationMapper.selectAll(employeeInformationExample);
     }
+
+    @Override
+    public EmployeeInformation getById(String id) {
+        return employeeInformationMapper.selectByPrimaryKey(BigDecimal.valueOf(Long.valueOf(id)));
+    }
 }

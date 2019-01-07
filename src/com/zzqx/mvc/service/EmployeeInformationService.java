@@ -29,4 +29,6 @@ public interface EmployeeInformationService {
     int  updateById(EmployeeInformation employeeInformation);
 
     List<EmployeeInformationDto> selectAll(EmployeeInformation employeeInformation);
+
+    EmployeeInformation getById(String id);
 }

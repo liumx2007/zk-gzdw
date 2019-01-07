@@ -271,6 +271,21 @@ public class PersonnelController extends BaseController {
 	public String watchUpdateWorkStatus(HttpServletRequest request) {
 		int statu = Integer.valueOf(request.getParameter("statu"));
 		String watchCode = request.getParameter("watchCode");
+		EmployeeInformation employeeInformation = new EmployeeInformation();
+		employeeInformation.setWatchCode(watchCode);
+		employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+		if(employeeInformation.getWorkState().equals(statu+"")){
+			return "状态无变化";
+		}
+		employeeInformation.setWorkState(String.valueOf(statu));
+		employeeInformation.setChangeTime(new Date());
+		int flag = employeeInformationService.updateByWatchCode(employeeInformation);
+		String returnStr = "";
+		if (flag == 0){
+			returnStr =  "修改状态失败。";
+		}else{
+			returnStr =  "修改状态成功。";
+		}
 		try{
 			s = HttpUtil.get(CountInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode,1500);
 			if (!s.contains("修改成功")) {
@@ -281,32 +296,8 @@ public class PersonnelController extends BaseController {
 			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			EmployeeInformation employeeInformation = new EmployeeInformation();
-			employeeInformation.setWatchCode(watchCode);
-			employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
-			if(employeeInformation.getWorkState().equals(statu+"")){
-				return "状态无变化";
-			}
-			employeeInformation.setWorkState(String.valueOf(statu));
-			employeeInformation.setChangeTime(new Date());
-			int flag = employeeInformationService.updateByWatchCode(employeeInformation);
-			if (flag == 0){
-				return "修改状态失败。";
-			}else{
-				return "修改状态成功。";
-			}
 		}
-//		List<Personnel> personList = personnelService.find(Restrictions.eq("watch_code", watchCode));
-//		Personnel person = null;
-//		if (!s.contains("修改成功")) {
-////			return "人员信息不存在";
-//			return "修改状态失败。";
-//		}
-//		else {
-//			logger.error("人员信息不存在");
-//			logger.error("通过watch_code：" + watchCode + "查询人员信息不存在");
-//			return "人员信息不存在";
-//		}
+		return returnStr;
 
 
 
@@ -480,22 +471,23 @@ public class PersonnelController extends BaseController {
 //		JSONArray json = JSONArray.fromObject(list);
 //		return json.toString();
 		List<EmployeeInformation> employeeInformationList;
+		//获取未绑定人员列表
+		EmployeeInformation employeeInformation = new EmployeeInformation();
+		employeeInformation.setBindState(bindStatus.shortValue());
+		employeeInformation.setHallId(CountInfo.HALL_ID);
+		employeeInformationList = employeeInformationService.selectNoboding(employeeInformation);
+		if (employeeInformationList.size() > 0 ){
+			JSONArray array = new JSONArray();
+			array.add(employeeInformationList);
+			s  = array.toString().substring(1,array.toString().length()-1);
+		}
 		try{
 			s = HttpUtil.get(CountInfo.GET_PERSON_LIST,2000);
 			cn.hutool.json.JSONArray json = JSONUtil.parseArray(JSONUtil.parseObj(s).get("data"));
 			employeeInformationList = JSONUtil.toList(json,EmployeeInformation.class);
 		}catch (Exception e){
 			logger.error("连接中台失败");
-			//获取未绑定人员列表
-			EmployeeInformation employeeInformation = new EmployeeInformation();
-			employeeInformation.setBindState(bindStatus.shortValue());
-			employeeInformation.setHallId(CountInfo.HALL_ID);
-			employeeInformationList = employeeInformationService.selectNoboding(employeeInformation);
-			if (employeeInformationList.size() > 0 ){
-				JSONArray array = new JSONArray();
-				array.add(employeeInformationList);
-				s  = array.toString().substring(1,array.toString().length()-1);
-			}
+
 		}
 		return  s;
 	}
@@ -605,14 +597,15 @@ public class PersonnelController extends BaseController {
 			message.setMessage("解绑失败！");
 			return message.toString();
 		}
-		Personnel personnel = personnelService.getById(id);
-		if(personnel!=null&&personnel.getBind_status() == 1){
+		EmployeeInformation employeeInformation = employeeInformationService.getById(id);
+//		Personnel personnel = personnelService.getById(id);
+		if(employeeInformation!=null&&employeeInformation.getBindState() == 1){
 			message.setType(ReturnMessage.MESSAGE_NOTICE);
-			message.setMessage(personnel.getName()+"未绑定任何设备，无需解绑！");
+			message.setMessage(employeeInformation.getName()+"未绑定任何设备，无需解绑！");
 			return message.toString();
 		}
 		
-		List<Message> msgList = messageService.find(Restrictions.eq("watch_code", personnel.getWatch_code()));
+		List<Message> msgList = messageService.find(Restrictions.eq("watch_code", employeeInformation.getWatchCode()));
 		String msgIds = "";
 		for(Message msg : msgList){
 			msgIds+=msg.getId()+",";
@@ -621,11 +614,11 @@ public class PersonnelController extends BaseController {
 			msgIds = msgIds.substring(0,msgIds.length() - 1);
 			messageService.delete(msgIds);
 		}
-		personnel.setBind_status(AndroidConstant.PERSON_BIND_STATUS_UNBOUND_KEY);
-		sendAndroidUnBandByIdWatchCode(personnel.getWatch_code());
-		personnel.setWatch_code(null);
-		personnel.setMy_work(null);
-		personnelService.saveOrUpdate(personnel);
+		employeeInformation.setBindState(Short.parseShort(AndroidConstant.PERSON_BIND_STATUS_UNBOUND_KEY.toString()));
+		sendAndroidUnBandByIdWatchCode(employeeInformation.getWatchCode());
+		employeeInformation.setWatchCode(null);
+		employeeInformation.setMyWork(null);
+		employeeInformationService.updateById(employeeInformation);
 		return message.toString();
 	}
 	
