@@ -68,6 +68,8 @@ public class SynchronizeTimerTask {
                     person.setName(employeeInformation.getName());
                     person.setWatch_code(employeeInformation.getWatchCode());
                     SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, employeeInformation.getWatchCode(), person);
+                    //更新本地排班数据
+                    bhSchduMapper.updateByPrimaryKey(schdu);
                 }
             }
         }
