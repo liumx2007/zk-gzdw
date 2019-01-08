@@ -25,4 +25,10 @@ public class BhSchduController {
             BhSchdu bhSchdu = bhSchduMapper.selectByPrimaryKey(id);
             return R.ok().put("bhSchdu",bhSchdu);
         }
+    @RequestMapping("test")
+    @ResponseBody
+    public R selectByEmIdAndDate(BhSchdu bhSchdu){
+         bhSchdu = bhSchduMapper.selectByEmIdAndDate(bhSchdu);
+        return R.ok().put("bhSchdu",bhSchdu);
+    }
 }

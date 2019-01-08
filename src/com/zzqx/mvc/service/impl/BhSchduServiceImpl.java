@@ -22,4 +22,11 @@ public class BhSchduServiceImpl implements BhSchduService {
         BhSchduExample example = new BhSchduExample();
         return bhSchduMapper.selectByExample(example);
     }
+
+    @Override
+    public BhSchdu selectByEmIdAndDate(BhSchdu bhSchdu) {
+        return bhSchduMapper.selectByEmIdAndDate(bhSchdu);
+    }
+
+
 }

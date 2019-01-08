@@ -9,4 +9,6 @@ import java.util.List;
 public interface BhSchduService {
 
     List<BhSchdu> selectByExample();
+
+    BhSchdu selectByEmIdAndDate(BhSchdu bhSchdu);
 }

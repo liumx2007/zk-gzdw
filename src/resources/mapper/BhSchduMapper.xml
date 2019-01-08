@@ -268,4 +268,16 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByEmIdAndDate" parameterType="com.zzqx.mvc.entity.BhSchdu" resultType="com.zzqx.mvc.entity.BhSchdu">
+    SELECT *
+    from dw_bh_schedu
+    <where>
+      1=1
+      <if test="employeeId != null">
+        and EMPLOYEE_ID =  #{employeeId,jdbcType=INTEGER}
+      </if>
+        and  to_days(SCHEDU_DATE) = to_days(now())
+    </where>
+  </select>
 </mapper>

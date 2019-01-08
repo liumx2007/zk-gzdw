@@ -1,6 +1,8 @@
 
 package com.zzqx.mvc.controller;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
@@ -71,6 +73,9 @@ public class InterfaceController extends BaseController {
 	private EmployeeJobsMapper employeeJobsMapper;
 	@Autowired
 	private BhSchduMapper bhSchduMapper;
+	@Autowired
+			BhSchduService bhSchduService;
+
 	Map<String, WorkPosition> goingOnduty = new HashMap<String, WorkPosition>();
 
 
@@ -255,11 +260,19 @@ public class InterfaceController extends BaseController {
 	 * @param -perTemp
 	 */
 	public EmployeeJobs getWork_new(EmployeeInformation employeeInformation) {
-		BhSchduExample bhSchduExample = new BhSchduExample();
-		BhSchduExample.Criteria criteria = bhSchduExample.createCriteria();
-		BigDecimal bigDecimal = new BigDecimal(employeeInformation.getId());
-		criteria.andEmployeeIdEqualTo(bigDecimal);
-		BhSchdu bhSchdu = bhSchduMapper.selectByExample(bhSchduExample).get(0);
+		//todo 19-1-8
+//		BhSchduExample bhSchduExample = new BhSchduExample();
+//		BhSchduExample.Criteria criteria = bhSchduExample.createCriteria();
+//		BigDecimal bigDecimal = new BigDecimal(employeeInformation.getId());
+//		criteria.andEmployeeIdEqualTo(bigDecimal);
+//
+//		DateTime dateTime = DateUtil.parse(DateUtil.today(),"yyyy-MM-dd");
+//		criteria.andScheduDateEqualTo(dateTime);
+//
+//		BhSchdu bhSchdu = bhSchduMapper.selectByExample(bhSchduExample).get(0);
+		BhSchdu bhSchdu1 = new BhSchdu();
+		bhSchdu1.setEmployeeId(employeeInformation.getId());
+		BhSchdu bhSchdu = bhSchduService.selectByEmIdAndDate(bhSchdu1);
 		EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
 		EmployeeJobsExample.Criteria jobCriteria = employeeJobsExample.createCriteria();
 		BigDecimal jobId = new BigDecimal(bhSchdu.getJobsId());

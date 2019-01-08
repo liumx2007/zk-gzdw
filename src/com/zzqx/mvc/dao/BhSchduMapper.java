@@ -35,4 +35,9 @@ public interface BhSchduMapper {
     int updateByPrimaryKeySelective(BhSchdu record);
 
     int updateByPrimaryKey(BhSchdu record);
+
+    /**
+     * 查询当天数据，根据员工ID
+     */
+    BhSchdu selectByEmIdAndDate(BhSchdu bhSchdu);
 }
