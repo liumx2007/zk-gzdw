@@ -4,9 +4,9 @@ import com.jetsum.core.orm.entity.Page;
 import com.zzqx.Global;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.entity.Dkh;
-import com.zzqx.mvc.entity.Order;
 import com.zzqx.mvc.entity.Station;
 import com.zzqx.mvc.entity.Yj;
+import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.service.DkhService;
@@ -16,30 +16,10 @@ import com.zzqx.support.framework.mina.Mina;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.file.FileManager;
 import com.zzqx.support.utils.net.SocketDataSender;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.io.FileUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 @Controller
 @RequestMapping(value = "/yj")
@@ -112,6 +100,43 @@ public class YjController extends BaseController {
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 		return data.toString(jsonConfig);
+	}
+
+	/**
+	 * iPad调用接口-分页数据
+	 * @param page
+	 * @param rows
+	 * @param sDate
+	 * @param eDate
+	 * @param isSearch
+	 * @param request
+	 * @return
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping("listOne")
+	public R listOne(String page, String rows, Date sDate, Date eDate,String isSearch, HttpServletRequest request) {
+		int pageNo = StringHelper.isEmpty(page)?1:Integer.parseInt(page);
+		int pageSize =  StringHelper.isEmpty(rows)?10:Integer.parseInt(rows);
+		Map<String, Object> map;
+		if("1".equals(isSearch)) {
+			map = getQueryParameter(request);
+			map.put("addTime_ge", sDate);
+			if(eDate != null) {
+				Calendar para = Calendar.getInstance();
+				para.setTime(eDate);
+				para.set(Calendar.HOUR_OF_DAY, 23);
+				para.set(Calendar.MINUTE, 59);
+				para.set(Calendar.SECOND, 59);
+				map.put("addTime_le", para.getTime());
+			}
+		} else {
+			map = new HashMap<String, Object>();
+			map.put("isShow_eq", 1);
+		}
+		Page<Yj> thisPage = yjService.getByPage(map, pageNo, pageSize, "isShow,flag,flagTime,addTime", "desc,desc,desc,desc");
+		List<Yj> list = thisPage.getResult();
+		return R.ok().put("rows",list);
 	}
 	
 	@OpenAccess
@@ -194,6 +219,39 @@ public class YjController extends BaseController {
 				thisYj.setFeedback(feedback);
 				thisYj.setHasFk(1);
 				thisYj.setFeedbackTime(new Date());
+			} else {
+				thisYj.setFeedback("");
+				thisYj.setHasFk(0);
+				thisYj.setFeedbackTime(null);
+			}
+			yjService.saveOrUpdate(thisYj);
+		} else {
+			message.setType(ReturnMessage.MESSAGE_ERROR);
+			message.setMessage("反馈失败！");
+		}
+		return message.toString();
+	}
+
+	/**
+	 * iPad调用接口-反馈意见建议
+	 * @param id
+	 * @param feedback
+	 * @param request
+	 * @return
+	 */
+	@OpenAccess
+	@ResponseBody
+	@RequestMapping(value = "feedbackOne")
+	public String feedbackOne(String id, String feedback, String feedbackName,String dept,HttpServletRequest request) {
+		ReturnMessage message = new ReturnMessage(ReturnMessage.MESSAGE_SUCCESS, "反馈成功！");
+		Yj thisYj = yjService.getById(id);
+		if(thisYj != null && StringHelper.isNotBlank(thisYj.getId())) {
+			if(StringHelper.isNotBlank(feedback)) {
+				thisYj.setFeedback(feedback);
+				thisYj.setHasFk(1);
+				thisYj.setFeedbackTime(new Date());
+				thisYj.setFeedbackName(feedbackName);
+				thisYj.setDept(dept);
 			} else {
 				thisYj.setFeedback("");
 				thisYj.setHasFk(0);

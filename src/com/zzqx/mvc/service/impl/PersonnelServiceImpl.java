@@ -15,7 +15,6 @@ import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
 import com.zzqx.support.utils.CommonUtil;
 import com.zzqx.support.utils.ServiceException;
 import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.file.PropertiesHelper;
 import com.zzqx.support.utils.net.SocketDataSender;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
@@ -259,10 +258,8 @@ public class PersonnelServiceImpl implements PersonnelService {
 				}
 			} else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_NORMAL_KEY.intValue()) {// 日常消息
 //				List<Personnel> personnels = personnelDao.find(Restrictions.eq("watch_code", watchCode));
-
+				//todo 需要处理 19-1-10
 				try{
-//					PropertiesHelper p = new PropertiesHelper("config.properties");
-//					String httpCore = p.readValue("url");
 					String httpCore = CountInfo.SERVER_IP;
 					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode,2000);
 
@@ -283,7 +280,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 					sb.append(personnel.getName());
 //					sb.append("工号");
 //					sb.append(personnel.getJob_num());
-					//获取拍板信息
+					//获取排班信息
 					String schMsg = "";
 					//todo 查询本地排班
 

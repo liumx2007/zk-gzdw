@@ -97,12 +97,11 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 				PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 //				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
 				try{
-//					PropertiesHelper p = new PropertiesHelper("config.properties");
-//					String httpCore = p.readValue("url");
-//					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+msgs);
 					s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+msgs,2000);
 				}catch (Exception e){
-					return ;
+					//todo 19-1-10
+					employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);
+//					return ;
 				}
 //				Personnel personnels = new Personnel();
 				if(!"".equals(s)){

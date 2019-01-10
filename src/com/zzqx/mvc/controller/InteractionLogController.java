@@ -6,12 +6,6 @@ import com.zzqx.mvc.entity.InteractionLog;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.service.InteractionLogService;
-import com.zzqx.support.utils.StringHelper;
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,6 +51,8 @@ public class InteractionLogController {
     @RequestMapping("save")
     @ResponseBody
     public R insertSelective(InteractionLog interactionLog){
+        //通过interactCode查询interactId
+        
         interactionLog.setClickTime(new Date());
         Integer i = interactionLogService.insertSelective(interactionLog);
         return R.ok();

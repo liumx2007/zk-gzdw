@@ -125,7 +125,6 @@ public class AndroidTimerTask {
 			String clearJobs = HttpUtil.get(CountInfo.UPDATE_MY_WORK_BY_HALLID);
 		}catch (Exception e){
 			System.out.print("读取监控系统该数据失败，读取本地数据");
-
 		}
 		//获取今天排班信息
 		List<BhSchdu> bhSchdus = new ArrayList<BhSchdu>();
