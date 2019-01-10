@@ -1,14 +1,19 @@
 package com.zzqx.mvc.service.impl;
 
 import com.zzqx.mvc.dao.InteractionLogMapper;
+import com.zzqx.mvc.dao.InteractionMapper;
 import com.zzqx.mvc.dto.InteractionLogDto;
+import com.zzqx.mvc.entity.Interaction;
+import com.zzqx.mvc.entity.InteractionExample;
 import com.zzqx.mvc.entity.InteractionLog;
 import com.zzqx.mvc.service.InteractionLogService;
+import com.zzqx.mvc.vo.InteractionLogVo;
 import com.zzqx.support.utils.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,6 +22,8 @@ public class InteractionLogServiceImpl  implements InteractionLogService {
 
     @Autowired
     InteractionLogMapper interactionLogMapper;
+    @Autowired
+    InteractionMapper interactionMapper;
 
     /**
      * 有选择的条件、所有数据
@@ -47,12 +54,34 @@ public class InteractionLogServiceImpl  implements InteractionLogService {
 
     /**
      * 有选择的插入数据
-     * @param interactionLog
+     * @param interactionLogVo
      * @return
      */
     @Override
-    public Integer insertSelective(InteractionLog interactionLog) {
-        return interactionLogMapper.insertSelective(interactionLog);
+    public Integer insertSelective(InteractionLogVo interactionLogVo) {
+        interactionLogVo.setClickTime(new Date());
+        //获取InteractionId
+        if (null != interactionLogVo && "".equals(interactionLogVo.getInteractCode()) ){
+            InteractionExample interactionExample = new InteractionExample();
+            InteractionExample.Criteria criteria = interactionExample.createCriteria();
+            criteria.andInteractCodeEqualTo(interactionLogVo.getInteractCode());
+            List<Interaction> list = interactionMapper.selectByExample(interactionExample);
+            String id = list.get(0).getId();
+            interactionLogVo.setInteractionId(id);
+            //判断业务会话
+            if (list.get(0).getFolderType().equals(2)){
+                try{
+
+                }catch (Exception e){
+
+                }
+            }
+            //判断触点会话
+            if (list.get(0).getFolderType().equals(3)){
+
+            }
+        }
+        return interactionLogMapper.insertSelective(interactionLogVo);
     }
 
     @Override

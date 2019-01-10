@@ -6,12 +6,12 @@ import com.zzqx.mvc.entity.InteractionLog;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnData;
 import com.zzqx.mvc.service.InteractionLogService;
+import com.zzqx.mvc.vo.InteractionLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
 import java.util.List;
 
 @OpenAccess
@@ -21,6 +21,7 @@ public class InteractionLogController {
 
     @Autowired
     InteractionLogService interactionLogService;
+
 
     @RequestMapping("list1")
     @ResponseBody
@@ -50,11 +51,9 @@ public class InteractionLogController {
 
     @RequestMapping("save")
     @ResponseBody
-    public R insertSelective(InteractionLog interactionLog){
-        //通过interactCode查询interactId
-        
-        interactionLog.setClickTime(new Date());
-        Integer i = interactionLogService.insertSelective(interactionLog);
+    public R insertSelective(InteractionLogVo interactionLogVo){
+
+        Integer i = interactionLogService.insertSelective(interactionLogVo);
         return R.ok();
     }
 }
