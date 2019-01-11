@@ -20,4 +20,5 @@ public interface InteractionLogService {
     InteractionLog getUpdateOne();
 
     void update(InteractionLog interactionLog);
+
 }

@@ -9,7 +9,7 @@ public class Interaction {
 
     private String previousId;
 
-    private Integer folderType;
+    private Integer folderType; //类型（1、展项  2、业务  3、交互触点）
 
     private int hallId;
 

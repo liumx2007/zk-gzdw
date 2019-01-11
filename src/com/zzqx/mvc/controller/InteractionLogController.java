@@ -52,8 +52,14 @@ public class InteractionLogController {
     @RequestMapping("save")
     @ResponseBody
     public R insertSelective(InteractionLogVo interactionLogVo){
-
         Integer i = interactionLogService.insertSelective(interactionLogVo);
         return R.ok();
+    }
+
+    @RequestMapping("testList")
+    @ResponseBody
+    public R sele(InteractionLogDto interactionLogDto){
+        List<InteractionLog> list = interactionLogService.selectWithInteraction(interactionLogDto);
+        return  R.ok().put("data",list);
     }
 }
