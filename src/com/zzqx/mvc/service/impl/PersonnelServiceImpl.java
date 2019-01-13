@@ -285,8 +285,6 @@ public class PersonnelServiceImpl implements PersonnelService {
 					//todo 查询本地排班
 
 					try{
-//						PropertiesHelper p = new PropertiesHelper("config.properties");
-//						String httpCore = p.readValue("url");
 						String httpCore = CountInfo.SERVER_IP;
 						schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2",2000);
 					}catch (Exception e){
