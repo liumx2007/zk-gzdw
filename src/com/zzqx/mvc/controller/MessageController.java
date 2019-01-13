@@ -1,26 +1,5 @@
 package com.zzqx.mvc.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.Query;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.service.MessageService;
@@ -28,8 +7,21 @@ import com.zzqx.mvc.service.PersonnelService;
 import com.zzqx.mvc.service.WorkPositionService;
 import com.zzqx.support.framework.mina.androidser.AndroidConstant;
 import com.zzqx.support.utils.DateManager;
-
 import net.sf.json.JSONArray;
+import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -57,7 +49,7 @@ public class MessageController extends BaseController {
 //		List<Message> list = messageService.find(Restrictions.eq("watch_code",watchCode),
 //							Restrictions.in("statu", status),
 //							Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE));
-		Query query = messageService.createQuery("from Message t where t.watch_code=? and t.statu not in (?,?) and t.create_time like ? order by t.ordertime desc", new Object[]{watchCode,AndroidConstant.MESSAGE_STATE_PROCESSED_KEY,AndroidConstant.MESSAGE_STATE_EXPIRED_KEY,DateManager.date2Str(DateManager.date_sdf)+"%"});
+		Query query = messageService.createQuery("from Message t where t.watch_code=? and t.statu not in (?) and t.create_time like ? order by t.ordertime desc limit 9", new Object[]{watchCode,AndroidConstant.MESSAGE_STATE_EXPIRED_KEY,DateManager.date2Str(DateManager.date_sdf)+"%"});
 		List<Message> list = query.list();
 		JSONArray json = JSONArray.fromObject(list);
 		return json.toString();
