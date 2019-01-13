@@ -6,11 +6,12 @@ import com.zzqx.mvc.entity.OtherDeviceEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CountInfo {
     //中台服务器Ip
-    public static final String SERVER_IP = "http://10.174.12.44:8091";
+//    public static final String SERVER_IP = "http://10.174.12.44:8091";
+    //测试
+    public static final String SERVER_IP = "http://192.168.1.104:8081/yytjk";
     //营业厅id
     public static final Integer HALL_ID = 2;
     /**
@@ -73,6 +74,10 @@ public class CountInfo {
      */
     public static final String POST_ENVIRONMENT_DATA = SERVER_IP+"/api/cloudViewEnvironment/save?hallId="+HALL_ID;
 
+    /**
+     * 上传交互数据
+     */
+    public static final String POST_INTERACTIONLOG_DATA = SERVER_IP+"/api/dwInteractionLog/save?hallId="+HALL_ID;
 
     /**
      *设备灯光类型

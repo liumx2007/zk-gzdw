@@ -106,6 +106,10 @@
       </if>
     </where>
   </select>
+  <!--查询未上传的数据-->
+  <!--<select id="selectByUpStatus" resultType="com.zzqx.mvc.entity.InteractionLog">-->
+    <!---->
+  <!--</select>-->
   <!--连tb_interaction表查-->
   <sql id="mcolumn">
       l.id,l.interaction_id,l.click_time,l.folder_type,
@@ -308,6 +312,9 @@
       <if test="folderType != null">
         folder_type = #{folderType,jdbcType=INTEGER},
       </if>
+      <if test="folderType != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -317,7 +324,8 @@
       click_time = #{clickTime,jdbcType=TIMESTAMP},
       session_business = #{sessionBusiness,jdbcType=VARCHAR},
       session_interact = #{sessionInteract,jdbcType=VARCHAR},
-      folder_type = #{folderType,jdbcType=INTEGER}
+      folder_type = #{folderType,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="getUpdateOne" parameterType="com.zzqx.mvc.entity.InteractionLog" resultMap="BaseResultMap">
@@ -325,6 +333,8 @@
     <include refid="Base_Column_List" />
     from tb_interaction_log
     WHERE status = 0
+    order BY
+    click_time desc
     limit   1
   </select>
 </mapper>

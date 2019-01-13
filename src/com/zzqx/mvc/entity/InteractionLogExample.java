@@ -504,6 +504,11 @@ public class InteractionLogExample {
             addCriterion("folder_type not between", value1, value2, "folderType");
             return (Criteria) this;
         }
+        //19-1-13
+        public Criteria andStatusEqualTo(String value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

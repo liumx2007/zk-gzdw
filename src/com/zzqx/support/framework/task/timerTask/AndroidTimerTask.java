@@ -123,6 +123,7 @@ public class AndroidTimerTask {
 		// 清空岗位
 		try{
 			String clearJobs = HttpUtil.get(CountInfo.UPDATE_MY_WORK_BY_HALLID);
+			//todo 清空本地的岗位数据
 		}catch (Exception e){
 			System.out.print("读取监控系统该数据失败，读取本地数据");
 		}

@@ -1,27 +1,18 @@
 
 package com.zzqx.support.framework.task.timerTask;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
-import com.zzqx.Global;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.Environment;
 import com.zzqx.mvc.entity.InteractionLog;
-import com.zzqx.mvc.javabean.WeatherInfo;
 import com.zzqx.mvc.service.EnvironmentService;
 import com.zzqx.mvc.service.InteractionLogService;
-import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.file.PropertiesHelper;
-import com.zzqx.support.utils.net.Weather;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.DataInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 
 public class EnvironmentTimerTask {
 	@Autowired
@@ -67,7 +58,6 @@ public class EnvironmentTimerTask {
 						+ "&pm=" + environment.getPm()
 						+ "&createTime=" + environment.getCreateTime().getTime()
 						+ "&id=" + environment.getId()
-						+ "&hallId=" + environment.getHallId()
 						+ "&area=" + environment.getArea();
 				String str = HttpUtil.get(url, 3000);
 				if (str.contains("成功")) {
@@ -90,7 +80,7 @@ public class EnvironmentTimerTask {
 		InteractionLog interactionLog = interactionLogService.getUpdateOne();
 		if (interactionLog != null) {
 			try {
-				String url = CountInfo.POST_ENVIRONMENT_DATA
+				String url = CountInfo.POST_INTERACTIONLOG_DATA
 						+ "&id=" + interactionLog.getId()
 						+ "&interactionId=" + interactionLog.getInteractionId()
 						+ "&clickTime=" + interactionLog.getClickTime().getTime()
