@@ -1,11 +1,10 @@
 package com.zzqx.mvc.entity;
 
-import java.util.Date;
+import com.jetsum.core.orm.entity.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import com.jetsum.core.orm.entity.IdEntity;
+import java.util.Date;
 
 @Entity
 @Table(name = "tb_message")
@@ -47,7 +46,7 @@ public class Message extends IdEntity {
 	private String creator;
 	private Date ordertime;
 	
-	
+	private int upStatus; //0未上传 ，1 上传
 	
 	public Date getOrdertime() {
 		return ordertime;
@@ -102,5 +101,13 @@ public class Message extends IdEntity {
 	}
 	public void setStatu(Integer statu) {
 		this.statu = statu;
-	}	
+	}
+
+	public int getUpStatus() {
+		return upStatus;
+	}
+
+	public void setUpStatus(int upStatus) {
+		this.upStatus = upStatus;
+	}
 }

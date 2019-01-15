@@ -214,6 +214,7 @@
     <bean id="SynchronizeTimerTask" class="com.zzqx.support.framework.task.timerTask.SynchronizeTimerTask"/>
     <bean id="EnvironmentTimerTask" class="com.zzqx.support.framework.task.timerTask.EnvironmentTimerTask"/>
     <bean id="InteractionLogTimeTask" class="com.zzqx.support.framework.task.timerTask.InteractionLogTimeTask"/>
+    <bean id="MessageTimeTask" class="com.zzqx.support.framework.task.timerTask.MessageTimeTask"/>
     <task:scheduled-tasks>
         <task:scheduled ref="terminalStateTimerTask" method="doTask" fixed-rate="5000"/><!-- 5000,5秒 -->
         <task:scheduled ref="AndroidTimerTask" method="sendAutoMessage_new" cron="0 0 5 * * *"/>
@@ -221,7 +222,8 @@
         <!--<task:scheduled ref="SynchronizeTimerTask" method="doMessageTask" fixed-rate="30000"/>&lt;!&ndash;更新排班信息 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="SynchronizeTimerTask" method="doSynchronizeTask" cron="0 0 6 * * *"/>&lt;!&ndash;每天6点同步人员和排班信息 &ndash;&gt;-->
         <!--<task:scheduled ref="EnvironmentTimerTask" method="postEnvironmentData" fixed-rate="15000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
-        <task:scheduled ref="EnvironmentTimerTask" method="postInteractionData" fixed-rate="5000"/><!-- 5000,5秒 -->
+        <!--<task:scheduled ref="EnvironmentTimerTask" method="postInteractionData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
+        <task:scheduled ref="MessageTimeTask" method="postMessageData" fixed-rate="5000"/><!-- 5000,5秒 -->
     </task:scheduled-tasks>
 
 

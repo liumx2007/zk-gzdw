@@ -11,7 +11,7 @@ public class CountInfo {
     //中台服务器Ip
 //    public static final String SERVER_IP = "http://10.174.12.44:8091";
     //测试
-    public static final String SERVER_IP = "http://192.168.1.104:8081/yytjk";
+    public static final String SERVER_IP = "http://127.0.0.1:8081/yytjk";
     //营业厅id
     public static final Integer HALL_ID = 2;
     /**
@@ -78,6 +78,10 @@ public class CountInfo {
      * 上传交互数据
      */
     public static final String POST_INTERACTIONLOG_DATA = SERVER_IP+"/api/dwInteractionLog/save?hallId="+HALL_ID;
+    /**
+     * 上传消息数据
+     */
+    public static final String POST_MESSAGE_DATA = SERVER_IP+"/api/dwMessage/save";
 
     /**
      *设备灯光类型
