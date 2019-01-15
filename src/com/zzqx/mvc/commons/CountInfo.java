@@ -82,6 +82,10 @@ public class CountInfo {
      * 上传消息数据
      */
     public static final String POST_MESSAGE_DATA = SERVER_IP+"/api/dwMessage/save";
+    /**
+     * 上传意见簿数据
+     */
+    public static final String POST_YJ_DATA = SERVER_IP+"/api/dtTbYj/save";
 
     /**
      *设备灯光类型

@@ -1,24 +1,22 @@
 package com.zzqx.mvc.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.hibernate.Query;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.jetsum.core.orm.entity.Page;
 import com.zzqx.mvc.dao.YjDao;
 import com.zzqx.mvc.entity.Yj;
 import com.zzqx.mvc.service.YjService;
 import com.zzqx.support.utils.StringHelper;
+import org.hibernate.Query;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service("yjService")
 @Transactional
@@ -65,8 +63,6 @@ public class YjServiceImpl implements YjService {
 	public void saveOrUpdate(Yj yj) {
 		yjDao.saveOrUpdate(yj);
 		yjDao.flush();
-		//todo 数据上传  监控系统接口
-
 	}
 
 	@Override
