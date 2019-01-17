@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jetsum.core.orm.entity.Page;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.EmployeeInformationMapper;
 import com.zzqx.mvc.dao.PersonnelDao;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.service.*;
@@ -46,7 +47,9 @@ public class PersonnelServiceImpl implements PersonnelService {
 	@Autowired
 	private MessageService messageService;
 	@Autowired
-			BhSchduService bhSchduService;
+	BhSchduService bhSchduService;
+	@Autowired
+	EmployeeInformationMapper employeeInformationMapper;
 
 
 	String s = "";
@@ -144,28 +147,47 @@ public class PersonnelServiceImpl implements PersonnelService {
 			MessageService msgService) throws ServiceException {
 		try {
 			boolean resState = false;
-			Personnel personnel = null;
+//			Personnel personnel = null;
+			Personnel personnel = new Personnel();
 			String content = "";
 			StringBuffer sb = null;
 			if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY.intValue()) {
-				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "12");
-				List<Personnel> startPersonnelsList = personnelDao.findBy("watch_code", watchCode);//发起呼叫的人List;
-				Personnel startPersonnels = null;//发起呼叫的人;
-				if(startPersonnelsList!=null&&startPersonnelsList.size()>0){
-					startPersonnels = startPersonnelsList.get(0);
+//				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "12");
+				EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+				criteria.andMyWorkEqualTo(CountInfo.BANZHANG);
+				List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(employeeInformationExample);//职位为班长的人员
+//				List<Personnel> startPersonnelsList = personnelDao.findBy("watch_code", watchCode);//发起呼叫的人List;
+				EmployeeInformationExample employeeInformationExample1 = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria1 = employeeInformationExample1.createCriteria();
+				criteria1.andWatchCodeEqualTo(watchCode);
+				List<EmployeeInformation> employeeInformationList1 = employeeInformationMapper.selectByExample(employeeInformationExample1);//发起呼叫的人
+//				Personnel startPersonnels = null;//发起呼叫的人;
+//				if(startPersonnelsList!=null&&startPersonnelsList.size()>0){
+//					startPersonnels = startPersonnelsList.get(0);
+//				}
+				EmployeeInformation employeeInformation1  = null;//发起呼叫的人
+				if (employeeInformationList1 != null && employeeInformationList1.size() > 0){
+					employeeInformation1 = employeeInformationList1.get(0);
 				}
-				List<Personnel> personnels = query.list();
-				if (personnels != null && personnels.size() > 0) {// 班长(后台)
-					personnel = personnels.get(CommonUtil.getRandom(0, personnels.size() - 1));// 随机选一个班长(后台)
+//				List<Personnel> personnels = query.list();
+				if (employeeInformationList != null && employeeInformationList.size() > 0) {// 班长(后台)
+//					personnel = personnels.get(CommonUtil.getRandom(0, personnels.size() - 1));// 随机选一个班长(后台)
+					EmployeeInformation employeeInformation = null;
+					employeeInformation = employeeInformationList.get(0);
+					personnel.setWatch_code(employeeInformation.getWatchCode());
+					personnel.setName(employeeInformation.getName());
 					SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知班长(后台)
-					
+
 					minaSession.getWatchCode();
 					sb = new StringBuffer("");
-					sb.append(startPersonnels.getMy_work().getPosition_name());
+//					sb.append(startPersonnels.getMy_work().getPosition_name());
+					sb.append(employeeInformation1.getMyWork());
 					sb.append("(");
-					sb.append(startPersonnels.getName());
-					sb.append("工号");
-					sb.append(startPersonnels.getJob_num());
+//					sb.append(startPersonnels.getName());
+					sb.append(employeeInformation1.getName());
+//					sb.append("工号");
+//					sb.append(startPersonnels.getJob_num());
 					sb.append(")");
 					sb.append("呼叫您。");
 					content = sb.toString();
@@ -174,24 +196,30 @@ public class PersonnelServiceImpl implements PersonnelService {
 					throw new ServiceException("未获取到班长(后台)信息");
 				}
 			} else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_SHIFT_KEY.intValue()) {
-				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "11");
-				List<Personnel> startPersonnelsList = personnelDao.findBy("watch_code", watchCode);//发起呼叫的人List;
-				Personnel startPersonnels = null;//发起呼叫的人;
-				if(startPersonnelsList!=null&&startPersonnelsList.size()>0){
-					startPersonnels = startPersonnelsList.get(0);
+				EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+				criteria.andMyWorkEqualTo(CountInfo.BANZHANG);
+				List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(employeeInformationExample);//职位为值长的人员
+				EmployeeInformationExample employeeInformationExample1 = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria1 = employeeInformationExample1.createCriteria();
+				criteria1.andWatchCodeEqualTo(watchCode);
+				List<EmployeeInformation> employeeInformationList1 = employeeInformationMapper.selectByExample(employeeInformationExample1);//发起呼叫的人
+				EmployeeInformation employeeInformation1  = null;//发起呼叫的人
+				if (employeeInformationList1 != null && employeeInformationList1.size() > 0){
+					employeeInformation1 = employeeInformationList1.get(0);
 				}
-				List<Personnel> personnels = query.list();
-				if (personnels != null && personnels.size() > 0) {// 值长
-					personnel = personnels.get(CommonUtil.getRandom(0, personnels.size() - 1));// 随机选一个值长
-					SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知值长
-					
+				if (employeeInformationList != null && employeeInformationList.size() > 0) {// 值长(后台)
+					EmployeeInformation employeeInformation = null;
+					employeeInformation = employeeInformationList.get(0);
+					personnel.setWatch_code(employeeInformation.getWatchCode());
+					personnel.setName(employeeInformation.getName());
+					SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知值长(后台)
+
 					minaSession.getWatchCode();
 					sb = new StringBuffer("");
-					sb.append(startPersonnels.getMy_work().getPosition_name());
+					sb.append(employeeInformation1.getMyWork());
 					sb.append("(");
-					sb.append(startPersonnels.getName());
-					sb.append("工号");
-					sb.append(startPersonnels.getJob_num());
+					sb.append(employeeInformation1.getName());
 					sb.append(")");
 					sb.append("呼叫您。");
 					content = sb.toString();
@@ -199,51 +227,75 @@ public class PersonnelServiceImpl implements PersonnelService {
 				} else {
 					throw new ServiceException("未获取到值长信息");
 				}
-			}else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_VACATION_KEY.intValue()) {
-				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "11");
-				List<Personnel> startPersonnelsList = personnelDao.findBy("watch_code", watchCode);//发起呼叫的人List;
-				Personnel startPersonnels = null;//发起呼叫的人;
-				if(startPersonnelsList!=null&&startPersonnelsList.size()>0){
-					startPersonnels = startPersonnelsList.get(0);
+			}else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_VACATION_KEY.intValue()) {//消息请假
+				EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+				criteria.andMyWorkEqualTo(CountInfo.BANZHANG);
+				List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(employeeInformationExample);//职位为值长的人员
+				EmployeeInformationExample employeeInformationExample1 = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria1 = employeeInformationExample1.createCriteria();
+				criteria1.andWatchCodeEqualTo(watchCode);
+				List<EmployeeInformation> employeeInformationList1 = employeeInformationMapper.selectByExample(employeeInformationExample1);//发起呼叫的人
+				EmployeeInformation employeeInformation1  = null;//发起呼叫的人
+				if (employeeInformationList1 != null && employeeInformationList1.size() > 0){
+					employeeInformation1 = employeeInformationList1.get(0);
 				}
-				List<Personnel> personnels = query.list();
-				if (personnels != null && personnels.size() > 0) {// 值长
-					personnel = personnels.get(CommonUtil.getRandom(0, personnels.size() - 1));// 随机选一个值长
-					SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知值长
-					
+				if (employeeInformationList != null && employeeInformationList.size() > 0) {// 值长(后台)
+					EmployeeInformation employeeInformation = null;
+					employeeInformation = employeeInformationList.get(0);
+					personnel.setWatch_code(employeeInformation.getWatchCode());
+					personnel.setName(employeeInformation.getName());
+					SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知值长(后台)
+
 					minaSession.getWatchCode();
 					sb = new StringBuffer("");
-					sb.append(startPersonnels.getMy_work().getPosition_name());
+					sb.append(employeeInformation1.getMyWork());
 					sb.append("(");
-					sb.append(startPersonnels.getName());
-					sb.append("工号");
-					sb.append(startPersonnels.getJob_num());
+					sb.append(employeeInformation1.getName());
 					sb.append(")");
 					sb.append("需要临时请假！");
 					content = sb.toString();
 					resState = true;
 				} else {
-					throw new ServiceException("未获取到值长信息");
+					throw new ServiceException("未获取到请假信息");
 				}
 			}else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_CALLSECURITY_KEY.intValue()) {
-				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "10");
-				List<Personnel> personnels = query.list();
-				if (personnels != null && personnels.size() > 0) {// 保安
-					personnel = personnels.get(CommonUtil.getRandom(0, personnels.size() - 1));// 随机选一个保安
-					SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知保安
+//				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "10");
+//				List<Personnel> personnels = query.list();
+//				if (personnels != null && personnels.size() > 0) {// 保安
+//					personnel = personnels.get(CommonUtil.getRandom(0, personnels.size() - 1));// 随机选一个保安
+				EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+				criteria.andNameEqualTo(CountInfo.BAOAN);
+				List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(employeeInformationExample);//职位为值长的人员
+				EmployeeInformationExample employeeInformationExample1 = new EmployeeInformationExample();
+				EmployeeInformationExample.Criteria criteria1 = employeeInformationExample1.createCriteria();
+				criteria1.andWatchCodeEqualTo(watchCode);
+				List<EmployeeInformation> employeeInformationList1 = employeeInformationMapper.selectByExample(employeeInformationExample1);//发起呼叫的人
+				EmployeeInformation employeeInformation1  = null;//发起呼叫的人
+				if (employeeInformationList1 != null && employeeInformationList1.size() > 0){
+					employeeInformation1 = employeeInformationList1.get(0);
+				}
+				if (employeeInformationList != null){
+					EmployeeInformation employeeInformation = employeeInformationList.get(0);
+					personnel.setName(employeeInformation.getName());
+					personnel.setWatch_code(employeeInformation.getWatchCode());
+
+				SocketDataSender.sendWatchMsg(msgType, watchCode, personnel);// 发消息通知保安
 					sb = new StringBuffer("");
-					sb.append(personnel.getName());
-					sb.append("工号");
-					sb.append(personnel.getJob_num());
-					sb.append(AndroidConstant.MESSAGE_TYPE_MAP.get(msgType));
 					sb.append("(");
-					sb.append(personnel.getMy_work().getPosition_name());
+					sb.append(employeeInformation1.getMyWork());
 					sb.append(")");
+					sb.append(employeeInformation1.getName());
+//					sb.append("工号");
+//					sb.append(personnel.getJob_num());
+					sb.append(AndroidConstant.MESSAGE_TYPE_MAP.get(msgType));
 					content = sb.toString();
 					resState = true;
 				} else {
 					throw new ServiceException("未获取到保安信息");
 				}
+
 			} else if (msgType.intValue() == AndroidConstant.MESSAGE_TYPE_GROUPBUSINESS_KEY.intValue()) {
 				Query query = personnelDao.createQuery("from Personnel p where p.my_work.id=?", "10");
 				List<Personnel> personnels = query.list();
@@ -330,6 +382,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 			MessageService msgService, String content) {
 		Message msg = new Message();
 		msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		if (msgType != AndroidConstant.MESSAGE_TYPE_CALLSECURITY_KEY)
 		msg.setTitle(AndroidConstant.MESSAGE_TYPE_SHOW_MAP.get(msgType));
 		msg.setContent(content);
 		msg.setType(msgType);

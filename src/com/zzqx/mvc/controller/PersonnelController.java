@@ -482,9 +482,10 @@ public class PersonnelController extends BaseController {
 			s  = array.toString().substring(1,array.toString().length()-1);
 		}
 		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_LIST,2000);
-			cn.hutool.json.JSONArray json = JSONUtil.parseArray(JSONUtil.parseObj(s).get("data"));
-			employeeInformationList = JSONUtil.toList(json,EmployeeInformation.class);
+			//todo 19-1-16 查询 -- 使用本地数据
+//			s = HttpUtil.get(CountInfo.GET_PERSON_LIST,2000);
+//			cn.hutool.json.JSONArray json = JSONUtil.parseArray(JSONUtil.parseObj(s).get("data"));
+//			employeeInformationList = JSONUtil.toList(json,EmployeeInformation.class);
 		}catch (Exception e){
 			logger.error("连接中台失败");
 
@@ -527,7 +528,7 @@ public class PersonnelController extends BaseController {
 			//todo 19-1-7 修改本地数据
 			EmployeeInformation employeeInformation = new EmployeeInformation();
 			employeeInformation.setWatchCode(uuid);
-//			employeeInformation.setBindState((short)0);
+			employeeInformation.setBindState((short)0);
 			employeeInformation.setId(i);
 			employeeInformationService.updateById(employeeInformation);
 			if (re.contains("修改成功")){
@@ -538,7 +539,7 @@ public class PersonnelController extends BaseController {
 			//修改人员绑定状态id="+i+"&&bindState=0&watchCode="+uuid
 			EmployeeInformation employeeInformation = new EmployeeInformation();
 			employeeInformation.setWatchCode(uuid);
-//			employeeInformation.setBindState((short)0);
+			employeeInformation.setBindState((short)0);
 			employeeInformation.setId(i);
 			int flag = employeeInformationService.updateById(employeeInformation);
 			if (flag > 0){
@@ -575,14 +576,24 @@ public class PersonnelController extends BaseController {
 	public String getPersonnelWatchCode(HttpServletRequest request) {
 		String uuid = request.getParameter("uuid");
 		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+uuid,2000);
-			if(!"".equals(s)){
-				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-				System.out.println(object.get("name").toString());
-				return object.get("name").toString();
-			}
+			//todo 19-1-16 查询--使用本地数据
+//			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+uuid,2000);
+//			if(!"".equals(s)){
+//				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+//				System.out.println(object.get("name").toString());
+//				return object.get("name").toString();
+//			}
 		}catch (Exception e){
 			logger.error("连接中台失败");
+			//根据WatchCode查人员
+			EmployeeInformation employeeInformation = new EmployeeInformation();
+			employeeInformation.setWatchCode(uuid);
+			List<EmployeeInformation> employeeInformationList = employeeInformationService.selectByWatchCode(employeeInformation);
+			if (employeeInformationList.size() > 0){
+				String  name = employeeInformationList.get(0).getName();
+				return name;
+			}
+		}finally {
 			//根据WatchCode查人员
 			EmployeeInformation employeeInformation = new EmployeeInformation();
 			employeeInformation.setWatchCode(uuid);

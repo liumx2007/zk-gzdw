@@ -122,7 +122,7 @@ public class SynchronizeTimerTask {
             bhSchduMapper.batchInsertBhSchdu(schduList);
         }
         if(employeeInformationList != null && employeeInformationList.size()>0){
-            employeeInformationMapper.deleteByExample(null);
+            employeeInformationMapper.delOrBaoAn();
             employeeInformationMapper.batchInsert(employeeInformationList);
         }
 

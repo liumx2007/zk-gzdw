@@ -15,6 +15,12 @@ public interface EmployeeInformationMapper {
 
     int deleteByPrimaryKey(BigDecimal id);
 
+    /**
+     * 排除保安不删除
+     * @return
+     */
+    int delOrBaoAn();
+
     int insert(EmployeeInformation record);
 
     /**

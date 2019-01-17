@@ -1,10 +1,7 @@
 
 package com.zzqx.mvc.controller;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.zzqx.Global;
 import com.zzqx.mvc.annotation.OpenAccess;
@@ -18,12 +15,10 @@ import com.zzqx.mvc.javabean.NewsImage;
 import com.zzqx.mvc.javabean.NewsInfo;
 import com.zzqx.mvc.javabean.NewsWords;
 import com.zzqx.mvc.service.*;
-import com.zzqx.mvc.vo.PersonVo;
 import com.zzqx.support.framework.mina.androidser.AndroidConstant;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
 import com.zzqx.support.utils.CommonUtil;
-import com.zzqx.support.utils.DateManager;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.file.PropertiesHelper;
 import com.zzqx.support.utils.net.SocketDataSender;
@@ -31,9 +26,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -275,7 +268,10 @@ public class InterfaceController extends BaseController {
 		BhSchdu bhSchdu = bhSchduService.selectByEmIdAndDate(bhSchdu1);
 		EmployeeJobsExample employeeJobsExample = new EmployeeJobsExample();
 		EmployeeJobsExample.Criteria jobCriteria = employeeJobsExample.createCriteria();
-		BigDecimal jobId = new BigDecimal(bhSchdu.getJobsId());
+		BigDecimal jobId = null;
+		if(bhSchdu != null){
+			 jobId = new BigDecimal(bhSchdu.getJobsId());
+		}
 		jobCriteria.andIdEqualTo(jobId);
 		EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
 		return employeeJobs;
@@ -598,21 +594,32 @@ public class InterfaceController extends BaseController {
 		msg.setOrdertime(new Date());
 		messageService.saveOrUpdate(msg);
 //		Personnel person = personnelService.find(Restrictions.eq("watch_code", toWatchCode)).get(0);
-		PropertiesHelper p = new PropertiesHelper("config.properties");
-		String httpCore = p.readValue("url");
+//		PropertiesHelper p = new PropertiesHelper("config.properties");
+//		String httpCore = p.readValue("url");
 		String s = null;
-		try{
-//			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+toWatchCode);
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+toWatchCode,2000);
-		}catch (Exception e){
-			return "";
+		//todo 19-1-17 查询使用本地数据
+//		try{
+////			s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+toWatchCode);
+//			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+toWatchCode,2000);
+//		}catch (Exception e){
+//			return "";
+//		}
+//		PersonVo personnels = null;
+//		if(!"".equals(s)){
+//			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
+//			personnels = JSONUtil.toBean(object,PersonVo.class);
+//		}
+//		Personnel person = new Personnel(personnels);
+		EmployeeInformationExample employeeInformationExample = new EmployeeInformationExample();
+		EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+		criteria.andWatchCodeEqualTo(toWatchCode);
+		List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(employeeInformationExample);
+		Personnel person = new Personnel();
+		if (employeeInformationList.size() > 0) {
+			EmployeeInformation employeeInformation = employeeInformationList.get(0);
+			person.setWatch_code(employeeInformation.getWatchCode());
+			person.setName(employeeInformation.getName());
 		}
-		PersonVo personnels = null;
-		if(!"".equals(s)){
-			cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
-			personnels = JSONUtil.toBean(object,PersonVo.class);
-		}
-		Personnel person = new Personnel(personnels);
 		SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_ANSWER_KEY, toWatchCode, person);
 		return "反馈成功";
 	}

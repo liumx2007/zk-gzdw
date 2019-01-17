@@ -8,7 +8,6 @@ import com.zzqx.mvc.service.WorkPositionService;
 import com.zzqx.support.framework.mina.androidser.AndroidConstant;
 import com.zzqx.support.utils.DateManager;
 import net.sf.json.JSONArray;
-import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +48,14 @@ public class MessageController extends BaseController {
 //		List<Message> list = messageService.find(Restrictions.eq("watch_code",watchCode),
 //							Restrictions.in("statu", status),
 //							Restrictions.ilike("create_time", DateManager.date2Str(DateManager.date_sdf),MatchMode.ANYWHERE));
-		Query query = messageService.createQuery("from Message t where t.watch_code=? and t.statu not in (?) and t.create_time like ? order by t.ordertime desc limit 9", new Object[]{watchCode,AndroidConstant.MESSAGE_STATE_EXPIRED_KEY,DateManager.date2Str(DateManager.date_sdf)+"%"});
-		List<Message> list = query.list();
-		JSONArray json = JSONArray.fromObject(list);
+		List<Message> list = messageService.createQuery("from Message t where t.watch_code=? and t.statu not in (?) and t.create_time like ? order by t.ordertime desc limit 10", new Object[]{watchCode,AndroidConstant.MESSAGE_STATE_EXPIRED_KEY,DateManager.date2Str(DateManager.date_sdf)+"%"}).list();
+		List<Message> list1 = null;
+		if (list.size() > 10){
+			list1 = list.subList(0,10);
+		}else {
+			list1 = list;
+		}
+		JSONArray json = JSONArray.fromObject(list1);
 		return json.toString();
 	}
 	

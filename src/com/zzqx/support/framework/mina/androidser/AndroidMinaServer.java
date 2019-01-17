@@ -104,7 +104,7 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 //					return ;
 				}
 //				Personnel personnels = new Personnel();
-				if(!"".equals(s)){
+				if(!"".equals(s) && null != s){
 					cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 //					personnels = JSONUtil.toBean(object,Personnel.class);=
 					employeeInformation.setBindState(Short.parseShort(object.get("bindState").toString()));

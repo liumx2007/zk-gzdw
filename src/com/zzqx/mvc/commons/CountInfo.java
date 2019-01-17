@@ -14,6 +14,13 @@ public class CountInfo {
     public static final String SERVER_IP = "http://127.0.0.1:8081/yytjk";
     //营业厅id
     public static final Integer HALL_ID = 2;
+    //班长职位
+    public  static  final  String BANZHANG = "大堂经理 ";
+    //值长职位
+    public  static  final  String ZHIZHANG = "大堂经理 ";
+    //保安职位
+    public  static  final  String BAOAN = "保安 ";
+
     /**
      * 本机的ip及port
      */

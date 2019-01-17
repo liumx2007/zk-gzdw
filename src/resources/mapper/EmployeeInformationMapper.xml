@@ -160,6 +160,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+  <!--排除保安不删除-->
+  <delete id="delOrBaoAn" parameterType="java.lang.Integer">
+      DELETE FROM dw_employee_information WHERE `NAME` not LIKE "保安"
+  </delete>
   <insert id="insert" parameterType="com.zzqx.mvc.entity.EmployeeInformation">
     insert into dw_employee_information (ID, LOGIN_NAME, PASSWORD, 
       EMPLOYEE_ID, EMPLOYEE_ACCOUNT, NAME, 

@@ -9,10 +9,8 @@ import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.BhSchduMapper;
 import com.zzqx.mvc.dao.EmployeeInformationMapper;
 import com.zzqx.mvc.dao.EmployeeJobsMapper;
-import com.zzqx.mvc.entity.BhSchdu;
-import com.zzqx.mvc.entity.BhSchduExample;
-import com.zzqx.mvc.entity.EmployeeInformation;
-import com.zzqx.mvc.entity.Message;
+import com.zzqx.mvc.entity.*;
+import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.service.EmployeeInformationService;
 import com.zzqx.mvc.service.MessageService;
 import com.zzqx.mvc.service.PersonnelService;
@@ -105,6 +103,9 @@ public class TestController extends BaseController {
 			String clearJobs = HttpUtil.get(CountInfo.UPDATE_MY_WORK_BY_HALLID);
 		}catch (Exception e){
 			System.out.print("读取监控系统该数据失败，读取本地数据");
+		}finally {
+			//清空本地岗位 排除保安人员
+
 		}
 		//获取今天排班信息
 		List<BhSchdu> bhSchdus = new ArrayList<BhSchdu>();
@@ -153,5 +154,11 @@ public class TestController extends BaseController {
 			}
 		}
 	}
-
+	@OpenAccess
+	@RequestMapping("delEmp")
+	@ResponseBody
+   public R del(){
+		employeeInformationMapper.delOrBaoAn();
+	   return R.ok();
+   }
 }
