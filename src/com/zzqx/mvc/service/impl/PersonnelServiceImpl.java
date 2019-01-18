@@ -341,7 +341,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 						schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2",2000);
 					}catch (Exception e){
 //						return false;
-						//本地排版信息
+						//本地排班信息
 						List<BhSchdu> list = bhSchduService.selectByExample();
 						cn.hutool.json.JSONArray jsonArray = new cn.hutool.json.JSONArray();
 						jsonArray.add(list);
@@ -396,26 +396,26 @@ public class PersonnelServiceImpl implements PersonnelService {
 	}
 	/**
 	 * 获取今日岗位
-	 * @param perTemp 
+	 * @param
 	 */
-	public WorkPosition getWorkByPerson(Personnel perTemp) {
-		//根据排班获取今天的岗位
-		Query datesQuery = arrangeDateService.createQuery("from ArrangeDate d where date_format(d.arrange_date,'%Y-%m-%d')=?", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		ArrangeDate Date = null;
-		if(datesQuery.list().size()>0){
-			Date = (ArrangeDate) datesQuery.list().get(0);
-		}else{
-			return perTemp.getMy_work();
-		}
-		Query detialQuery = arrangeDetialService.createQuery("from ArrangeDetial d where d.arrange_date_id.id=?", Date.getId());
-		List<ArrangeDetial> list = detialQuery.list();
-		for(ArrangeDetial ad :list){
-			if(ad.getPerson_id().equals(perTemp.getId()) || ad.getPerson_id().contains(perTemp.getId())){
-				return workPositionService.getById(ad.getPosition());
-			}
-		}
-		return perTemp.getMy_work();
-	}
+//	public WorkPosition getWorkByPerson(Personnel perTemp) {
+//		//根据排班获取今天的岗位
+//		Query datesQuery = arrangeDateService.createQuery("from ArrangeDate d where date_format(d.arrange_date,'%Y-%m-%d')=?", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+//		ArrangeDate Date = null;
+//		if(datesQuery.list().size()>0){
+//			Date = (ArrangeDate) datesQuery.list().get(0);
+//		}else{
+//			return perTemp.getMy_work();
+//		}
+//		Query detialQuery = arrangeDetialService.createQuery("from ArrangeDetial d where d.arrange_date_id.id=?", Date.getId());
+//		List<ArrangeDetial> list = detialQuery.list();
+//		for(ArrangeDetial ad :list){
+//			if(ad.getPerson_id().equals(perTemp.getId()) || ad.getPerson_id().contains(perTemp.getId())){
+//				return workPositionService.getById(ad.getPosition());
+//			}
+//		}
+//		return perTemp.getMy_work();
+//	}
 
 	@Override
 	public Personnel getPersonnelWatchCode(String WatchCode) {

@@ -4,8 +4,6 @@ import com.jetsum.core.orm.entity.IdEntity;
 import com.zzqx.mvc.vo.PersonVo;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -20,7 +18,8 @@ public class Personnel extends IdEntity {
 	private String sex;
 	private String watch_code;
 	private String photo;
-	private WorkPosition my_work;
+//	private WorkPosition my_work;
+	private  String  my_work;
 	private int work_status;
 	private int work_time;
 	private String remark;
@@ -67,19 +66,23 @@ public class Personnel extends IdEntity {
 	 * 绑定状态（0：已绑定，未绑定）
 	 */
 	
-	@OneToOne
-	@JoinColumn(name="my_work")
-	public WorkPosition getMy_work() {
+//	@OneToOne
+//	@JoinColumn(name="my_work")
+//	public WorkPosition getMy_work() {
+//		return my_work;
+//	}
+//
+//	public void setMy_work(WorkPosition my_work) {
+//		this.my_work = my_work;
+//	}
+//
+
+
+	public String getMy_work() {
 		return my_work;
-	}
-	
-	public void setMy_work(WorkPosition my_work) {
+	}public void setMy_work(String my_work) {
 		this.my_work = my_work;
-	}
-	
-	
-	
-	public String getOnduty() {
+	}public String getOnduty() {
 		return onduty;
 	}
 	public void setOnduty(String onduty) {

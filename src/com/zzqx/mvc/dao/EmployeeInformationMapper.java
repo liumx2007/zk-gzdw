@@ -38,6 +38,12 @@ public interface EmployeeInformationMapper {
 
     EmployeeInformation selectByPrimaryKey(BigDecimal id);
 
+    /**
+     * watchCode不为空的数据
+     * @return
+     */
+    List<EmployeeInformation> selectWatchCodeNotNull();
+
     int updateByExampleSelective(@Param("record") EmployeeInformation record, @Param("example") EmployeeInformationExample example);
 
     int updateByExampleWithBLOBs(@Param("record") EmployeeInformation record, @Param("example") EmployeeInformationExample example);

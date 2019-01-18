@@ -1,7 +1,5 @@
 package com.zzqx.mvc.vo;
 
-import com.zzqx.mvc.entity.WorkPosition;
-
 import java.util.Date;
 
 public class PersonVo {
@@ -11,7 +9,8 @@ public class PersonVo {
     private String sex;
     private String watchCode;
     private String photo;
-    private WorkPosition myWork;
+//    private WorkPosition myWork;
+    private String myWork;
     private int workState;
     private int workTime;
     private String remark;
@@ -60,11 +59,20 @@ public class PersonVo {
         this.photo = photo;
     }
 
-    public WorkPosition getMyWork() {
+//    public WorkPosition getMyWork() {
+//        return myWork;
+//    }
+//
+//    public void setMyWork(WorkPosition myWork) {
+//        this.myWork = myWork;
+//    }
+
+
+    public String getMyWork() {
         return myWork;
     }
 
-    public void setMyWork(WorkPosition myWork) {
+    public void setMyWork(String myWork) {
         this.myWork = myWork;
     }
 

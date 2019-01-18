@@ -3,9 +3,9 @@ package com.zzqx.support.framework.mina.androidser;
 import cn.hutool.http.HttpUtil;
 import com.zzqx.mvc.SpringContext;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.EmployeeInformationMapper;
 import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.entity.Message;
-import com.zzqx.mvc.entity.Personnel;
 import com.zzqx.mvc.service.EmployeeInformationService;
 import com.zzqx.mvc.service.MessageService;
 import com.zzqx.mvc.service.PersonnelService;
@@ -21,6 +21,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 	private static Logger logger = LoggerFactory.getLogger(AndroidMinaServer.class);
 	@Autowired
 	private EmployeeInformationService employeeInformationService;
+	@Autowired
+	EmployeeInformationMapper employeeInformationMapper;
 
 	String s = null;
 
@@ -224,6 +227,7 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 	 * @param watchCode
 	 *            手表ID
 	 */
+
 	private void logicMsgCall(AndroidMinaSession minaSession, Integer msgType, String watchCode) {
 		PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 		MessageService msgService = (MessageService) SpringContext.getBean("messageService");
@@ -250,15 +254,17 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 	 * @param watchCode
 	 *            手表ID
 	 */
-	private void logicMsgUrgent(AndroidMinaSession minaSession, Integer msgType, String watchCode) {
+	@Transactional
+	public void logicMsgUrgent(AndroidMinaSession minaSession, Integer msgType, String watchCode) {
 
 		PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 		MessageService messageService = (MessageService) SpringContext.getBean("messageService");
 
-		List<Personnel> personnels = personnelService.find(Restrictions
-				.not(Restrictions.in("work", new Object[] { AndroidConstant.PERSONNEL_STATE_VACATION_KEY })));
+//		List<Personnel> personnels = personnelService.find(Restrictions
+//				.not(Restrictions.in("work", new Object[] { AndroidConstant.PERSONNEL_STATE_VACATION_KEY })));
+		List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectWatchCodeNotNull();
 		try {
-			if (messageService.logicMsgUrgent(minaSession, msgType, watchCode, personnelService, personnels)) {
+			if (messageService.logicMsgUrgent(minaSession, msgType, watchCode, personnelService, employeeInformationList)) {
 				logger.info(AndroidConstant.MESSAGE_TYPE_MAP.get(msgType) + "成功！");
 			} else {
 				logger.info(AndroidConstant.MESSAGE_TYPE_MAP.get(msgType) + "失败！");

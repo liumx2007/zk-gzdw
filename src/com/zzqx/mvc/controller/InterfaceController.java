@@ -20,14 +20,12 @@ import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
 import com.zzqx.support.utils.CommonUtil;
 import com.zzqx.support.utils.StringHelper;
-import com.zzqx.support.utils.file.PropertiesHelper;
 import com.zzqx.support.utils.net.SocketDataSender;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -230,24 +228,24 @@ public class InterfaceController extends BaseController {
 	 * 获取今日岗位
 	 * @param perTemp 
 	 */
-	public WorkPosition getWork(Personnel perTemp) {
-		//根据排班获取今天的岗位
-		Query datesQuery = arrangeDateService.createQuery("from ArrangeDate d where date_format(d.arrange_date,'%Y-%m-%d')=?", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		ArrangeDate Date = null;
-		if(datesQuery.list().size()>0){
-			Date = (ArrangeDate) datesQuery.list().get(0);
-		}else{
-			return perTemp.getMy_work();
-		}
-		Query detialQuery = arrangeDetialService.createQuery("from ArrangeDetial d where d.arrange_date_id.id=?", Date.getId());
-		List<ArrangeDetial> list = detialQuery.list();
-		for(ArrangeDetial ad :list){
-			if(ad.getPerson_id().equals(perTemp.getId()) || ad.getPerson_id().contains(perTemp.getId())){
-				return workPositionService.getById(ad.getPosition());
-			}
-		}
-		return perTemp.getMy_work();
-	}
+//	public WorkPosition getWork(Personnel perTemp) {
+//		//根据排班获取今天的岗位
+//		Query datesQuery = arrangeDateService.createQuery("from ArrangeDate d where date_format(d.arrange_date,'%Y-%m-%d')=?", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+//		ArrangeDate Date = null;
+//		if(datesQuery.list().size()>0){
+//			Date = (ArrangeDate) datesQuery.list().get(0);
+//		}else{
+//			return perTemp.getMy_work();
+//		}
+//		Query detialQuery = arrangeDetialService.createQuery("from ArrangeDetial d where d.arrange_date_id.id=?", Date.getId());
+//		List<ArrangeDetial> list = detialQuery.list();
+//		for(ArrangeDetial ad :list){
+//			if(ad.getPerson_id().equals(perTemp.getId()) || ad.getPerson_id().contains(perTemp.getId())){
+//				return workPositionService.getById(ad.getPosition());
+//			}
+//		}
+//		return perTemp.getMy_work();
+//	}
 	/**
 	 * 获取今日岗位
 	 * @param -perTemp
@@ -280,56 +278,56 @@ public class InterfaceController extends BaseController {
 	 *自动调度
 	 * @param request(toWhere)
 	 */
-	@SuppressWarnings("unchecked")
-	@OpenAccess
-	@ResponseBody
-	@RequestMapping("autoOnduty")
-	public void autoOnduty(HttpServletRequest request) {
-		String p = request.getParameter("position");
-		PropertiesHelper props = new PropertiesHelper("config");
-		List<String> autoLine = props.readList("autoLine", ",");
-		String words = props.readValueTrim("auto.onduty."+p);
-		List<WorkPosition> wps = workPositionService.get(props.readValueTrim("autoLine").split(","));
-		List<Personnel> allPersons = personnelService.find(Restrictions.in("my_work", wps));
-		//自动调度的对象
-		Personnel Per = null;
-		Personnel zz = null;
-		for(String workId:autoLine){
-			for(Personnel perTemp:allPersons){
-				if(perTemp.getMy_work() != null && perTemp.getMy_work().getId().equals(workId)){
-					if(perTemp.getWork_status()==AndroidConstant.PERSONNEL_STATE_FREE_KEY){
-						Per = perTemp;
-						break;
-					}
-				}
-				if(zz == null && perTemp.getMy_work() != null && perTemp.getMy_work().getId().equals("11") && perTemp.getWork_status() != AndroidConstant.PERSONNEL_STATE_TEMP_KEY) {
-					zz = perTemp;
-				}
-			}
-			if(Per != null) {
-				break;
-			}
-		}
-		if(Per == null){
-			Per = zz;
-		}
-		if(Per != null) {
-			Message msg = new Message();
-			String content = words;
-			msg.setContent(content);
-			msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			msg.setCreator("admin");
-			msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
-			msg.setTitle("临时调度信息");
-			msg.setType(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY);
-			msg.setWatch_code(Per.getWatch_code());
-			msg.setOrdertime(new Date());
-			messageService.saveOrUpdate(msg);
-			SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, Per.getWatch_code(), Per);
-			System.out.println(Per.getName() + "(" + words +")");
-		}
-		
-	}
+//	@SuppressWarnings("unchecked")
+//	@OpenAccess
+//	@ResponseBody
+//	@RequestMapping("autoOnduty")
+//	public void autoOnduty(HttpServletRequest request) {
+//		String p = request.getParameter("position");
+//		PropertiesHelper props = new PropertiesHelper("config");
+//		List<String> autoLine = props.readList("autoLine", ",");
+//		String words = props.readValueTrim("auto.onduty."+p);
+//		List<WorkPosition> wps = workPositionService.get(props.readValueTrim("autoLine").split(","));
+//		List<Personnel> allPersons = personnelService.find(Restrictions.in("my_work", wps));
+//		//自动调度的对象
+//		Personnel Per = null;
+//		Personnel zz = null;
+//		for(String workId:autoLine){
+//			for(Personnel perTemp:allPersons){
+//				if(perTemp.getMy_work() != null && perTemp.getMy_work().getId().equals(workId)){
+//					if(perTemp.getWork_status()==AndroidConstant.PERSONNEL_STATE_FREE_KEY){
+//						Per = perTemp;
+//						break;
+//					}
+//				}
+//				if(zz == null && perTemp.getMy_work() != null && perTemp.getMy_work().getId().equals("11") && perTemp.getWork_status() != AndroidConstant.PERSONNEL_STATE_TEMP_KEY) {
+//					zz = perTemp;
+//				}
+//			}
+//			if(Per != null) {
+//				break;
+//			}
+//		}
+//		if(Per == null){
+//			Per = zz;
+//		}
+//		if(Per != null) {
+//			Message msg = new Message();
+//			String content = words;
+//			msg.setContent(content);
+//			msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+//			msg.setCreator("admin");
+//			msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
+//			msg.setTitle("临时调度信息");
+//			msg.setType(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY);
+//			msg.setWatch_code(Per.getWatch_code());
+//			msg.setOrdertime(new Date());
+//			messageService.saveOrUpdate(msg);
+//			SocketDataSender.sendWatchMsg(AndroidConstant.MESSAGE_TYPE_CALLMONITOR_KEY, Per.getWatch_code(), Per);
+//			System.out.println(Per.getName() + "(" + words +")");
+//		}
+//
+//	}
 	/**
 	 * 手动发送调度信息
 	 * @param request (personId position)
@@ -508,34 +506,34 @@ public class InterfaceController extends BaseController {
 	 * 不响应调度
 	 * @param request
 	 */
-	@OpenAccess
-	@ResponseBody
-	@RequestMapping("ondutyCancle")
-	public String ondutyCancle(HttpServletRequest request) {
-		String watchCode = request.getParameter("watchCode");
-		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
-		if("11".equals(person.getMy_work().getId())){
-			return "不响应调度";
-		}
-		Message msg = new Message();
-		msg.setContent(person.getName() + "未响应您的调度");
-		msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-		msg.setCreator("admin");
-		msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
-		msg.setTitle("回复信息");
-		msg.setType(AndroidConstant.MESSAGE_TYPE_ANSWER_KEY);
-		Personnel mate = personnelService.find(Restrictions.eq("my_work", workPositionService.getById("11"))).get(0);
-		msg.setWatch_code(mate.getWatch_code());
-		msg.setOrdertime(new Date());
-		messageService.saveOrUpdate(msg);
-		for(AndroidMinaSession as:sessions){
-			if(as.getWatchCode().equals(mate.getWatch_code())){
-				SocketDataSender.sendAndroid(as.getIoSession(), "ReturnMessage");
-				return "不响应调度";
-			}
-		}
-		return "不响应调度";
-	}
+//	@OpenAccess
+//	@ResponseBody
+//	@RequestMapping("ondutyCancle")
+//	public String ondutyCancle(HttpServletRequest request) {
+//		String watchCode = request.getParameter("watchCode");
+//		Personnel person = personnelService.find(Restrictions.eq("watch_code", watchCode)).get(0);
+//		if("11".equals(person.getMy_work().getId())){
+//			return "不响应调度";
+//		}
+//		Message msg = new Message();
+//		msg.setContent(person.getName() + "未响应您的调度");
+//		msg.setCreate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+//		msg.setCreator("admin");
+//		msg.setStatu(AndroidConstant.MESSAGE_STATE_UNREAD_KEY);
+//		msg.setTitle("回复信息");
+//		msg.setType(AndroidConstant.MESSAGE_TYPE_ANSWER_KEY);
+//		Personnel mate = personnelService.find(Restrictions.eq("my_work", workPositionService.getById("11"))).get(0);
+//		msg.setWatch_code(mate.getWatch_code());
+//		msg.setOrdertime(new Date());
+//		messageService.saveOrUpdate(msg);
+//		for(AndroidMinaSession as:sessions){
+//			if(as.getWatchCode().equals(mate.getWatch_code())){
+//				SocketDataSender.sendAndroid(as.getIoSession(), "ReturnMessage");
+//				return "不响应调度";
+//			}
+//		}
+//		return "不响应调度";
+//	}
 	/**
 	 * 呼叫类型（呼叫班长、呼叫保安、集团业务）消息函数
 	 * 
@@ -559,9 +557,10 @@ public class InterfaceController extends BaseController {
 	@RequestMapping("emergencyService")
 	public String emergencyService(HttpServletRequest request) {
 		Integer type = Integer.parseInt(request.getParameter("type"));
-		List<Personnel> personnels = personnelService.find(Restrictions
-				.not(Restrictions.in("my_work", new Object[] { AndroidConstant.PERSONNEL_STATE_VACATION_KEY })));
-		messageService.logicMsgUrgent(new AndroidMinaSession(null), type, "admin", personnelService, personnels);
+//		List<Personnel> personnels = personnelService.find(Restrictions
+//				.not(Restrictions.in("my_work", new Object[] { AndroidConstant.PERSONNEL_STATE_VACATION_KEY })));
+		List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectWatchCodeNotNull();
+		messageService.logicMsgUrgent(new AndroidMinaSession(null), type, "admin", personnelService, employeeInformationList);
 		return "紧急处理成功";
 	}
 	/**
@@ -594,8 +593,6 @@ public class InterfaceController extends BaseController {
 		msg.setOrdertime(new Date());
 		messageService.saveOrUpdate(msg);
 //		Personnel person = personnelService.find(Restrictions.eq("watch_code", toWatchCode)).get(0);
-//		PropertiesHelper p = new PropertiesHelper("config.properties");
-//		String httpCore = p.readValue("url");
 		String s = null;
 		//todo 19-1-17 查询使用本地数据
 //		try{

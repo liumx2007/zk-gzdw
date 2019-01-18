@@ -1,11 +1,11 @@
 package com.zzqx.mvc.service;
 
-import java.util.List;
-
+import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.entity.Message;
-import com.zzqx.mvc.entity.Personnel;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
 import com.zzqx.support.utils.ServiceException;
+
+import java.util.List;
 
 public interface MessageService extends BaseService<Message> {
 
@@ -16,5 +16,5 @@ public interface MessageService extends BaseService<Message> {
 	 * @param watchCode 手表ID
 	 */
 	boolean logicMsgUrgent(AndroidMinaSession minaSession, Integer msgType, String watchCode,
-			PersonnelService personnelService, List<Personnel> personnels) throws ServiceException;
+			PersonnelService personnelService, List<EmployeeInformation> employeeInformationList) throws ServiceException;
 }
