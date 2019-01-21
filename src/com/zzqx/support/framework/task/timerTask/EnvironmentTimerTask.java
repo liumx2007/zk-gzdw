@@ -52,7 +52,8 @@ public class EnvironmentTimerTask {
 		Environment environment = environmentService.getUpdateOne();
 		if (environment != null) {
 			try {
-				String url = CountInfo.POST_ENVIRONMENT_DATA
+				CountInfo countInfo = new CountInfo();
+				String url = countInfo.POST_ENVIRONMENT_DATA
 						+ "&temperature=" + environment.getTemperature()
 						+ "&humidity=" + environment.getHumidity()
 						+ "&pm=" + environment.getPm()
@@ -80,7 +81,8 @@ public class EnvironmentTimerTask {
 		InteractionLog interactionLog = interactionLogService.getUpdateOne();
 		if (interactionLog != null) {
 			try {
-				String url = CountInfo.POST_INTERACTIONLOG_DATA
+				CountInfo countInfo = new CountInfo();
+				String url = countInfo.POST_INTERACTIONLOG_DATA
 						+ "&id=" + interactionLog.getId()
 						+ "&interactionId=" + interactionLog.getInteractionId()
 						+ "&clickTime=" + interactionLog.getClickTime().getTime()

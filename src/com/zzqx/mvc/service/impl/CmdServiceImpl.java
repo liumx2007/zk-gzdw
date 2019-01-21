@@ -1,6 +1,7 @@
 package com.zzqx.mvc.service.impl;
 
 import com.zzqx.mvc.commons.CmdInfo;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.CmdMapper;
 import com.zzqx.mvc.entity.Cmd;
 import com.zzqx.mvc.entity.CmdExample;
@@ -30,7 +31,8 @@ public class CmdServiceImpl implements CmdService {
     public List<Cmd> getListByType(String type) {
         CmdExample cmdExample =new CmdExample();
         CmdExample.Criteria criteria = cmdExample.createCriteria();
-        criteria.andTypeEqualTo(type);
+        CountInfo countInfo = new CountInfo();
+        criteria.andTypeEqualTo(type).andHallIdEqualTo(countInfo.HALL_ID);
         return cmdMapper.selectByExample(cmdExample);
     }
 

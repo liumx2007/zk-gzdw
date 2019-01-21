@@ -74,7 +74,8 @@ public class TestController extends BaseController {
 	@RequestMapping("testGetEmp")
 	@ResponseBody
 	public void doSynchronizeTask(){
-		getData = HttpUtil.get(CountInfo.GET_SYNC_DAYA);
+		CountInfo countInfo = new CountInfo();
+		getData = HttpUtil.get(countInfo.GET_SYNC_DAYA);
 		JSONObject dataJson = JSONUtil.parseObj(getData);
 		Object bhSchduObject = dataJson.get("ScheduList");
 		Object employeeInformationObject = dataJson.get("employeeInformationList");
@@ -101,7 +102,8 @@ public class TestController extends BaseController {
 	public void sendAutoMessage_new(){
 		// 清空岗位
 		try{
-			String clearJobs = HttpUtil.get(CountInfo.UPDATE_MY_WORK_BY_HALLID);
+			CountInfo countInfo = new CountInfo();
+			String clearJobs = HttpUtil.get(countInfo.UPDATE_MY_WORK_BY_HALLID);
 		}catch (Exception e){
 			System.out.print("读取监控系统该数据失败，读取本地数据");
 		}finally {
@@ -111,7 +113,8 @@ public class TestController extends BaseController {
 		//获取今天排班信息
 		List<BhSchdu> bhSchdus = new ArrayList<BhSchdu>();
 		try{
-			String schMsg = HttpUtil.get(CountInfo.GET_SCH_MSG);
+			CountInfo countInfo = new CountInfo();
+			String schMsg = HttpUtil.get(countInfo.GET_SCH_MSG);
 			if(!"".equals(schMsg)){
 				com.alibaba.fastjson.JSONObject jsa = com.alibaba.fastjson.JSONObject.parseObject(schMsg);
 				Object Json = jsa.get("data");

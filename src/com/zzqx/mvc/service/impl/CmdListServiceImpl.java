@@ -1,6 +1,7 @@
 package com.zzqx.mvc.service.impl;
 
 
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.CmdListMapper;
 import com.zzqx.mvc.dao.CmdMapper;
 import com.zzqx.mvc.dto.CmdListDto;
@@ -38,10 +39,13 @@ public class CmdListServiceImpl implements CmdListService {
     @Override
     public List<CmdList> allList(String directName) {
         CmdListExample cmdListExample = new CmdListExample();
+        CmdListExample.Criteria criteria = cmdListExample.createCriteria();
         if (  !"".equals(directName)) {
-            CmdListExample.Criteria criteria = cmdListExample.createCriteria();
             criteria.andDirectListNameEqualTo(directName);
         }
+        //只查本营业厅的指令数据
+        CountInfo countInfo = new CountInfo();
+        criteria.andHallIdEqualTo(countInfo.HALL_ID);
         return cmdListMapper.selectByExample(cmdListExample);
     }
 
@@ -52,11 +56,16 @@ public class CmdListServiceImpl implements CmdListService {
         int  limit0 = (pageNo-1)*pageSize;
         cmdListDto.setLimit0(limit0);
         cmdListDto.setLimit1(pageSize);
+        //只查询本营业厅数据
+        CountInfo countInfo = new CountInfo();
+        cmdListDto.setHallId(countInfo.HALL_ID);
         return cmdListMapper.getList(cmdListDto);
     }
 
     @Override
     public List<CmdList> getListCount(CmdListDto cmdListDto) {
+        CountInfo countInfo = new CountInfo();
+        cmdListDto.setHallId(countInfo.HALL_ID);
         return cmdListMapper.getListCount(cmdListDto);
     }
 
@@ -102,12 +111,16 @@ public class CmdListServiceImpl implements CmdListService {
 
     @Override
     public int insertSelect(CmdList cmdList) {
+        CountInfo countInfo = new CountInfo();
+        cmdList.setHallId(countInfo.HALL_ID);
         cmdList = cmdAdd(cmdList);
         return cmdListMapper.insertSelective(cmdList);
     }
 
     @Override
     public int updateSelect(CmdList cmdList) {
+        CountInfo countInfo = new CountInfo();
+        cmdList.setHallId(countInfo.HALL_ID);
         cmdList = cmdAdd(cmdList);
         return cmdListMapper.updateByPrimaryKeySelective(cmdList);
     }

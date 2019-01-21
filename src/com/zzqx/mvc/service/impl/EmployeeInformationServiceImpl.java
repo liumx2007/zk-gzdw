@@ -50,7 +50,8 @@ public class EmployeeInformationServiceImpl implements EmployeeInformationServic
         EmployeeInformationExample employeeInformationExample  = new EmployeeInformationExample();
         EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
         BigDecimal bd = new BigDecimal(employeeInformation.getId());
-        criteria.andHallIdEqualTo(CountInfo.HALL_ID).andIdEqualTo(bd);
+        CountInfo countInfo = new CountInfo();
+        criteria.andHallIdEqualTo(countInfo.HALL_ID).andIdEqualTo(bd);
 //        EmployeeInformation em = new EmployeeInformation();
 //        em.setBindState((short)0);
 //        em.setWatchCode(employeeInformation.getWatchCode());

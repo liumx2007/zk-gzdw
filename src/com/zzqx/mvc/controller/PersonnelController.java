@@ -474,7 +474,8 @@ public class PersonnelController extends BaseController {
 		//获取未绑定人员列表
 		EmployeeInformation employeeInformation = new EmployeeInformation();
 		employeeInformation.setBindState(bindStatus.shortValue());
-		employeeInformation.setHallId(CountInfo.HALL_ID);
+		CountInfo countInfo = new CountInfo();
+		employeeInformation.setHallId(countInfo.HALL_ID);
 		employeeInformationList = employeeInformationService.selectNoboding(employeeInformation);
 		if (employeeInformationList.size() > 0 ){
 			JSONArray array = new JSONArray();
@@ -524,7 +525,8 @@ public class PersonnelController extends BaseController {
 		String re ="";
 		try{
 			//修改中台数据
-			re = HttpUtil.get(CountInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid,1500);
+			CountInfo countInfo = new CountInfo();
+			re = HttpUtil.get(countInfo.UPDATE_PERSON_STATUS+"&id="+i+"&bindState="+0+"&watchCode="+uuid,1500);
 			//todo 19-1-7 修改本地数据
 			EmployeeInformation employeeInformation = new EmployeeInformation();
 			employeeInformation.setWatchCode(uuid);

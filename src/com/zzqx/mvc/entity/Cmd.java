@@ -9,6 +9,8 @@ public class Cmd {
 
     private String description;
 
+    private int hallId;
+
     public String getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class Cmd {
 
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
+    }
+
+    public int getHallId() {
+        return hallId;
+    }
+
+    public void setHallId(int hallId) {
+        this.hallId = hallId;
     }
 }

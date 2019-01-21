@@ -36,7 +36,8 @@ public class MessageTimeTask {
             if (message != null) {
                 try {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("hallId", CountInfo.HALL_ID);
+                    CountInfo countInfo = new CountInfo();
+                    map.put("hallId", countInfo.HALL_ID);
                     map.put("id", message.getId());
                     map.put("title", message.getTitle());
                     map.put("content", message.getContent());

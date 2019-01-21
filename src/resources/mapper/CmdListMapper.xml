@@ -93,7 +93,8 @@
       SELECT
       <include refid="Base_Column_List" />
       from tb_cmd_list
-      <where> 1=1
+      <where>
+        `hall_id` = #{hallId}
         <if test="directListName != null">
           and `direct_list_name` LIKE CONCAT('%',#{directListName},'%')
         </if>
@@ -107,7 +108,8 @@
     SELECT
     <include refid="Base_Column_List" />
     from tb_cmd_list
-    <where> 1=1
+    <where>
+      `hall_id` = #{hallId}
       <if test="directListName != null">
         and `direct_list_name` LIKE CONCAT('%',#{directListName},'%')
       </if>
@@ -164,6 +166,9 @@
       <if test="tcpSource != null">
         tcp_source,
       </if>
+      <if test="hallId != null">
+        hall_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -186,6 +191,9 @@
       </if>
       <if test="tcpSource != null">
         #{tcpSource,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        #{hallId},
       </if>
     </trim>
   </insert>
@@ -245,6 +253,9 @@
       </if>
       <if test="tcpSource != null">
         tcp_source = #{tcpSource,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        hall_id = #{hallId,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

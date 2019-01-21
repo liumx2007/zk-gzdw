@@ -217,11 +217,11 @@ public class InterfaceController extends BaseController {
 		emp.setMyWork(getWork_new(emp).getJobsName());
 		employeeInformationMapper.updateByPrimaryKey(emp);
 		try{
-			String getData = HttpUtil.get(CountInfo.GET_JOB_BY_WATCHCODE+watchCode,2000);
+			CountInfo countInfo = new CountInfo();
+			String getData = HttpUtil.get(countInfo.GET_JOB_BY_WATCHCODE+watchCode,2000);
 		}catch (Exception e){
 			System.out.print("--------------------连接中台超时。。。。。。。。。。。。。。。。。");
 		}
-
 		return "确认到岗";
 	}
 	/**
@@ -378,7 +378,8 @@ public class InterfaceController extends BaseController {
 			EmployeeJobs employeeJobs = employeeJobsMapper.selectByExample(employeeJobsExample).get(0);
 			wPosition = employeeJobs.getJobsName();
 			try {
-				s =  HttpUtil.get(CountInfo.JOB_BY_ID+position,2000);
+				CountInfo countInfo = new CountInfo();
+				s =  HttpUtil.get(countInfo.JOB_BY_ID+position,2000);
 				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 				wPosition = object.get("jobsName").toString();
 			}catch (Exception e){

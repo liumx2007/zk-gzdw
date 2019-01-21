@@ -25,7 +25,8 @@ public class EnvironmentController {
     @RequestMapping("save")
     @ResponseBody
     public R saveEvo(Environment environment){
-        environment.setHallId(CountInfo.HALL_ID);
+        CountInfo countInfo = new CountInfo();
+        environment.setHallId(countInfo.HALL_ID);
         environment.setCreateTime(new Date());
         int flag = environmentService.saveEvo(environment);
         return R.ok();

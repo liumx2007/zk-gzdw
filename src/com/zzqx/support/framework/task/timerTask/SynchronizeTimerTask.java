@@ -39,7 +39,8 @@ public class SynchronizeTimerTask {
      * 每分钟获取排班变动
      */
     public void doMessageTask() {
-        getData = HttpUtil.get(CountInfo.GET_MESSAGE_SCHEDU);
+        CountInfo countInfo = new CountInfo();
+        getData = HttpUtil.get(countInfo.GET_MESSAGE_SCHEDU);
         //todo getData 非空判断
         JSONObject upDataJson = JSONUtil.parseObj(getData);
         JSONArray schJsonArray = JSONUtil.parseArray(upDataJson.get("update"));
@@ -107,7 +108,8 @@ public class SynchronizeTimerTask {
 //                "\t\t\"workState\": \"1\"\n" +
 //                "\t}]\n" +
 //                "}";
-        getData = HttpUtil.get(CountInfo.GET_SYNC_DAYA);
+        CountInfo countInfo = new CountInfo();
+        getData = HttpUtil.get(countInfo.GET_SYNC_DAYA);
         JSONObject dataJson = JSONUtil.parseObj(getData);
         Object bhSchduObject = dataJson.get("ScheduList");
         Object employeeInformationObject = dataJson.get("employeeInformationList");

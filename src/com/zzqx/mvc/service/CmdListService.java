@@ -10,7 +10,7 @@ import java.util.List;
 public interface CmdListService {
 
     /**
-     * 全部数据and指令名字条件查询
+     * 全部数据and指令名字条件查询,and hallId的查询
      */
     List<CmdList> allList(String directName);
 

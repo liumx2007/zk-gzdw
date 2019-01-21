@@ -27,7 +27,8 @@ public class YjTimeTask {
             if (yj != null) {
                 try {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("hallId", CountInfo.HALL_ID);
+                    CountInfo countInfo = new CountInfo();
+                    map.put("hallId", countInfo.HALL_ID);
                     map.put("id", yj.getId());
                     map.put("flag", yj.getFlag());
                     map.put("isShow", yj.getIsShow());

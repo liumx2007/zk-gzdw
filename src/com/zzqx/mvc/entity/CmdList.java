@@ -17,6 +17,8 @@ public class CmdList extends IdEntity {
 
     private String tcpSource;
 
+    private  int hallId;
+
 
     public String getId() {
         return id;
@@ -72,5 +74,13 @@ public class CmdList extends IdEntity {
 
     public void setTcpSource(String tcpSource) {
         this.tcpSource = tcpSource;
+    }
+
+    public int getHallId() {
+        return hallId;
+    }
+
+    public void setHallId(int hallId) {
+        this.hallId = hallId;
     }
 }
