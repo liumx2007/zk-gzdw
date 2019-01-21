@@ -1,27 +1,8 @@
 package com.zzqx.mvc.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.zzqx.mvc.entity.*;
-import com.zzqx.mvc.vo.TerminalVo;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
-
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.javabean.TerminalInfo;
 import com.zzqx.mvc.service.ContentService;
@@ -31,6 +12,23 @@ import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.machine.hardware.HardwareHandler;
 import com.zzqx.support.utils.net.SocketDataSender;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping(value = "/terminal")
@@ -167,6 +165,8 @@ public class TerminalController extends BaseController {
 			}
 			terminal.setCodeName(terminal.getCodeName().toUpperCase());
 			terminal.setStatus("false");
+			CountInfo countInfo = new CountInfo();
+			terminal.setHallId(countInfo.HALL_ID);
 			terminals.add(terminal);
 			group.setTerminals(terminals);
 			groupService.saveOrUpdate(group);

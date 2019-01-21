@@ -1,18 +1,15 @@
 package com.zzqx.mvc.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import com.jetsum.core.orm.entity.Page;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.TerminalDao;
 import com.zzqx.mvc.dao.TerminalMybatisMapper;
 import com.zzqx.mvc.entity.Group;
 import com.zzqx.mvc.entity.Terminal;
 import com.zzqx.mvc.entity.TerminalMybatis;
 import com.zzqx.mvc.entity.TerminalMybatisExample;
-import com.zzqx.mvc.vo.TerminalVo;
+import com.zzqx.mvc.service.TerminalService;
+import com.zzqx.support.utils.StringHelper;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -20,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jetsum.core.orm.entity.Page;
-import com.zzqx.mvc.service.TerminalService;
-import com.zzqx.support.utils.StringHelper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service("terminalService")
 @Transactional
@@ -108,6 +107,9 @@ public class TerminalServiceImpl implements TerminalService {
 	@Override
 	public List<TerminalMybatis> getList() {
 		TerminalMybatisExample terminalMybatisExample = new TerminalMybatisExample();
+		CountInfo countInfo =new CountInfo();
+		TerminalMybatisExample.Criteria  criteria= terminalMybatisExample.createCriteria();
+		criteria.andHallIdEqualTo(countInfo.HALL_ID);
 		List<TerminalMybatis> list =terminalMybatisMapper.selectByExample(terminalMybatisExample);
 		return list;
 	}

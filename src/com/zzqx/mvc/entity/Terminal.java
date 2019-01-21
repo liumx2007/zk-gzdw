@@ -1,18 +1,11 @@
 package com.zzqx.mvc.entity;
 
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import com.jetsum.core.orm.entity.IdEntity;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import com.jetsum.core.orm.entity.IdEntity;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_terminal")
@@ -27,6 +20,7 @@ public class Terminal extends IdEntity {
 	private String remark;
 	private Set<TerminalContent> terminalContents;
 	private Group group;
+	private  int hallId;
 	
 	@OneToMany(mappedBy="terminal")
 	public Set<TerminalContent> getTerminalContents() {
@@ -85,5 +79,13 @@ public class Terminal extends IdEntity {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public int getHallId() {
+		return hallId;
+	}
+
+	public void setHallId(int hallId) {
+		this.hallId = hallId;
 	}
 }

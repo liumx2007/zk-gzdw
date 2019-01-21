@@ -19,6 +19,8 @@ public class TerminalMybatis {
 
     private String remark;
 
+    private  int hallId;
+
     public String getId() {
         return id;
     }
@@ -89,5 +91,13 @@ public class TerminalMybatis {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public int getHallId() {
+        return hallId;
+    }
+
+    public void setHallId(int hallId) {
+        this.hallId = hallId;
     }
 }

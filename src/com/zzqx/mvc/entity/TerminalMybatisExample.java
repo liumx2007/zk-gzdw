@@ -723,6 +723,15 @@ public class TerminalMybatisExample {
             addCriterion("remark not between", value1, value2, "remark");
             return (Criteria) this;
         }
+
+        /**
+         * 添加hallId的查询
+         * date 19-1-21
+         */
+        public Criteria andHallIdEqualTo(int value) {
+            addCriterion("hall_id =", value, "hallId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
