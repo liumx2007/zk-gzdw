@@ -3,6 +3,7 @@ package com.zzqx.mvc.controller;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.*;
+import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.javabean.TerminalInfo;
 import com.zzqx.mvc.service.ContentService;
@@ -10,6 +11,7 @@ import com.zzqx.mvc.service.GroupService;
 import com.zzqx.mvc.service.TerminalContentService;
 import com.zzqx.mvc.service.TerminalService;
 import com.zzqx.support.utils.StringHelper;
+import com.zzqx.support.utils.machine.hardware.Hardware;
 import com.zzqx.support.utils.machine.hardware.HardwareHandler;
 import com.zzqx.support.utils.net.SocketDataSender;
 import net.sf.json.JSONArray;
@@ -432,7 +434,8 @@ public class TerminalController extends BaseController {
 				terminalInfo.setCodeName(terminal.getCodeName());
 				terminalInfo.setIp(terminal.getIp());
 				terminalInfo.setMac(terminal.getMac());
-				terminalInfo.setHardwares(HardwareHandler.getHardwares(terminal.getMac()));
+//				terminalInfo.setHardwares(HardwareHandler.getHardwares(terminal.getMac()));
+				terminalInfo.setHardwares(HardwareHandler.getHardwareList(terminal.getMac()));
 				terminalInfoList.add(terminalInfo);
 			});
 		}
@@ -448,5 +451,19 @@ public class TerminalController extends BaseController {
 	@ResponseBody
 	public List<TerminalMybatis> getList(){
 		return terminalService.getList();
+	}
+
+	/**
+	 * 通过mac地址获取当前设备的信息
+	 */
+	@OpenAccess
+	@RequestMapping("hardware")
+	@ResponseBody
+	public R hardware(String mac){
+		List<Hardware> hardware = HardwareHandler.getHardwareList(mac);
+		if (hardware.size() > 0) {
+			return R.ok().put("data",hardware);
+		}
+		return R.error();
 	}
 }

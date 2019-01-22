@@ -1,8 +1,8 @@
 package com.zzqx.support.framework.mina.androidser;
 
-import java.util.Date;
-
 import org.apache.mina.core.session.IoSession;
+
+import java.util.Date;
 
 public class AndroidMinaSession {
 	private long time;
@@ -12,7 +12,9 @@ public class AndroidMinaSession {
 	private String watchCode;
 	
 	@SuppressWarnings("unused")
-	private AndroidMinaSession(){}
+//	private AndroidMinaSession(){}
+
+	public AndroidMinaSession(){}
 	
 	public AndroidMinaSession(IoSession ioSession) {
 		this.ioSession = ioSession;

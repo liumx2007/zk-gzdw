@@ -135,11 +135,11 @@ public class PersonnelServiceImpl implements PersonnelService {
 	 * 呼叫类型（呼叫班长、呼叫保安、集团业务、日常消息）消息函数
 	 * 
 	 * @param minaSession
-	 *            socket Session对象
+	 *           发送者 socket Session对象
 	 * @param msgType
 	 *            消息类型
 	 * @param watchCode
-	 *            手表ID
+	 *          发送者  手表ID
 	 */
 	@SuppressWarnings("unchecked")
 	@Override

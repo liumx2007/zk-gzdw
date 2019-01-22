@@ -15,6 +15,10 @@ public interface EmployeeInformationService {
     int updateByWatchCode(EmployeeInformation employeeInformation);
 
     /**
+     * 修改人员绑定状态id="+i+"&&bindState=0&watchCode="+uuid
+     */
+    int  updateById(EmployeeInformation employeeInformation);
+    /**
      * 根据WatchCode查询人员
      */
     List<EmployeeInformation> selectByWatchCode(EmployeeInformation employeeInformation);
@@ -23,12 +27,14 @@ public interface EmployeeInformationService {
      * 获取未绑定人员列表  不同营业厅
      */
     List<EmployeeInformation> selectNoboding(EmployeeInformation employeeInformation);
-    /**
-     * 修改人员绑定状态id="+i+"&&bindState=0&watchCode="+uuid
-     */
-    int  updateById(EmployeeInformation employeeInformation);
+
 
     List<EmployeeInformationDto> selectAll(EmployeeInformation employeeInformation);
 
     EmployeeInformation getById(String id);
+
+    /**
+     * 根据MyWorkC查询人员数据
+     */
+    EmployeeInformation selectByMyWork(String myWork);
 }

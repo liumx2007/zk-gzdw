@@ -70,4 +70,17 @@ public class EmployeeInformationServiceImpl implements EmployeeInformationServic
     public EmployeeInformation getById(String id) {
         return employeeInformationMapper.selectByPrimaryKey(BigDecimal.valueOf(Long.valueOf(id)));
     }
+
+    @Override
+    public EmployeeInformation selectByMyWork(String myWork) {
+        EmployeeInformationExample employeeInformationExample  = new EmployeeInformationExample();
+        EmployeeInformationExample.Criteria criteria = employeeInformationExample.createCriteria();
+        criteria.andMyWorkEqualTo(myWork);
+        List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectByExample(employeeInformationExample);
+        EmployeeInformation employeeInformation = null;
+        if (employeeInformationList.size() > 0){
+            employeeInformation = employeeInformationList.get(0);
+        }
+        return employeeInformation;
+    }
 }

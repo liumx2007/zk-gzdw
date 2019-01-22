@@ -9,7 +9,10 @@ import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.BhSchduMapper;
 import com.zzqx.mvc.dao.EmployeeInformationMapper;
 import com.zzqx.mvc.dao.EmployeeJobsMapper;
-import com.zzqx.mvc.entity.*;
+import com.zzqx.mvc.entity.BhSchdu;
+import com.zzqx.mvc.entity.BhSchduExample;
+import com.zzqx.mvc.entity.EmployeeInformation;
+import com.zzqx.mvc.entity.Message;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.service.EmployeeInformationService;
 import com.zzqx.mvc.service.MessageService;
@@ -18,6 +21,8 @@ import com.zzqx.support.framework.mina.androidser.AndroidConstant;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaManager;
 import com.zzqx.support.framework.mina.androidser.AndroidMinaSession;
 import com.zzqx.support.utils.DateManager;
+import com.zzqx.support.utils.machine.hardware.Hardware;
+import com.zzqx.support.utils.machine.hardware.HardwareHandler;
 import com.zzqx.support.utils.net.SocketDataSender;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -165,4 +170,14 @@ public class TestController extends BaseController {
 		employeeInformationMapper.delOrBaoAn();
 	   return R.ok();
    }
+	@OpenAccess
+	@RequestMapping("hardware")
+	@ResponseBody
+	public R hardware(String mac){
+		List<Hardware> hardware = HardwareHandler.getHardwareList(mac);
+		if (hardware.size() > 0) {
+			return R.ok().put("data",hardware);
+		}
+		return R.error();
+	}
 }
