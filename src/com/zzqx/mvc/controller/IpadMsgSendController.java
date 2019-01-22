@@ -2,6 +2,7 @@ package com.zzqx.mvc.controller;
 
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.EmployeeInformationMapper;
 import com.zzqx.mvc.entity.EmployeeInformation;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.service.EmployeeInformationService;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @OpenAccess
 @Controller
 @RequestMapping("msgSend")
@@ -26,6 +29,8 @@ public class IpadMsgSendController {
     MessageService messageService;
     @Autowired
     EmployeeInformationService employeeInformationService;
+    @Autowired
+    EmployeeInformationMapper employeeInformationMapper;
 
     @RequestMapping("personMsg")
     @ResponseBody
@@ -38,6 +43,7 @@ public class IpadMsgSendController {
             employeeInformation = employeeInformationService.selectByMyWork(CountInfo.BANZHANG);
             if (employeeInformation != null) {
                 androidMinaSession.setWatchCode(employeeInformation.getWatchCode());
+                personnelService.logicMsgCall(androidMinaSession, msgVo.getMsgType(), employeeInformation.getWatchCode(), messageService);
             }
         }
         //保安
@@ -46,9 +52,17 @@ public class IpadMsgSendController {
             employeeInformation = employeeInformationService.selectByMyWork(CountInfo.BANZHANG);
             if (employeeInformation != null) {
                 androidMinaSession.setWatchCode(employeeInformation.getWatchCode());
+                personnelService.logicMsgCall(androidMinaSession, msgVo.getMsgType(), employeeInformation.getWatchCode(), messageService);
             }
         }
-       personnelService.logicMsgCall(androidMinaSession,msgVo.getMsgType(),employeeInformation.getWatchCode(),messageService);
+        if (msgVo.getMsgType().equals(AndroidConstant.MESSAGE_TYPE_FIREALARM_KEY)){
+            employeeInformation = employeeInformationService.selectByMyWork(CountInfo.BANZHANG);
+            if (employeeInformation != null) {
+                androidMinaSession.setWatchCode(employeeInformation.getWatchCode());
+                List<EmployeeInformation> employeeInformationList = employeeInformationMapper.selectWatchCodeNotNull();
+                messageService.logicMsgUrgent(androidMinaSession,msgVo.getMsgType(),employeeInformation.getWatchCode(),personnelService,employeeInformationList);
+            }
+        }
         return R.ok();
     }
 }
