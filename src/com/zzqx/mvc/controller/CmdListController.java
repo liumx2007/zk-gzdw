@@ -58,14 +58,12 @@ public class CmdListController {
 
     /**
      * 分页数据
-     * @param page
-     * @param rows
      * @param cmdListDto
      * @return
      */
     @RequestMapping("list")
     @ResponseBody
-    public String selectWithCmdList(String page,String rows,CmdListDto cmdListDto){
+    public String selectWithCmdList(CmdListDto cmdListDto){
         //分页数据
         List<CmdList> list = cmdListService.getList(cmdListDto);
         //数据总数

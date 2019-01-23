@@ -51,8 +51,8 @@ public class CmdListServiceImpl implements CmdListService {
 
     @Override
     public List<CmdList> getList(CmdListDto cmdListDto) {
-        int pageNo = cmdListDto.getLimit0() == 0?1:cmdListDto.getLimit0();
-        int pageSize =  cmdListDto.getLimit1() == 0?10:cmdListDto.getLimit1();
+        int pageNo = cmdListDto.getPage() == 0?1:cmdListDto.getPage();
+        int pageSize =  cmdListDto.getRows() == 0?10:cmdListDto.getRows();
         int  limit0 = (pageNo-1)*pageSize;
         cmdListDto.setLimit0(limit0);
         cmdListDto.setLimit1(pageSize);
