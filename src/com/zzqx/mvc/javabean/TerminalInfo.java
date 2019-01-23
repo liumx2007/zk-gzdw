@@ -13,6 +13,7 @@ public class TerminalInfo {
     private String mac;
     private String ip;
     private String codeName;
+    private String status;
     private List<Hardware> hardwares;
 
     public String getName() {
@@ -53,5 +54,13 @@ public class TerminalInfo {
 
     public void setHardwares(List<Hardware> hardwares) {
         this.hardwares = hardwares;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

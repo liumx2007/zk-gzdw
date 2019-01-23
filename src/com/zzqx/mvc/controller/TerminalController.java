@@ -444,13 +444,25 @@ public class TerminalController extends BaseController {
 
 
 	/**
-	 * 获取所有设备
+	 * 获取所有设备 以及设备信息
 	 */
 	@OpenAccess
 	@RequestMapping("terminalList")
 	@ResponseBody
-	public List<TerminalMybatis> getList(){
-		return terminalService.getList();
+	public List<TerminalInfo> getList(){
+		List<TerminalInfo> terminalInfoList = new ArrayList<>();
+		List<TerminalMybatis> list = terminalService.getList();
+		list.forEach(terminalMybatis -> {
+			TerminalInfo terminalInfo = new TerminalInfo();
+			terminalInfo.setName(terminalMybatis.getName());
+			terminalInfo.setStatus(terminalMybatis.getStatus());
+			terminalInfo.setCodeName(terminalMybatis.getCodeName());
+			terminalInfo.setIp(terminalMybatis.getIp());
+			terminalInfo.setMac(terminalMybatis.getMac());
+			terminalInfo.setHardwares(HardwareHandler.getHardwareList(terminalMybatis.getMac()));
+			terminalInfoList.add(terminalInfo);
+		});
+		return terminalInfoList;
 	}
 
 	/**
