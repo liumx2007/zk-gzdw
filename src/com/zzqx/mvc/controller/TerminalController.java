@@ -454,6 +454,7 @@ public class TerminalController extends BaseController {
 		List<TerminalMybatis> list = terminalService.getList();
 		list.forEach(terminalMybatis -> {
 			TerminalInfo terminalInfo = new TerminalInfo();
+			terminalInfo.setId(terminalMybatis.getId());
 			terminalInfo.setName(terminalMybatis.getName());
 			terminalInfo.setStatus(terminalMybatis.getStatus());
 			terminalInfo.setCodeName(terminalMybatis.getCodeName());
