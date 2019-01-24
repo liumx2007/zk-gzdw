@@ -1,26 +1,22 @@
 package com.zzqx.mvc.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.CmdListMapper;
 import com.zzqx.mvc.dao.CmdMapper;
 import com.zzqx.mvc.dto.CmdListDto;
-
-import com.zzqx.mvc.entity.*;
-import com.zzqx.mvc.service.*;
+import com.zzqx.mvc.entity.CmdList;
+import com.zzqx.mvc.entity.CmdListExample;
+import com.zzqx.mvc.service.CmdListService;
+import com.zzqx.mvc.service.CmdService;
 import com.zzqx.mvc.vo.CmdListOneVo;
 import com.zzqx.mvc.vo.CmdListVo;
-
-
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.lang.reflect.InvocationTargetException;
-
-
+import java.util.Date;
 import java.util.List;
 
 
@@ -73,13 +69,14 @@ public class CmdListServiceImpl implements CmdListService {
     public CmdListVo getById(String id) {
         CmdList cmdList = cmdListMapper.selectByPrimaryKey(id);
         CmdListVo cmdListVo = cmdService.getAllDataByType();
-        try {
-            BeanUtils.copyProperties(cmdListVo,cmdList);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            BeanUtils.copyProperties(cmdListVo,cmdList);
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+        BeanUtil.copyProperties(cmdList,cmdListVo);
         //检测是否有toTCPServer字符
 //        String s = cmdList.getDirectList();
 //        boolean flag = StringUtils.contains(s,"toTCPServer=");
@@ -92,6 +89,12 @@ public class CmdListServiceImpl implements CmdListService {
 //            cmdListVo.setPort(port);
 //        }
         return cmdListVo;
+    }
+
+    @Override
+    public CmdList getByIdOne(String id) {
+        CmdList cmdList = cmdListMapper.selectByPrimaryKey(id);
+        return cmdList;
     }
 
     @Override
@@ -113,6 +116,8 @@ public class CmdListServiceImpl implements CmdListService {
     public int insertSelect(CmdList cmdList) {
         CountInfo countInfo = new CountInfo();
         cmdList.setHallId(countInfo.HALL_ID);
+        cmdList.setCreateTime(new Date());
+        cmdList.setUpdateTime(new Date());
         cmdList = cmdAdd(cmdList);
         return cmdListMapper.insertSelective(cmdList);
     }
@@ -121,6 +126,7 @@ public class CmdListServiceImpl implements CmdListService {
     public int updateSelect(CmdList cmdList) {
         CountInfo countInfo = new CountInfo();
         cmdList.setHallId(countInfo.HALL_ID);
+        cmdList.setUpdateTime(new Date());
         cmdList = cmdAdd(cmdList);
         return cmdListMapper.updateByPrimaryKeySelective(cmdList);
     }

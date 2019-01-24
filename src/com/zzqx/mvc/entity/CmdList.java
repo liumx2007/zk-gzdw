@@ -2,6 +2,8 @@ package com.zzqx.mvc.entity;
 
 import com.jetsum.core.orm.entity.IdEntity;
 
+import java.util.Date;
+
 public class CmdList extends IdEntity {
     private String id;
 
@@ -18,6 +20,8 @@ public class CmdList extends IdEntity {
     private String tcpSource;
 
     private  int hallId;
+    private Date createTime;
+    private Date updateTime;
 
 
     public String getId() {
@@ -82,5 +86,21 @@ public class CmdList extends IdEntity {
 
     public void setHallId(int hallId) {
         this.hallId = hallId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

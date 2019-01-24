@@ -25,6 +25,7 @@ public interface CmdListService {
      * 根据主键查询
      */
     CmdListVo getById(String id );
+    CmdList getByIdOne(String id );
     /**
      * 页面使用的单个数据
      */

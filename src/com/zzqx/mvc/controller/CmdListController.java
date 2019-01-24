@@ -82,6 +82,7 @@ public class CmdListController {
     @ResponseBody
     public R getListById(String id){
         CmdListVo cmdListVo = cmdListService.getById(id);
+//        CmdList cmdListVo = cmdListService.getByIdOne(id);
         return R.ok().put("data",cmdListVo);
     }
     /**

@@ -102,6 +102,7 @@
           and `description` LIKE CONCAT('%',#{description},'%')
         </if>
       </where>
+        ORDER BY `create_time` desc
         limit #{limit0},#{limit1}
   </select>
   <select id="getListCount" resultType="com.zzqx.mvc.entity.CmdList" parameterType="com.zzqx.mvc.dto.CmdListDto">
@@ -169,6 +170,12 @@
       <if test="hallId != null">
         hall_id,
       </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -194,6 +201,12 @@
       </if>
       <if test="hallId != null">
         #{hallId},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime},
       </if>
     </trim>
   </insert>
@@ -256,6 +269,9 @@
       </if>
       <if test="hallId != null">
         hall_id = #{hallId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
