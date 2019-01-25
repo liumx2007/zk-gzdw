@@ -2,6 +2,7 @@ package com.zzqx.mvc.service.impl;
 
 import com.jetsum.core.orm.entity.Page;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.GroupDao;
 import com.zzqx.mvc.dao.TerminalDao;
 import com.zzqx.mvc.dao.TerminalMybatisMapper;
 import com.zzqx.mvc.entity.Group;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,6 +31,8 @@ public class TerminalServiceImpl implements TerminalService {
 	
 	@Autowired
 	private TerminalDao terminalDao;
+	@Autowired
+	GroupDao groupDao;
 
 	@Autowired
 	TerminalMybatisMapper terminalMybatisMapper;
@@ -112,6 +116,34 @@ public class TerminalServiceImpl implements TerminalService {
 		criteria.andHallIdEqualTo(countInfo.HALL_ID);
 		List<TerminalMybatis> list =terminalMybatisMapper.selectByExample(terminalMybatisExample);
 		return list;
+	}
+
+	@Override
+	public int insertBySelect(TerminalMybatis terminalMybatis) {
+		List<Group> groups = groupDao.getAll();
+		Group group = null;
+		if (groups.size() > 0 ){
+			group = groups.get(0);
+		}else {
+			CountInfo countInfo = new CountInfo();
+			group.setCodeName(String.valueOf(countInfo.HALL_ID));
+			group.setName("体验厅");
+			group.setAddTime(new Date());
+			groupDao.save(group);
+		}
+		terminalMybatis.setGroupId(group.getId());
+		terminalMybatis.setStatus("false");
+		terminalMybatis.setUpdateStatus(1);
+		return terminalMybatisMapper.insertSelective(terminalMybatis);
+	}
+
+	@Override
+	public int updateBySelect(TerminalMybatis terminalMybatis) {
+		TerminalMybatis terminalMybatis1 = terminalMybatisMapper.selectByPrimaryKey(terminalMybatis.getId());
+		if (terminalMybatis1 != null) {
+			terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis);
+		}
+		return 0;
 	}
 
 }

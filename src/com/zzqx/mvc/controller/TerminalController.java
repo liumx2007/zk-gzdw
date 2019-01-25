@@ -222,7 +222,8 @@ public class TerminalController extends BaseController {
 		message.setMessage("修改成功！");
 		return message.toString();
 	}
-	
+
+	@OpenAccess
 	@ResponseBody
 	@RequestMapping("delete")
 	public String delete(String id) {
@@ -479,4 +480,25 @@ public class TerminalController extends BaseController {
 		}
 		return R.error();
 	}
+	/**
+	 * 新增---监控调用接口
+	 */
+	@OpenAccess
+	@RequestMapping("insert")
+	@ResponseBody
+	public R save(TerminalMybatis terminalMybatis){
+		terminalService.insertBySelect(terminalMybatis);
+		return  R.ok();
+	}
+	/**
+	 * 更新--监控调用接口
+	 */
+	@OpenAccess
+	@RequestMapping("update")
+	@ResponseBody
+	public R update(TerminalMybatis terminalMybatis){
+		terminalService.updateBySelect(terminalMybatis);
+		return  R.ok();
+	}
+
 }

@@ -143,6 +143,12 @@
       <if test="remark != null">
         remark,
       </if>
+      <if test="hallId != null">
+        hall_id,
+      </if>
+      <if test="updateStatus != null">
+        update_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -171,6 +177,12 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        #{hallId},
+      </if>
+      <if test="updateStatus != null">
+        #{updateStatus},
       </if>
     </trim>
   </insert>
@@ -256,6 +268,12 @@
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="hallId != null">
+        hall_id =  #{hallId},
+      </if>
+      <if test="updateStatus != null">
+        update_status = #{updateStatus},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

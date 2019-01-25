@@ -1,15 +1,16 @@
 package com.zzqx.mvc.entity;
 
 public class TerminalMybatis {
+
     private String id;
 
-    private String status;
+    private String status;//设备状态
 
-    private Integer serialNumber;
+    private Integer serialNumber;//代号
 
-    private String name;
+    private String name;//设备名
 
-    private String codeName;
+    private String codeName;//终端编号
 
     private String ip;
 
@@ -19,7 +20,9 @@ public class TerminalMybatis {
 
     private String remark;
 
-    private  int hallId;
+    private  int hallId;//营业厅ID
+
+    private  int updateStatus;//上传状态（0 未上传 1已上传）默认为 0
 
     public String getId() {
         return id;
@@ -99,5 +102,13 @@ public class TerminalMybatis {
 
     public void setHallId(int hallId) {
         this.hallId = hallId;
+    }
+
+    public int getUpdateStatus() {
+        return updateStatus;
+    }
+
+    public void setUpdateStatus(int updateStatus) {
+        this.updateStatus = updateStatus;
     }
 }
