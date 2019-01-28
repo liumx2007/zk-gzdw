@@ -355,7 +355,8 @@ public class InterfaceController extends BaseController {
 		person.setName(employeeInformation.getName());
 		person.setWatch_code(employeeInformation.getWatchCode());
 		try{
-			s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,2000);
+			CountInfo countInfo = new CountInfo();
+			s = HttpUtil.get(countInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,2000);
 			if(!"".equals(s)){
 				cn.hutool.json.JSONObject object = new cn.hutool.json.JSONObject(s);
 				String name = object.get("name").toString();

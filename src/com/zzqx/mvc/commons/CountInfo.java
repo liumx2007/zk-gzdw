@@ -9,15 +9,32 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CountInfo {
-    //中台服务器Ip
-    public static final String SERVER_IP = "http://10.174.12.44:8091";
-    //测试
-//    public static final String SERVER_IP = "http://127.0.0.1:8081/yytjk";
-    //营业厅id  --黄埔 2 --钟村 10  --南沙
+    Props props =new Props("config.properties");
+    /**
+     * 中台服务器Ip
+     */
+    String serverIp = props.getStr("SERVER_IP");
+    public  String SERVER_IP = serverIp;
+
+    /**
+     * 外网监系统地址
+     */
+    String DW_SERVER_IP = props.getStr("DW_SERVER_IP");
+
+    /**
+     * 文件系统ip
+     */
+    private  String FILE_SERVER_IP = props.getStr("FILE_SERVER_IP");
+    /**
+     * 文件系统的用户名和密码
+     */
+    public  String USER_NAME = props.getStr("FILE_SYSTEM_USER");
+    public  String  PASSWORD = props.getStr("FILE_SYSTEM_PASSWORD");
+
     /**
      * 改动位置比较多，只能去除静态。
+     * 营业厅id  --黄埔 2 --钟村 10  --南沙
      */
-    Props props =new Props("config.properties");
     Integer hallId = props.getInt("HALL_ID");
     public  Integer HALL_ID = Integer.valueOf(hallId);
 //    public static final Integer HALL_ID = 10;
@@ -35,7 +52,7 @@ public class CountInfo {
     /**
      * 根据腕表编码查询人员
      */
-    public static final String GET_PERSON_BY_WATCHCODE = SERVER_IP + "/api/employeeInformation/getListByWatch?";
+    public   String GET_PERSON_BY_WATCHCODE = SERVER_IP + "/api/employeeInformation/getListByWatch?";
     /**
      * 获取排班列表
      */
@@ -61,7 +78,7 @@ public class CountInfo {
     /**
      * 修改员工工作状态
      */
-    public  static final String UPDATE_WORK_STATUS = SERVER_IP+"/api/employeeInformation/updateByWatchCode?";
+    public    String UPDATE_WORK_STATUS = SERVER_IP+"/api/employeeInformation/updateByWatchCode?";
 
     /**
      * 修改人员绑定状态id="+i+"&&bindState=0&watchCode="+uuid
@@ -95,12 +112,24 @@ public class CountInfo {
     /**
      * 上传消息数据
      */
-    public static final String POST_MESSAGE_DATA = SERVER_IP+"/api/dwMessage/save";
+    public   String POST_MESSAGE_DATA = SERVER_IP+"/api/dwMessage/save";
     /**
      * 上传意见簿数据
      */
-    public  static final String POST_YJ_DATA = SERVER_IP+"/api/dtTbYj/save";
+    public    String POST_YJ_DATA = SERVER_IP+"/api/dtTbYj/save";
 
+    /**
+     * 外网监控登录
+     */
+    public  String  DW_SYSTEM_LOGIN = DW_SERVER_IP+"/api/sys/login";
+    /**
+     * 监控系统登录后获取用户信息
+     */
+    public String FILE_SYSTEM_USER_INFO = FILE_SERVER_IP+"";
+    /**
+     * 文件系统文件上传
+     */
+    public String FILE_UPLOAD = FILE_SERVER_IP + "/hall-file/api/fileUpload/singleFile";
     /**
      *设备灯光类型
      */

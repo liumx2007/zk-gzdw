@@ -287,7 +287,8 @@ public class PersonnelController extends BaseController {
 			returnStr =  "修改状态成功。";
 		}
 		try{
-			s = HttpUtil.get(CountInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode,1500);
+			CountInfo countInfo = new CountInfo();
+			s = HttpUtil.get(countInfo.UPDATE_WORK_STATUS+"workState="+statu+"&watchCode=" + watchCode,1500);
 			if (!s.contains("修改成功")) {
 //			return "人员信息不存在";
 				return "修改状态失败。";
@@ -405,7 +406,8 @@ public class PersonnelController extends BaseController {
 		String perStr = "";
 		PersonVo person = new PersonVo();
 		try{
-			perStr = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,1500);
+			CountInfo countInfo =  new CountInfo();
+			perStr = HttpUtil.get(countInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+watchCode,1500);
 			if(!"".equals(perStr)){
 				cn.hutool.json.JSONObject object = JSONUtil.parseObj(perStr);
 				Object ob = object.get("changeTime");

@@ -63,7 +63,7 @@ public class YjTimeTask {
                     if (yj.getFeedbackTime() != null) {
                         map.put("feedbackTime", yj.getFeedbackTime().getTime());
                     }
-                    String str = HttpUtil.post(CountInfo.POST_YJ_DATA, map,3000);
+                    String str = HttpUtil.post(countInfo.POST_YJ_DATA, map,3000);
                     if (str.contains("成功")) {
                         yj.setUpStatus(1);
                         yjService.saveOrUpdate(yj);

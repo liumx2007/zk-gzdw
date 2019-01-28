@@ -1,6 +1,10 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
+import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.Content;
 import com.zzqx.mvc.entity.Folder;
 import com.zzqx.mvc.entity.Queue;
@@ -75,6 +79,36 @@ public class ContentController extends BaseController {
 		if(content.getWay() == Content.WAY_UPLOAD) {
 			MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
 			MultipartFile file = multipartHttpServletRequest.getFile("file");
+			// 19-1-28
+			try{
+				//登录监控获取token
+				CountInfo countInfo = new CountInfo();
+				// 设置请求的参数
+				JSONObject jsonParam = new JSONObject();
+				jsonParam.put("username", countInfo.USER_NAME);
+				jsonParam.put("password", countInfo.PASSWORD);
+				String json = jsonParam.toString();
+				String data = HttpRequest.post(countInfo.DW_SYSTEM_LOGIN)
+						.body(json,"application/json")
+						.execute().body();
+				cn.hutool.json.JSONObject object = JSONUtil.parseObj(data);
+				Object userInfo = object.get("data");
+				cn.hutool.json.JSONObject object1 = JSONUtil.parseObj(userInfo);
+				String token = (String) object1.get("token");
+				System.out.println("------------------"+token);
+				String userId = (String) object1.get("employeeId");
+				//再上传file，存储对应的文件表
+				Map<String,Object> map = new HashMap<>();
+				map.put("flie",file);
+				map.put("businessEnumType",15);
+				map.put("userId",userId);
+				map.put("retainFileName",1);
+				map.put("saveToDb",2);
+				map.put("serverToken",token);
+				String s = HttpUtil.post(countInfo.FILE_UPLOAD,map);
+			}catch (Exception e){
+				System.out.println("-------------网络中断，文件上传监控失败！------------");
+			}
 			if(file == null || StringHelper.isBlank(file.getOriginalFilename())) {
 				message.setType(ReturnMessage.MESSAGE_ERROR);
 				message.setMessage("上传失败！");

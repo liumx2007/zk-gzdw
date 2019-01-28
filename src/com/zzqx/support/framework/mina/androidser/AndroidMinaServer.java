@@ -100,7 +100,8 @@ public class AndroidMinaServer extends IoHandlerAdapter {
 				PersonnelService personnelService = (PersonnelService) SpringContext.getBean("personnelService");
 //				List<Personnel> personnels = personnelService.find(Restrictions.eq("watch_code", msgs));
 				try{
-					s = HttpUtil.get(CountInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+msgs,2000);
+					CountInfo countInfo = new CountInfo();
+					s = HttpUtil.get(countInfo.GET_PERSON_BY_WATCHCODE+"watchCode="+msgs,2000);
 				}catch (Exception e){
 					//todo 19-1-10
 					employeeInformation = employeeInformationService.selectByWatchCode(employeeInformation).get(0);

@@ -52,7 +52,7 @@ public class MessageTimeTask {
                     if (message.getOrdertime() != null) {
                         map.put("ordertime", message.getOrdertime().getTime());
                     }
-                    String str = HttpUtil.post(CountInfo.POST_MESSAGE_DATA, map,3000);
+                    String str = HttpUtil.post(countInfo.POST_MESSAGE_DATA, map,3000);
                     if (str.contains("成功")) {
                         message.setUpStatus(1);
                         messageDao.saveOrUpdate(message);

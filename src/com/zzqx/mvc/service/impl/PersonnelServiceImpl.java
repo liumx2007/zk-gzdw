@@ -312,7 +312,8 @@ public class PersonnelServiceImpl implements PersonnelService {
 //				List<Personnel> personnels = personnelDao.find(Restrictions.eq("watch_code", watchCode));
 				//todo 需要处理 19-1-10
 				try{
-					String httpCore = CountInfo.SERVER_IP;
+					CountInfo countInfo = new CountInfo();
+					String httpCore = countInfo.SERVER_IP;
 					s = HttpUtil.get(httpCore+"/api/employeeInformation/getListByWatch?watchCode="+watchCode,2000);
 
 				}catch (Exception e){
@@ -337,7 +338,8 @@ public class PersonnelServiceImpl implements PersonnelService {
 					//todo 查询本地排班
 
 					try{
-						String httpCore = CountInfo.SERVER_IP;
+						CountInfo countInfo = new CountInfo();
+						String httpCore = countInfo.SERVER_IP;
 						schMsg = HttpUtil.get(httpCore+"/api/dwBhSchedu/watchSchedu?hallId=2",2000);
 					}catch (Exception e){
 //						return false;
