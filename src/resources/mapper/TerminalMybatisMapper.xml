@@ -73,7 +73,7 @@
   <sql id="Base_Column_List">
     id, status, serial_number, name, code_name, ip, mac, group_id, remark
   </sql>
-  <select id="selectByExample" parameterType="com.zzqx.mvc.entity.TerminalMybatisExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.zzqx.mvc.entity.TerminalMybatisExample" resultType="com.zzqx.mvc.entity.TerminalMybatis">
     select
     <if test="distinct">
       distinct

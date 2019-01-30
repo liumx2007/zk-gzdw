@@ -141,6 +141,7 @@ public class TerminalServiceImpl implements TerminalService {
 	public int updateBySelect(TerminalMybatis terminalMybatis) {
 		TerminalMybatis terminalMybatis1 = terminalMybatisMapper.selectByPrimaryKey(terminalMybatis.getId());
 		if (terminalMybatis1 != null) {
+			terminalMybatis.setUpdateStatus(1);
 			terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis);
 		}
 		return 0;

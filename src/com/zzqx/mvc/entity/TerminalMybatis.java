@@ -22,7 +22,7 @@ public class TerminalMybatis {
 
     private  int hallId;//营业厅ID
 
-    private  int updateStatus;//上传状态（0 未上传 1已上传）默认为 0
+    private  int updateStatus;//上传状态（0 未上传 1已上传 2 已更新）默认为 0
 
     public String getId() {
         return id;

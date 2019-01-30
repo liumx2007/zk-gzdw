@@ -1,5 +1,6 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.http.HttpUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.*;
@@ -217,6 +218,8 @@ public class TerminalController extends BaseController {
 		Terminal t = terminalService.getById(terminal.getId());
 		terminal.setStatus(t.getStatus());
 		BeanUtils.copyProperties(terminal, t);
+		//19-1-29 设备更新状态
+		t.setUpdateStatus(2);
 		terminalService.saveOrUpdate(t);
 		message.setType(ReturnMessage.MESSAGE_SUCCESS);
 		message.setMessage("修改成功！");
@@ -235,6 +238,15 @@ public class TerminalController extends BaseController {
 		}
 		String[] ids = id.split(",");
 		terminalService.delete(ids);
+		//19-1-29 删除监控系统数据
+		try{
+			CountInfo countInfo = new CountInfo();
+			String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id);
+		}catch (Exception e){
+			//监控删除出行问题，记录未删除ID，
+			//todo 加表处理
+
+		}
 		message.setType(ReturnMessage.MESSAGE_SUCCESS);
 		message.setMessage("删除成功！");
 		return message.toString();

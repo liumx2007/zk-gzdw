@@ -19,7 +19,7 @@ public class HttpRequest {
     public static void main(String[] args) throws Exception{
         DefaultHttpClient httpClient = new DefaultHttpClient();
         CountInfo countInfo = new CountInfo();
-        String url = countInfo.FILE_SYSTEM_LOGIN;
+        String url = countInfo.DW_SYSTEM_LOGIN;
         HttpPost httpPost = new HttpPost(url);
 
         // 设置请求的header

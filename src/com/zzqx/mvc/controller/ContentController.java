@@ -1,7 +1,6 @@
 package com.zzqx.mvc.controller;
 
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
@@ -18,6 +17,7 @@ import com.zzqx.mvc.vo.ContentStatusVo;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.file.FileManager;
 import com.zzqx.support.utils.file.PropertiesHelper;
+import com.zzqx.support.utils.net.HttpClientUploadFile;
 import com.zzqx.support.utils.net.SocketDataSender;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -98,14 +98,30 @@ public class ContentController extends BaseController {
 				System.out.println("------------------"+token);
 				String userId = (String) object1.get("employeeId");
 				//再上传file，存储对应的文件表
-				Map<String,Object> map = new HashMap<>();
-				map.put("flie",file);
-				map.put("businessEnumType",15);
-				map.put("userId",userId);
-				map.put("retainFileName",1);
-				map.put("saveToDb",2);
-				map.put("serverToken",token);
-				String s = HttpUtil.post(countInfo.FILE_UPLOAD,map);
+//				Map<String,Object> map = new HashMap<>();
+//				map.put("file",file);
+//				map.put("businessEnumType",15);
+//				map.put("userId",userId);
+//				map.put("retainFileName",1);
+//				map.put("saveToDb",2);
+//				map.put("serverToken",token);
+				// 设置请求的参数
+//				JSONObject param = new JSONObject();
+//				param.put("file", file);
+//				param.put("businessEnumType",15);
+//				param.put("userId", userId);
+//				param.put("retainFileName",1);
+//				param.put("saveToDb",2);
+//				param.put("serverToken",token);
+//				String json1 = param.toString();
+//				String s = HttpUtil.post(countInfo.FILE_UPLOAD,map);
+// ?businessEnumType=15&userId=1&retainFileName=1&saveToDb=2&sortNumber=1&serverToken=
+//				String s = HttpRequest.post(countInfo.FILE_UPLOAD+"?businessEnumType=15&userId="+userId+"&retainFileName=1&saveToDb=2&sortNumber=1&serverToken="+token)
+//						.form("file",file)
+//						.execute().body();
+				HttpClientUploadFile httpClientUploadFile = new HttpClientUploadFile();
+				String s = httpClientUploadFile.httpClientUploadFile(file,token);
+				System.out.println("---------------------");
 			}catch (Exception e){
 				System.out.println("-------------网络中断，文件上传监控失败！------------");
 			}

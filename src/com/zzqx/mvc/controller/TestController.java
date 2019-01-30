@@ -29,8 +29,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -179,5 +183,23 @@ public class TestController extends BaseController {
 			return R.ok().put("data",hardware);
 		}
 		return R.error();
+	}
+	/**
+	 * 服务端A->服务端B之间文件以及数据传输接收测试
+	 */
+	@OpenAccess
+	@RequestMapping(value = "/singleFile",method = RequestMethod.POST)
+	@ResponseBody
+	public R fileUpload(HttpServletRequest request,
+							 HttpServletResponse response,
+							 MultipartFile file,
+							 Integer businessEnumType,//上传文件的业务类型
+							 String userId,//用户ID(不传默认用户是 0，后面通过接口获取用户信息)
+							 Integer retainFileName, //保留文件名类型 0 不保留文件名  1 保留文件名 2 保留文件名，文件重复覆盖
+							 String saveToDb,   //是否保存到公共表
+							 Integer sortNumber,     //文件顺序
+							 String serverToken
+	) {
+		return R.ok();
 	}
 }

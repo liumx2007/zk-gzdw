@@ -216,9 +216,10 @@
     <bean id="InteractionLogTimeTask" class="com.zzqx.support.framework.task.timerTask.InteractionLogTimeTask"/>
     <bean id="MessageTimeTask" class="com.zzqx.support.framework.task.timerTask.MessageTimeTask"/>
     <bean id="YjTimeTask" class="com.zzqx.support.framework.task.timerTask.YjTimeTask"/>
+    <bean id="TerminalTimeTask" class="com.zzqx.support.framework.task.timerTask.TerminalTimeTask"/>
     <task:scheduled-tasks>
-        <task:scheduled ref="terminalStateTimerTask" method="doTask" fixed-rate="5000"/><!-- 5000,5秒 -->
-        <task:scheduled ref="AndroidTimerTask" method="sendAutoMessage_new" cron="0 0 5 * * *"/>
+        <!--<task:scheduled ref="terminalStateTimerTask" method="doTask" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
+        <!--<task:scheduled ref="AndroidTimerTask" method="sendAutoMessage_new" cron="0 0 5 * * *"/>-->
        <!--<task:scheduled ref="AndroidTimerTask" method="sendAutoMessage" cron="0 0 6 * * *"/> -->
         <!--<task:scheduled ref="SynchronizeTimerTask" method="doMessageTask" fixed-rate="30000"/>&lt;!&ndash;更新排班信息 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="SynchronizeTimerTask" method="doSynchronizeTask" cron="0 0 6 * * *"/>&lt;!&ndash;每天6点同步人员和排班信息 &ndash;&gt;-->
@@ -226,6 +227,8 @@
         <!--<task:scheduled ref="EnvironmentTimerTask" method="postInteractionData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="MessageTimeTask" method="postMessageData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="YjTimeTask" method="postYjData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
+        <task:scheduled ref="TerminalTimeTask" method="addDwTerminal" fixed-rate="5000"/><!-- 5000,5秒 -->
+        <!--<task:scheduled ref="TerminalTimeTask" method="updateDwTerminal" fixed-rate="5000"/>-->
     </task:scheduled-tasks>
 
 
@@ -236,4 +239,18 @@
 
     <!-- 使用annotation定义事务 -->
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+    <!-- 文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+        <property name="maxUploadSize">
+            <!-- 上传文件大小限制为31M，31*1024*1024 -->
+            <value>32505856</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
+    </bean>
 </beans>

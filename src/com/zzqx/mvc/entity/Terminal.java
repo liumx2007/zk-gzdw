@@ -21,6 +21,7 @@ public class Terminal extends IdEntity {
 	private Set<TerminalContent> terminalContents;
 	private Group group;
 	private  int hallId;
+	private  int updateStatus;//上传状态（0 未上传 1已上传 2 已更新 ）默认为 0
 	
 	@OneToMany(mappedBy="terminal")
 	public Set<TerminalContent> getTerminalContents() {
@@ -87,5 +88,13 @@ public class Terminal extends IdEntity {
 
 	public void setHallId(int hallId) {
 		this.hallId = hallId;
+	}
+
+	public int getUpdateStatus() {
+		return updateStatus;
+	}
+
+	public void setUpdateStatus(int updateStatus) {
+		this.updateStatus = updateStatus;
 	}
 }

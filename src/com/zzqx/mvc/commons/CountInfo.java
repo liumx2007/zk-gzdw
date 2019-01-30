@@ -130,6 +130,20 @@ public class CountInfo {
      * 文件系统文件上传
      */
     public String FILE_UPLOAD = FILE_SERVER_IP + "/hall-file/api/fileUpload/singleFile";
+
+    /**
+     * 监控设备新增
+     */
+    public String  DW_TERMINAL_ADD = DW_SERVER_IP +"/api/employeeInformation/addOrUpdatePlayTerminal";
+    /**
+     * 监控设备更新
+     */
+    public String  DW_TERMINAL_UPDATE = DW_SERVER_IP + "/api/employeeInformation/addOrUpdatePlayTerminal";
+    /**
+     * 监控设备删除
+     */
+    public String  DW_TERMINAL_DELETE = DW_SERVER_IP + "/api/employeeInformation/delTerminal";
+
     /**
      *设备灯光类型
      */

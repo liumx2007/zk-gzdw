@@ -732,6 +732,14 @@ public class TerminalMybatisExample {
             addCriterion("hall_id =", value, "hallId");
             return (Criteria) this;
         }
+        /**
+         * 添加updateStatus的查询
+         * date 19-1-21
+         */
+        public Criteria andUpdateStatusEqualTo(int value) {
+            addCriterion("update_status =", value, "updateStatus");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
