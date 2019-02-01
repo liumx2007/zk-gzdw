@@ -36,10 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/test")
@@ -201,5 +198,28 @@ public class TestController extends BaseController {
 							 String serverToken
 	) {
 		return R.ok();
+	}
+
+	/**
+	 * 测试Hutool是否支持域名调用
+	 */
+	@OpenAccess
+	@RequestMapping(value = "/testHttpUtil")
+	@ResponseBody
+	public R testHttpUtil(){
+		Map<String,Object> map = new HashMap<>();
+		map.put("hallId","2");
+		map.put("terminalName","电动驾驶");
+		map.put("ipAddress","173.60.1.15");
+		map.put("macAddress","30-9C-23-C2-0C-DF");
+		map.put("code","15");
+		map.put("alias","15");
+		String s  = HttpUtil.post("http://127.0.0.1:8092/api/employeeInformation/addOrUpdatePlayTerminal",map);
+//		Map<String,Object> map = new HashMap<>();
+//		map.put("username","banzhang");
+//		map.put("password","admin");
+//		String s = HttpUtil.post("http://www.zzqxs.com:8091/sys/login/restful",map);
+//		String ss = HttpRequest.get("http://127.0.0.1:8092/api/employeeInformation/addOrUpdatePlayTerminal?hallId=2&terminalName=电动驾驶&ipAddress=173.60.1.15&macAddress=30-9C-23-C2-0C-DF&code=15&alias=15").contentType("application/json;charset=UTF-8").execute().body();
+		return  R.ok();
 	}
 }

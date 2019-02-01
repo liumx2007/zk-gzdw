@@ -30,6 +30,7 @@ public class TerminalTimeTask {
         CountInfo countInfo = new CountInfo();
         if (list.size() > 0) {
             list.forEach(terminalMybatis -> {
+//            TerminalMybatis terminalMybatis = list.get(0);
                 try {
                     String s = HttpUtil.get(countInfo.DW_TERMINAL_ADD + "?hallId=" + countInfo.HALL_ID
                             + "&terminalName=" + terminalMybatis.getName()
@@ -38,14 +39,16 @@ public class TerminalTimeTask {
                             + "&code=" + terminalMybatis.getCodeName()
                             + "&alias=" + terminalMybatis.getSerialNumber()
                     ,2000);
-                    JSONObject object = new JSONObject(s);
-                    Object flag = object.get("infoCode");
-                    if (flag.equals(200)){
-                        //更新上传状态
-                        TerminalMybatis terminalMybatis1 = new TerminalMybatis();
-                        terminalMybatis1.setId(terminalMybatis.getId());
-                        terminalMybatis1.setUpdateStatus(1);
-                        terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis1);
+                    if (!"".equals(s)) {
+                        JSONObject object = new JSONObject(s);
+                        Object flag = object.get("infoCode");
+                        if (flag.equals(200)) {
+                            //更新上传状态
+                            TerminalMybatis terminalMybatis1 = new TerminalMybatis();
+                            terminalMybatis1.setId(terminalMybatis.getId());
+                            terminalMybatis1.setUpdateStatus(1);
+                            terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis1);
+                        }
                     }
                 }catch (Exception e){
                     System.out.println("-------------------"+ e);
@@ -66,6 +69,7 @@ public class TerminalTimeTask {
         CountInfo countInfo = new CountInfo();
         if (list.size() > 0) {
             list.forEach(terminalMybatis -> {
+//            TerminalMybatis terminalMybatis = list.get(0);
                 try {
                     String s = HttpUtil.get(countInfo.DW_TERMINAL_UPDATE + "?hallId=" + countInfo.HALL_ID
                             + "&terminalName=" + terminalMybatis.getName()
@@ -74,14 +78,16 @@ public class TerminalTimeTask {
                             + "&code=" + terminalMybatis.getCodeName()
                             + "&alias=" + terminalMybatis.getSerialNumber()
                     ,2000);
-                    JSONObject object = new JSONObject(s);
-                    Object flag = object.get("infoCode");
-                    if (flag.equals(200)){
-                        //更新上传状态
-                        TerminalMybatis terminalMybatis1 = new TerminalMybatis();
-                        terminalMybatis1.setId(terminalMybatis.getId());
-                        terminalMybatis1.setUpdateStatus(1);
-                        terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis1);
+                    if (!"".equals(s)) {
+                        JSONObject object = new JSONObject(s);
+                        Object flag = object.get("infoCode");
+                        if (flag.equals(200)) {
+                            //更新上传状态
+                            TerminalMybatis terminalMybatis1 = new TerminalMybatis();
+                            terminalMybatis1.setId(terminalMybatis.getId());
+                            terminalMybatis1.setUpdateStatus(1);
+                            terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis1);
+                        }
                     }
                 }catch (Exception e){
                     System.out.println("-------------------"+ e);
