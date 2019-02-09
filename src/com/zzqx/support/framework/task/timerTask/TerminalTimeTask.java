@@ -9,7 +9,9 @@ import com.zzqx.mvc.entity.TerminalMybatisExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 public class TerminalTimeTask {
@@ -25,20 +27,21 @@ public class TerminalTimeTask {
         TerminalMybatisExample terminalMybatisExample =  new TerminalMybatisExample();
         TerminalMybatisExample.Criteria criteria  =terminalMybatisExample.createCriteria();
         criteria.andUpdateStatusEqualTo(0);
-        List<TerminalMybatis> list =   terminalMybatisMapper.selectByExample(terminalMybatisExample);
+        List<TerminalMybatis> list =  terminalMybatisMapper.selectByExample(terminalMybatisExample);
         //字段匹配上传
         CountInfo countInfo = new CountInfo();
         if (list.size() > 0) {
             list.forEach(terminalMybatis -> {
 //            TerminalMybatis terminalMybatis = list.get(0);
+                Map<String,Object> map = new HashMap<>();
+                map.put("hallId",countInfo.HALL_ID);
+                map.put("terminalName",terminalMybatis.getName());
+                map.put("ipAddress",terminalMybatis.getIp());
+                map.put("macAddress",terminalMybatis.getMac());
+                map.put("code",terminalMybatis.getCodeName());
+                map.put("alias",terminalMybatis.getSerialNumber());
                 try {
-                    String s = HttpUtil.get(countInfo.DW_TERMINAL_ADD + "?hallId=" + countInfo.HALL_ID
-                            + "&terminalName=" + terminalMybatis.getName()
-                            + "&ipAddress=" + terminalMybatis.getIp()
-                            + "&macAddress=" + terminalMybatis.getMac()
-                            + "&code=" + terminalMybatis.getCodeName()
-                            + "&alias=" + terminalMybatis.getSerialNumber()
-                    ,2000);
+                    String s = HttpUtil.post(countInfo.DW_TERMINAL_ADD , map,2000);
                     if (!"".equals(s)) {
                         JSONObject object = new JSONObject(s);
                         Object flag = object.get("infoCode");
@@ -70,14 +73,15 @@ public class TerminalTimeTask {
         if (list.size() > 0) {
             list.forEach(terminalMybatis -> {
 //            TerminalMybatis terminalMybatis = list.get(0);
+                Map<String,Object> map = new HashMap<>();
+                map.put("hallId",countInfo.HALL_ID);
+                map.put("terminalName",terminalMybatis.getName());
+                map.put("ipAddress",terminalMybatis.getIp());
+                map.put("macAddress",terminalMybatis.getMac());
+                map.put("code",terminalMybatis.getCodeName());
+                map.put("alias",terminalMybatis.getSerialNumber());
                 try {
-                    String s = HttpUtil.get(countInfo.DW_TERMINAL_UPDATE + "?hallId=" + countInfo.HALL_ID
-                            + "&terminalName=" + terminalMybatis.getName()
-                            + "&ipAddress=" + terminalMybatis.getIp()
-                            + "&macAddress=" + terminalMybatis.getMac()
-                            + "&code=" + terminalMybatis.getCodeName()
-                            + "&alias=" + terminalMybatis.getSerialNumber()
-                    ,2000);
+                    String s = HttpUtil.post(countInfo.DW_TERMINAL_UPDATE ,map,2000);
                     if (!"".equals(s)) {
                         JSONObject object = new JSONObject(s);
                         Object flag = object.get("infoCode");

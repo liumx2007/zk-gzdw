@@ -201,7 +201,7 @@ public class TestController extends BaseController {
 	}
 
 	/**
-	 * 测试Hutool是否支持域名调用
+	 * 测试调用
 	 */
 	@OpenAccess
 	@RequestMapping(value = "/testHttpUtil")
