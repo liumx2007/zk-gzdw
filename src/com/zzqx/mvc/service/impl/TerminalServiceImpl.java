@@ -119,6 +119,16 @@ public class TerminalServiceImpl implements TerminalService {
 	}
 
 	@Override
+	public List<TerminalMybatis> getListByStatus() {
+		TerminalMybatisExample terminalMybatisExample = new TerminalMybatisExample();
+		CountInfo countInfo =new CountInfo();
+		TerminalMybatisExample.Criteria  criteria= terminalMybatisExample.createCriteria();
+		criteria.andHallIdEqualTo(countInfo.HALL_ID).andStatusEqualTo("true");
+		List<TerminalMybatis> list =terminalMybatisMapper.selectByExample(terminalMybatisExample);
+		return list;
+	}
+
+	@Override
 	public int insertBySelect(TerminalMybatis terminalMybatis) {
 		List<Group> groups = groupDao.getAll();
 		Group group = null;

@@ -3,24 +3,31 @@ package com.zzqx.support.framework.task.timerTask;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.HardwareMapper;
 import com.zzqx.mvc.dao.TerminalMybatisMapper;
 import com.zzqx.mvc.entity.TerminalMybatis;
 import com.zzqx.mvc.entity.TerminalMybatisExample;
+import com.zzqx.support.utils.machine.hardware.HardwareHandler;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Transactional
 public class TerminalTimeTask {
 
     @Autowired
     TerminalMybatisMapper terminalMybatisMapper;
+    @Autowired
+    HardwareMapper hardwareMapper;
 
     /**
-     * 新增
+     * 新增设备到监控
      */
     public void addDwTerminal(){
         //查询未上传的数据
@@ -60,7 +67,7 @@ public class TerminalTimeTask {
         }
     }
     /**
-     * 更新
+     * 更新设备到监控
      */
     public void updateDwTerminal(){
         //查询已更新的数据
@@ -105,4 +112,35 @@ public class TerminalTimeTask {
     public void delDwTerminal(){
 
     }
+    /**
+     * 设备信息保存
+     */
+    public void doSaveHardware(){
+        //获取开机状态的设备
+        TerminalMybatisExample terminalMybatisExample = new TerminalMybatisExample();
+        CountInfo countInfo =new CountInfo();
+        TerminalMybatisExample.Criteria  criteria= terminalMybatisExample.createCriteria();
+        criteria.andHallIdEqualTo(countInfo.HALL_ID).andStatusEqualTo("true");
+        List<TerminalMybatis> list =terminalMybatisMapper.selectByExample(terminalMybatisExample);
+//        Hardware hardware = null ;
+        list.forEach(terminalMybatis -> {
+            List<com.zzqx.support.utils.machine.hardware.Hardware> list_1 = HardwareHandler.getHardwareList(terminalMybatis.getMac());
+            if(list_1.size() > 0){
+                List<com.zzqx.mvc.entity.Hardware> hardwareList = new CopyOnWriteArrayList<>();
+                list_1.forEach(hardware_1 -> {
+                    com.zzqx.mvc.entity.Hardware hardware = new com.zzqx.mvc.entity.Hardware();
+                    BeanUtils.copyProperties(hardware_1,hardware);
+                    hardware.setMac(terminalMybatis.getMac());
+                    hardware.setCreateTime(new Date());
+                    hardware.setHallId(countInfo.HALL_ID);
+                    hardwareList.add(hardware);
+                });
+                //保存数据到本地数据库
+                hardwareMapper.batchInsert(hardwareList);
+            }
+        });
+    }
+    /**
+     * 设备信息同步到监控
+     */
 }

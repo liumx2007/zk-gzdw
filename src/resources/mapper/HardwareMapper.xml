@@ -190,16 +190,13 @@
   </insert>
   <!--批量插入-->
   <insert id="batchInsert" parameterType="java.util.List" >
-    <selectKey keyProperty="id" resultType="String" order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    INSERT INTO tb_hardware (id, type, name,
-    load, temp, power, used,
-    free, create_time, hall_id,
-    mac)
-    VALUES
+    insert into  tb_hardware (`id`, `type`, `name`,
+    `load`, `temp`, `power`, `used`,
+    `free`, `create_time`, `hall_id`,
+    `mac`)
+    values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=VARCHAR}, #{item.type,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR},
+      ((SELECT REPLACE(UUID(), '-', '') AS id), #{item.type,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR},
       #{item.load,jdbcType=DOUBLE}, #{item.temp,jdbcType=DOUBLE}, #{item.power,jdbcType=DOUBLE}, #{item.used,jdbcType=DOUBLE},
       #{item.free,jdbcType=DOUBLE}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.hallId,jdbcType=INTEGER},
       #{item.mac,jdbcType=VARCHAR})

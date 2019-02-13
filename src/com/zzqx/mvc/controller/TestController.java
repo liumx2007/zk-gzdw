@@ -6,13 +6,8 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
-import com.zzqx.mvc.dao.BhSchduMapper;
-import com.zzqx.mvc.dao.EmployeeInformationMapper;
-import com.zzqx.mvc.dao.EmployeeJobsMapper;
-import com.zzqx.mvc.entity.BhSchdu;
-import com.zzqx.mvc.entity.BhSchduExample;
-import com.zzqx.mvc.entity.EmployeeInformation;
-import com.zzqx.mvc.entity.Message;
+import com.zzqx.mvc.dao.*;
+import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.service.EmployeeInformationService;
 import com.zzqx.mvc.service.MessageService;
@@ -26,6 +21,7 @@ import com.zzqx.support.utils.machine.hardware.HardwareHandler;
 import com.zzqx.support.utils.net.SocketDataSender;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Controller
 @RequestMapping(value = "/test")
@@ -54,6 +51,10 @@ public class TestController extends BaseController {
 	private EmployeeInformationService employeeInformationService;
 	@Autowired
 	private PersonnelService personnelService;
+	@Autowired
+	TerminalMybatisMapper terminalMybatisMapper;
+	@Autowired
+	HardwareMapper hardwareMapper;
 
 	private String getData = "";
 
@@ -221,5 +222,37 @@ public class TestController extends BaseController {
 //		String s = HttpUtil.post("http://www.zzqxs.com:8091/sys/login/restful",map);
 //		String ss = HttpRequest.get("http://127.0.0.1:8092/api/employeeInformation/addOrUpdatePlayTerminal?hallId=2&terminalName=电动驾驶&ipAddress=173.60.1.15&macAddress=30-9C-23-C2-0C-DF&code=15&alias=15").contentType("application/json;charset=UTF-8").execute().body();
 		return  R.ok();
+	}
+
+	/**
+	 * 设备信息保存
+	 */
+	@OpenAccess
+	@RequestMapping(value = "/testSaveHardware")
+	@ResponseBody
+	public void doSaveHardware(){
+		//获取开机状态的设备
+		TerminalMybatisExample terminalMybatisExample = new TerminalMybatisExample();
+		CountInfo countInfo =new CountInfo();
+		TerminalMybatisExample.Criteria  criteria= terminalMybatisExample.createCriteria();
+		criteria.andHallIdEqualTo(countInfo.HALL_ID).andStatusEqualTo("true");
+		List<TerminalMybatis> list =terminalMybatisMapper.selectByExample(terminalMybatisExample);
+//        Hardware hardware = null ;
+		list.forEach(terminalMybatis -> {
+			List<com.zzqx.support.utils.machine.hardware.Hardware> list_1 = HardwareHandler.getHardwareList(terminalMybatis.getMac());
+			if(list_1.size() > 0){
+				List<com.zzqx.mvc.entity.Hardware> hardwareList = new CopyOnWriteArrayList<>();
+				list_1.forEach(hardware_1 -> {
+					com.zzqx.mvc.entity.Hardware hardware = new com.zzqx.mvc.entity.Hardware();
+					BeanUtils.copyProperties(hardware_1,hardware);
+					hardware.setMac(terminalMybatis.getMac());
+					hardware.setCreateTime(new Date());
+					hardware.setHallId(countInfo.HALL_ID);
+					hardwareList.add(hardware);
+				});
+				//保存数据到本地数据库
+				hardwareMapper.batchInsert(hardwareList);
+			}
+		});
 	}
 }

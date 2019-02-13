@@ -25,6 +25,7 @@ public class Hardware {
     private Integer hallId;
 
     private String mac;
+    private  int updateStatus;
 
     public String getId() {
         return id;
@@ -112,5 +113,13 @@ public class Hardware {
 
     public void setMac(String mac) {
         this.mac = mac == null ? null : mac.trim();
+    }
+
+    public int getUpdateStatus() {
+        return updateStatus;
+    }
+
+    public void setUpdateStatus(int updateStatus) {
+        this.updateStatus = updateStatus;
     }
 }

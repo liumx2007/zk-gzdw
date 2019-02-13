@@ -10,7 +10,17 @@ public interface TerminalService extends BaseService<Terminal> {
 
 	List<Terminal> getByGroup(Group group);
 
+	/**
+	 * 获取设备列表
+	 * @return
+	 */
 	List<TerminalMybatis> getList();
+
+	/**
+	 * 获取开机状态的设备列表
+	 * @return
+	 */
+	List<TerminalMybatis> getListByStatus();
 
 	/**
 	 * 设备新增

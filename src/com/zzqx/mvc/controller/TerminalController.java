@@ -116,6 +116,9 @@ public class TerminalController extends BaseController {
 				t.setName("");
 				t.setStatus("true");
 			}
+			//
+			CountInfo countInfo = new CountInfo();
+			t.setHallId(countInfo.HALL_ID);
 			terminals.add(t);
 			if("true".equals(isServerNode)) {
 				group.setServerNodeMac(terminal.getMac());
@@ -132,6 +135,7 @@ public class TerminalController extends BaseController {
 					group.setServerNodeMac("");
 				}
 			}
+
 			group.setTerminals(terminals);
 			groupService.saveOrUpdate(group);
 //			terminalService.saveOrUpdate(t);
@@ -244,7 +248,7 @@ public class TerminalController extends BaseController {
 			String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id);
 		}catch (Exception e){
 			//监控删除出行问题，记录未删除ID，
-			//todo 加表处理
+			//todo 可以采用加表处理
 
 		}
 		message.setType(ReturnMessage.MESSAGE_SUCCESS);
