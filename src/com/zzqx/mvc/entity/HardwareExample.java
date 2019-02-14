@@ -794,6 +794,16 @@ public class HardwareExample {
             addCriterion("mac not between", value1, value2, "mac");
             return (Criteria) this;
         }
+
+        /**
+         * 19-2-14
+         * 上传状态
+         */
+        public Criteria andUpdateStatusEqualTo(Integer value) {
+            addCriterion(" update_status=", value, "updateStatus");
+            return (Criteria) this;
+        }
+
     }
 
     public static class Criteria extends GeneratedCriteria {

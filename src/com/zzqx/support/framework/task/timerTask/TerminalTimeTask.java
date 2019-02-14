@@ -1,10 +1,13 @@
 package com.zzqx.support.framework.task.timerTask;
 
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.HardwareMapper;
 import com.zzqx.mvc.dao.TerminalMybatisMapper;
+import com.zzqx.mvc.dto.HardwareDto;
+import com.zzqx.mvc.entity.HardwareExample;
 import com.zzqx.mvc.entity.TerminalMybatis;
 import com.zzqx.mvc.entity.TerminalMybatisExample;
 import com.zzqx.support.utils.machine.hardware.HardwareHandler;
@@ -12,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -143,4 +147,30 @@ public class TerminalTimeTask {
     /**
      * 设备信息同步到监控
      */
+    public void terminalSave2Control(){
+        CountInfo countInfo = new CountInfo();
+        //获取为上传的数据
+        HardwareExample hardwareExample = new HardwareExample();
+        HardwareExample.Criteria criteria = hardwareExample.createCriteria();
+        criteria.andUpdateStatusEqualTo(0);
+        List<com.zzqx.mvc.entity.Hardware> hardwareList = hardwareMapper.selectByExample(hardwareExample);
+        List<HardwareDto> hardwareDtos = new CopyOnWriteArrayList<>();
+        hardwareList.forEach(hardware -> {
+            HardwareDto hardwareDto = new HardwareDto();
+            try {
+                org.apache.commons.beanutils.BeanUtils.copyProperties(hardwareDto,hardware);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            hardwareDto.setCreateTime(hardware.getCreateTime().getTime());
+            hardwareDtos.add(hardwareDto);
+        });
+        //转hardwareDtos2Json
+        JSONArray jsonArray = new JSONArray(hardwareDtos);
+        System.out.println("------------------"+jsonArray);
+        String json = jsonArray.toString();
+        String s =  HttpUtil.post(countInfo.DW_TERMINAL_SAVE2CENTROL_TEST,json);
+    }
 }

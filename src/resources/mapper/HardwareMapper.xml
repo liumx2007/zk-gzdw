@@ -13,6 +13,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="hall_id" jdbcType="INTEGER" property="hallId" />
     <result column="mac" jdbcType="VARCHAR" property="mac" />
+    <result column="update_status" jdbcType="INTEGER" property="updateStatus" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, name, load, temp, power, used, free, create_time, hall_id, mac
+    `id`, `type`, `name`, `load`, `temp`, `power`, `used`, `free`, `create_time`, `hall_id`, `mac`, `update_status`
   </sql>
   <select id="selectByExample" parameterType="com.zzqx.mvc.entity.HardwareExample" resultMap="BaseResultMap">
     select

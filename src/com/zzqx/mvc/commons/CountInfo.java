@@ -32,7 +32,6 @@ public class CountInfo {
     public  String  PASSWORD = props.getStr("FILE_SYSTEM_PASSWORD");
 
     /**
-     * 改动位置比较多，只能去除静态。
      * 营业厅id  --黄埔 2 --钟村 10  --南沙
      */
     Integer hallId = props.getInt("HALL_ID");
@@ -143,6 +142,14 @@ public class CountInfo {
      * 监控设备删除
      */
     public String  DW_TERMINAL_DELETE = DW_SERVER_IP + "/api/employeeInformation/delTerminal";
+
+    /**
+     * 设备同步监控系统
+     */
+    public String  DW_TERMINAL_SAVE2CENTROL = SERVER_IP + "/api/dwHardware/save";
+    public String  DW_TERMINAL_SAVE2CENTROL_TEST = SERVER_IP + "/api/dwHardware/saveTest";
+
+
 
     /**
      *设备灯光类型

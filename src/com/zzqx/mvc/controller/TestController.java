@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.dao.*;
+import com.zzqx.mvc.dto.HardwareDto;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.service.EmployeeInformationService;
@@ -31,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -254,5 +256,35 @@ public class TestController extends BaseController {
 				hardwareMapper.batchInsert(hardwareList);
 			}
 		});
+	}
+
+	@OpenAccess
+	@RequestMapping(value = "/save2Centrol")
+	@ResponseBody
+	public void save2Centrol(){
+		CountInfo countInfo = new CountInfo();
+		//获取为上传的数据
+		HardwareExample hardwareExample = new HardwareExample();
+		HardwareExample.Criteria criteria = hardwareExample.createCriteria();
+		criteria.andUpdateStatusEqualTo(0);
+		List<com.zzqx.mvc.entity.Hardware> hardwareList = hardwareMapper.selectByExample(hardwareExample);
+		List<HardwareDto> hardwareDtos = new CopyOnWriteArrayList<>();
+		hardwareList.forEach(hardware -> {
+			HardwareDto hardwareDto = new HardwareDto();
+				try {
+					org.apache.commons.beanutils.BeanUtils.copyProperties(hardwareDto,hardware);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+				hardwareDto.setCreateTime(hardware.getCreateTime().getTime());
+				hardwareDtos.add(hardwareDto);
+		});
+		//转hardwareDtos2Json
+		JSONArray jsonArray = new JSONArray(hardwareDtos);
+		System.out.println("------------------"+jsonArray);
+		String json = jsonArray.toString();
+		String s =  HttpUtil.post(countInfo.DW_TERMINAL_SAVE2CENTROL_TEST,json);
 	}
 }
