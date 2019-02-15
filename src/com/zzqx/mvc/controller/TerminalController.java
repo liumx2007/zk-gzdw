@@ -245,11 +245,11 @@ public class TerminalController extends BaseController {
 		//19-1-29 删除监控系统数据
 		try{
 			CountInfo countInfo = new CountInfo();
-			String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id);
+			String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id+"&hallId="+Long.valueOf(countInfo.HALL_ID));
+			System.out.println(s);
 		}catch (Exception e){
 			//监控删除出行问题，记录未删除ID，
 			//todo 可以采用加表处理
-
 		}
 		message.setType(ReturnMessage.MESSAGE_SUCCESS);
 		message.setMessage("删除成功！");

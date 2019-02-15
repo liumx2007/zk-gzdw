@@ -51,7 +51,7 @@ public class TerminalTimeTask {
 //                map.put("alias",terminalMybatis.getSerialNumber());
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id",terminalMybatis.getId());
-                jsonObject.put("hallId",countInfo.HALL_ID);
+                jsonObject.put("hallId",terminalMybatis.getHallId());
                 jsonObject.put("terminalName",terminalMybatis.getName());
                 jsonObject.put("ipAddress",terminalMybatis.getIp());
                 jsonObject.put("macAddress",terminalMybatis.getMac());
@@ -69,6 +69,7 @@ public class TerminalTimeTask {
                             TerminalMybatis terminalMybatis1 = new TerminalMybatis();
                             terminalMybatis1.setId(terminalMybatis.getId());
                             terminalMybatis1.setUpdateStatus(1);
+                            terminalMybatis1.setHallId(terminalMybatis.getHallId());
                             terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis1);
                         }
                     }
@@ -101,7 +102,7 @@ public class TerminalTimeTask {
 //                map.put("alias",terminalMybatis.getSerialNumber());
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id",terminalMybatis.getId());
-                jsonObject.put("hallId",countInfo.HALL_ID);
+                jsonObject.put("hallId",terminalMybatis.getHallId());
                 jsonObject.put("terminalName",terminalMybatis.getName());
                 jsonObject.put("ipAddress",terminalMybatis.getIp());
                 jsonObject.put("macAddress",terminalMybatis.getMac());
@@ -118,6 +119,7 @@ public class TerminalTimeTask {
                             TerminalMybatis terminalMybatis1 = new TerminalMybatis();
                             terminalMybatis1.setId(terminalMybatis.getId());
                             terminalMybatis1.setUpdateStatus(1);
+                            terminalMybatis1.setHallId(terminalMybatis.getHallId());
                             terminalMybatisMapper.updateByPrimaryKeySelective(terminalMybatis1);
                         }
                     }
