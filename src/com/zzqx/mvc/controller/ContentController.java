@@ -96,35 +96,15 @@ public class ContentController extends BaseController {
 				cn.hutool.json.JSONObject object1 = JSONUtil.parseObj(userInfo);
 				String token = (String) object1.get("token");
 				System.out.println("------------------"+token);
-				String userId = (String) object1.get("employeeId");
+//				String userId = (String) object1.get("employeeId");
 				//再上传file，存储对应的文件表
-//				Map<String,Object> map = new HashMap<>();
-//				map.put("file",file);
-//				map.put("businessEnumType",15);
-//				map.put("userId",userId);
-//				map.put("retainFileName",1);
-//				map.put("saveToDb",2);
-//				map.put("serverToken",token);
-				// 设置请求的参数
-//				JSONObject param = new JSONObject();
-//				param.put("file", file);
-//				param.put("businessEnumType",15);
-//				param.put("userId", userId);
-//				param.put("retainFileName",1);
-//				param.put("saveToDb",2);
-//				param.put("serverToken",token);
-//				String json1 = param.toString();
-//				String s = HttpUtil.post(countInfo.FILE_UPLOAD,map);
-// ?businessEnumType=15&userId=1&retainFileName=1&saveToDb=2&sortNumber=1&serverToken=
-//				String s = HttpRequest.post(countInfo.FILE_UPLOAD+"?businessEnumType=15&userId="+userId+"&retainFileName=1&saveToDb=2&sortNumber=1&serverToken="+token)
-//						.form("file",file)
-//						.execute().body();
 				HttpClientUploadFile httpClientUploadFile = new HttpClientUploadFile();
 				String s = httpClientUploadFile.httpClientUploadFile(file,token);
-				System.out.println("---------------------");
+				System.out.println("---------------------"+s);
 			}catch (Exception e){
 				System.out.println("-------------网络中断，文件上传监控失败！------------");
 			}
+
 			if(file == null || StringHelper.isBlank(file.getOriginalFilename())) {
 				message.setType(ReturnMessage.MESSAGE_ERROR);
 				message.setMessage("上传失败！");

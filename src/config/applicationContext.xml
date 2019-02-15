@@ -217,7 +217,7 @@
     <bean id="MessageTimeTask" class="com.zzqx.support.framework.task.timerTask.MessageTimeTask"/>
     <bean id="YjTimeTask" class="com.zzqx.support.framework.task.timerTask.YjTimeTask"/>
     <bean id="TerminalTimeTask" class="com.zzqx.support.framework.task.timerTask.TerminalTimeTask"/>
-    <!--<task:scheduled-tasks>-->
+    <task:scheduled-tasks>
         <!--<task:scheduled ref="terminalStateTimerTask" method="doTask" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="AndroidTimerTask" method="sendAutoMessage_new" cron="0 0 5 * * *"/>-->
         <!--<task:scheduled ref="SynchronizeTimerTask" method="doMessageTask" fixed-rate="30000"/>&lt;!&ndash;更新排班信息 5000,5秒 &ndash;&gt;-->
@@ -226,9 +226,9 @@
         <!--<task:scheduled ref="EnvironmentTimerTask" method="postInteractionData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="MessageTimeTask" method="postMessageData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
         <!--<task:scheduled ref="YjTimeTask" method="postYjData" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
-        <!--<task:scheduled ref="TerminalTimeTask" method="addDwTerminal" fixed-rate="5000"/>&lt;!&ndash; 5000,5秒 &ndash;&gt;-->
+        <task:scheduled ref="TerminalTimeTask" method="addDwTerminal" fixed-rate="5000"/><!-- 5000,5秒 -->
         <!--<task:scheduled ref="TerminalTimeTask" method="updateDwTerminal" fixed-rate="5000"/>-->
-    <!--</task:scheduled-tasks>-->
+    </task:scheduled-tasks>
 
 
     <!-- 事务管理器配置,单数据源事务 -->

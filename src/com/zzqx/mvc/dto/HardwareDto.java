@@ -11,7 +11,7 @@ public class HardwareDto {
     private Double used;
     private Double free;
     private long createTime;
-    private Double hallId;
+    private Integer hallId;
     private String mac;
 
     public String getId() {
@@ -86,11 +86,11 @@ public class HardwareDto {
         this.createTime = createTime;
     }
 
-    public Double getHallId() {
+    public Integer getHallId() {
         return hallId;
     }
 
-    public void setHallId(Double hallId) {
+    public void setHallId(Integer hallId) {
         this.hallId = hallId;
     }
 

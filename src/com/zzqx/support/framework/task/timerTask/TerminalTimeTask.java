@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Transactional
@@ -44,15 +42,25 @@ public class TerminalTimeTask {
         if (list.size() > 0) {
             list.forEach(terminalMybatis -> {
 //            TerminalMybatis terminalMybatis = list.get(0);
-                Map<String,Object> map = new HashMap<>();
-                map.put("hallId",countInfo.HALL_ID);
-                map.put("terminalName",terminalMybatis.getName());
-                map.put("ipAddress",terminalMybatis.getIp());
-                map.put("macAddress",terminalMybatis.getMac());
-                map.put("code",terminalMybatis.getCodeName());
-                map.put("alias",terminalMybatis.getSerialNumber());
+//                Map<String,Object> map = new HashMap<>();
+//                map.put("hallId",countInfo.HALL_ID);
+//                map.put("terminalName",terminalMybatis.getName());
+//                map.put("ipAddress",terminalMybatis.getIp());
+//                map.put("macAddress",terminalMybatis.getMac());
+//                map.put("code",terminalMybatis.getCodeName());
+//                map.put("alias",terminalMybatis.getSerialNumber());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id",terminalMybatis.getId());
+                jsonObject.put("hallId",countInfo.HALL_ID);
+                jsonObject.put("terminalName",terminalMybatis.getName());
+                jsonObject.put("ipAddress",terminalMybatis.getIp());
+                jsonObject.put("macAddress",terminalMybatis.getMac());
+                jsonObject.put("code",terminalMybatis.getCodeName());
+                jsonObject.put("alias",terminalMybatis.getSerialNumber());
                 try {
-                    String s = HttpUtil.post(countInfo.DW_TERMINAL_ADD , map,2000);
+//                    String s = HttpUtil.post(countInfo.DW_TERMINAL_ADD , map,2000);
+                    String s = HttpUtil.createPost(countInfo.DW_TERMINAL_ADD).body(jsonObject.toString(),"application/json")
+                            .timeout(2000).execute().body();
                     if (!"".equals(s)) {
                         JSONObject object = new JSONObject(s);
                         Object flag = object.get("infoCode");
@@ -84,15 +92,24 @@ public class TerminalTimeTask {
         if (list.size() > 0) {
             list.forEach(terminalMybatis -> {
 //            TerminalMybatis terminalMybatis = list.get(0);
-                Map<String,Object> map = new HashMap<>();
-                map.put("hallId",countInfo.HALL_ID);
-                map.put("terminalName",terminalMybatis.getName());
-                map.put("ipAddress",terminalMybatis.getIp());
-                map.put("macAddress",terminalMybatis.getMac());
-                map.put("code",terminalMybatis.getCodeName());
-                map.put("alias",terminalMybatis.getSerialNumber());
+//                Map<String,Object> map = new HashMap<>();
+//                map.put("hallId",countInfo.HALL_ID);
+//                map.put("terminalName",terminalMybatis.getName());
+//                map.put("ipAddress",terminalMybatis.getIp());
+//                map.put("macAddress",terminalMybatis.getMac());
+//                map.put("code",terminalMybatis.getCodeName());
+//                map.put("alias",terminalMybatis.getSerialNumber());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id",terminalMybatis.getId());
+                jsonObject.put("hallId",countInfo.HALL_ID);
+                jsonObject.put("terminalName",terminalMybatis.getName());
+                jsonObject.put("ipAddress",terminalMybatis.getIp());
+                jsonObject.put("macAddress",terminalMybatis.getMac());
+                jsonObject.put("code",terminalMybatis.getCodeName());
+                jsonObject.put("alias",terminalMybatis.getSerialNumber());
                 try {
-                    String s = HttpUtil.post(countInfo.DW_TERMINAL_UPDATE ,map,2000);
+                    String s = HttpUtil.createPost(countInfo.DW_TERMINAL_UPDATE).body(jsonObject.toString(),"application/json")
+                            .timeout(2000).execute().body();
                     if (!"".equals(s)) {
                         JSONObject object = new JSONObject(s);
                         Object flag = object.get("infoCode");
@@ -117,7 +134,7 @@ public class TerminalTimeTask {
 
     }
     /**
-     * 设备信息保存
+     * 设备信息保存本地
      */
     public void doSaveHardware(){
         //获取开机状态的设备

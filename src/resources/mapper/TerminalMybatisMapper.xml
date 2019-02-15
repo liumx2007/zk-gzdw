@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, status, serial_number, name, code_name, ip, mac, group_id, remark
+    id, status, serial_number, name, code_name, ip, mac, group_id, remark,hall_id,update_status
   </sql>
   <select id="selectByExample" parameterType="com.zzqx.mvc.entity.TerminalMybatisExample" resultType="com.zzqx.mvc.entity.TerminalMybatis">
     select
