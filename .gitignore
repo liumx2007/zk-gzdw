@@ -8,3 +8,4 @@ target/
 .classpath
 /logs
 /classes
+/WebRoot/WEB-INF/classes
