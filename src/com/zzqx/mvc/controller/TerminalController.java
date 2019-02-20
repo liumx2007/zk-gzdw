@@ -1,16 +1,12 @@
 package com.zzqx.mvc.controller;
 
-import cn.hutool.http.HttpUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.*;
 import com.zzqx.mvc.javabean.R;
 import com.zzqx.mvc.javabean.ReturnMessage;
 import com.zzqx.mvc.javabean.TerminalInfo;
-import com.zzqx.mvc.service.ContentService;
-import com.zzqx.mvc.service.GroupService;
-import com.zzqx.mvc.service.TerminalContentService;
-import com.zzqx.mvc.service.TerminalService;
+import com.zzqx.mvc.service.*;
 import com.zzqx.support.utils.StringHelper;
 import com.zzqx.support.utils.machine.hardware.Hardware;
 import com.zzqx.support.utils.machine.hardware.HardwareHandler;
@@ -45,6 +41,8 @@ public class TerminalController extends BaseController {
 	private ContentService contentService;
 	@Autowired
 	private TerminalContentService terminalContentService;
+	@Autowired
+	private DelterminalService delterminalService;
 
 	@OpenAccess
 	@ResponseBody
@@ -243,14 +241,18 @@ public class TerminalController extends BaseController {
 		String[] ids = id.split(",");
 		terminalService.delete(ids);
 		//19-1-29 删除监控系统数据
-		try{
-			CountInfo countInfo = new CountInfo();
-			String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id+"&hallId="+Long.valueOf(countInfo.HALL_ID));
-			System.out.println(s);
-		}catch (Exception e){
-			//监控删除出行问题，记录未删除ID，
-			//todo 可以采用加表处理
-		}
+//		try{
+//			CountInfo countInfo = new CountInfo();
+//			String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id+"&hallId="+Long.valueOf(countInfo.HALL_ID));
+//			System.out.println(s);
+//		}catch (Exception e){
+//			//监控删除出行问题，记录未删除ID，
+//			//todo 可以采用加表处理
+//		}
+		//19-2-20 保存删除的设备ID
+		DelTerminal delTerminal = new DelTerminal();
+		delTerminal.setTerminalIds(id);
+		delterminalService.save(delTerminal);
 		message.setType(ReturnMessage.MESSAGE_SUCCESS);
 		message.setMessage("删除成功！");
 		return message.toString();

@@ -4,12 +4,11 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.zzqx.mvc.commons.CountInfo;
+import com.zzqx.mvc.dao.DelTerminalMapper;
 import com.zzqx.mvc.dao.HardwareMapper;
 import com.zzqx.mvc.dao.TerminalMybatisMapper;
 import com.zzqx.mvc.dto.HardwareDto;
-import com.zzqx.mvc.entity.HardwareExample;
-import com.zzqx.mvc.entity.TerminalMybatis;
-import com.zzqx.mvc.entity.TerminalMybatisExample;
+import com.zzqx.mvc.entity.*;
 import com.zzqx.support.utils.machine.hardware.HardwareHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,8 @@ public class TerminalTimeTask {
     TerminalMybatisMapper terminalMybatisMapper;
     @Autowired
     HardwareMapper hardwareMapper;
+    @Autowired
+    DelTerminalMapper delTerminalMapper;
 
     /**
      * 新增设备到监控
@@ -133,7 +134,32 @@ public class TerminalTimeTask {
      * 删除
      */
     public void delDwTerminal(){
+        DelTerminalExample delTerminalExample = new DelTerminalExample();
+        DelTerminalExample.Criteria criteria = delTerminalExample.createCriteria();
+        criteria.andTagEqualTo(0);
+        List<DelTerminal> list = delTerminalMapper.selectByExample(delTerminalExample);
+        list.stream().forEach(delTerminal -> {
+            try{
+                CountInfo countInfo = new CountInfo();
+                String id = delTerminal.getTerminalIds();
+                String s = HttpUtil.get(countInfo.DW_TERMINAL_DELETE + "?terminalId="+id+"&hallId="+Long.valueOf(countInfo.HALL_ID));
+//			    System.out.println(s);
+                if (!"".equals(s)){
+                    JSONObject object = new JSONObject(s);
+                    Object flag = object.get("infoCode");
+                    if ("200".equals(flag)){
+                        //更新tag为1
+                        DelTerminal delTerminal_1 = new DelTerminal();
+                        delTerminal_1.setTag(1);
+                        delTerminal_1.setId(delTerminal.getId());
+                        delTerminalMapper.updateByPrimaryKeySelective(delTerminal_1);
+                    }
+                }
+            }catch (Exception e){
 
+            }
+
+        });
     }
     /**
      * 设备信息保存本地
