@@ -1,5 +1,6 @@
 package com.zzqx.mvc.controller;
 
+import cn.hutool.http.HttpUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
 import com.zzqx.mvc.entity.*;
@@ -271,7 +272,8 @@ public class TerminalController extends BaseController {
 		map.put("terminal", terminal);
 		return "terminal/manageContent";
 	}
-	
+
+	@OpenAccess
 	@ResponseBody
 	@RequestMapping("distributeContent")
 	public String distributeContent(String terminalId, String contentIds) {
@@ -519,4 +521,37 @@ public class TerminalController extends BaseController {
 		return  R.ok();
 	}
 
+	/**
+	 * 客户端调用 存储当前播放的文件为哪个
+	 * 设备的MAC，播放文件的ID
+	 */
+	@OpenAccess
+	@RequestMapping("nowContent")
+	@ResponseBody
+	public R clientSetContent(TerminalMybatis terminalMybatis){
+		TerminalMybatis terminalMybatis_1 = null;
+		if (terminalMybatis != null){
+			terminalMybatis_1 = new TerminalMybatis();
+			terminalMybatis_1 = terminalService.selectByMac(terminalMybatis);
+		}
+		//存储设备的播放文件的ID信息
+
+		//调用监控接口
+		try {
+			CountInfo countInfo = new CountInfo();
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("hallId",countInfo.HALL_ID);
+			jsonObject.put("terminalId",terminalMybatis_1.getId());
+			jsonObject.put("playingFileId",terminalMybatis.getContentId());
+			String s = HttpUtil.createPost(countInfo.DW_TERMINAL_PLAY_CONTENT).body(jsonObject.toString())
+					.execute().body();
+//			System.out.println("--------------------"+s);
+		}catch (Exception e){
+
+		}
+		return  R.ok();
+	}
+
 }
+
+

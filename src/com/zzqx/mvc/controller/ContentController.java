@@ -1,6 +1,7 @@
 package com.zzqx.mvc.controller;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.zzqx.mvc.annotation.OpenAccess;
 import com.zzqx.mvc.commons.CountInfo;
@@ -75,35 +76,36 @@ public class ContentController extends BaseController {
 			message.setMessage("上传失败！");
 			return message.toString();
 		}
+		MultipartFile file = null;
 		Folder folder = folderService.getById(content.getFolder().getId());
 		if(content.getWay() == Content.WAY_UPLOAD) {
 			MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-			MultipartFile file = multipartHttpServletRequest.getFile("file");
+			 file = multipartHttpServletRequest.getFile("file");
 			// 19-1-28
-			try{
-				//登录监控获取token
-				CountInfo countInfo = new CountInfo();
-				// 设置请求的参数
-				JSONObject jsonParam = new JSONObject();
-				jsonParam.put("username", countInfo.USER_NAME);
-				jsonParam.put("password", countInfo.PASSWORD);
-				String json = jsonParam.toString();
-				String data = HttpRequest.post(countInfo.DW_SYSTEM_LOGIN)
-						.body(json,"application/json")
-						.execute().body();
-				cn.hutool.json.JSONObject object = JSONUtil.parseObj(data);
-				Object userInfo = object.get("data");
-				cn.hutool.json.JSONObject object1 = JSONUtil.parseObj(userInfo);
-				String token = (String) object1.get("token");
-				System.out.println("------------------"+token);
-//				String userId = (String) object1.get("employeeId");
-				//再上传file，存储对应的文件表
-				HttpClientUploadFile httpClientUploadFile = new HttpClientUploadFile();
-				String s = httpClientUploadFile.httpClientUploadFile(file,token);
-				System.out.println("---------------------"+s);
-			}catch (Exception e){
-				System.out.println("-------------网络中断，文件上传监控失败！------------");
-			}
+//			try{
+//				//登录监控获取token
+//				CountInfo countInfo = new CountInfo();
+//				// 设置请求的参数
+//				JSONObject jsonParam = new JSONObject();
+//				jsonParam.put("username", countInfo.USER_NAME);
+//				jsonParam.put("password", countInfo.PASSWORD);
+//				String json = jsonParam.toString();
+//				String data = HttpRequest.post(countInfo.DW_SYSTEM_LOGIN)
+//						.body(json,"application/json")
+//						.execute().body();
+//				cn.hutool.json.JSONObject object = JSONUtil.parseObj(data);
+//				Object userInfo = object.get("data");
+//				cn.hutool.json.JSONObject object1 = JSONUtil.parseObj(userInfo);
+//				String token = (String) object1.get("token");
+//				System.out.println("------------------"+token);
+////				String userId = (String) object1.get("employeeId");
+//				//再上传file，存储对应的文件表
+//				HttpClientUploadFile httpClientUploadFile = new HttpClientUploadFile();
+//				String s = httpClientUploadFile.httpClientUploadFile(file,token);
+//				System.out.println("---------------------"+s);
+//			}catch (Exception e){
+//				System.out.println("-------------网络中断，文件上传监控失败！------------");
+//			}
 
 			if(file == null || StringHelper.isBlank(file.getOriginalFilename())) {
 				message.setType(ReturnMessage.MESSAGE_ERROR);
@@ -245,6 +247,50 @@ public class ContentController extends BaseController {
 		contents.add(content);
 		folder.setContents(contents);
 		folderService.saveOrUpdate(folder);
+		try{
+			//登录监控获取token
+			CountInfo countInfo = new CountInfo();
+			// 设置请求的参数
+			JSONObject jsonParam = new JSONObject();
+			jsonParam.put("username", countInfo.USER_NAME);
+			jsonParam.put("password", countInfo.PASSWORD);
+			String json = jsonParam.toString();
+			String data = HttpRequest.post(countInfo.DW_SYSTEM_LOGIN)
+							.body(json,"application/json")
+							.execute().body();
+			cn.hutool.json.JSONObject object = JSONUtil.parseObj(data);
+			Object userInfo = object.get("data");
+			cn.hutool.json.JSONObject object1 = JSONUtil.parseObj(userInfo);
+			String token = (String) object1.get("token");
+			System.out.println("------------------"+token);
+//				String userId = (String) object1.get("employeeId");
+			//再上传file，存储对应的文件表
+			HttpClientUploadFile httpClientUploadFile = new HttpClientUploadFile();
+			String s = httpClientUploadFile.httpClientUploadFile(file,token);
+			System.out.println("---------------------"+s);
+			//文件信息存储监控
+					cn.hutool.json.JSONObject jsonObject_1 = JSONUtil.parseObj(s);
+			Object data_1 = jsonObject_1.get("data");
+			cn.hutool.json.JSONObject jsonObject_2 = new cn.hutool.json.JSONObject(data_1);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("fileName",content.getFileName());
+			jsonObject.put("filePath",jsonObject_2.get("path"));
+			jsonObject.put("fileSize",jsonObject_2.get("fileSize"));
+//			if (content.getType()){
+//
+//			}
+			jsonObject.put("fileType","2");
+			jsonObject.put("fileUrl",jsonObject_2.get("url"));
+			jsonObject.put("hallId",countInfo.HALL_ID);
+			jsonObject.put("id",content.getId());
+			jsonObject.put("reviewMark","1");
+			String s_1 = HttpUtil.createPost(countInfo.DW_FILE_INFO_SAVE)
+							.body(jsonObject.toString(),"application/json")
+							.execute().body();
+			System.out.println(s_1);
+		}catch (Exception e){
+			System.out.println("-------------网络中断，文件上传监控失败！------------");
+		}
 		return message.toString();
 	}
 	

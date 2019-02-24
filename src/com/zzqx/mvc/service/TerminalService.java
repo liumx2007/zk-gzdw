@@ -30,4 +30,9 @@ public interface TerminalService extends BaseService<Terminal> {
 	 * 设备更新
 	 */
 	int updateBySelect(TerminalMybatis terminalMybatis);
+
+	/**
+	 * 根据mac查询设备数据
+	 */
+	TerminalMybatis selectByMac(TerminalMybatis terminalMybatis);
 }

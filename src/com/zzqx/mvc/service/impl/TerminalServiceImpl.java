@@ -157,4 +157,18 @@ public class TerminalServiceImpl implements TerminalService {
 		return 0;
 	}
 
+	@Override
+	public TerminalMybatis selectByMac(TerminalMybatis terminalMybatis) {
+		TerminalMybatisExample terminalMybatisExample = new TerminalMybatisExample();
+		TerminalMybatisExample.Criteria criteria = terminalMybatisExample.createCriteria();
+		criteria.andMacEqualTo(terminalMybatis.getMac());
+		List<TerminalMybatis> list = terminalMybatisMapper.selectByExample(terminalMybatisExample);
+		TerminalMybatis terminalMybatis_1 = null;
+		if (list.size() > 0){
+			terminalMybatis_1 = new TerminalMybatis();
+			terminalMybatis_1 = list.get(0);
+		}
+		return terminalMybatis_1;
+	}
+
 }

@@ -24,6 +24,8 @@ public class TerminalMybatis {
 
     private  int updateStatus;//上传状态（0 未上传 1已上传 2 已更新）默认为 0
 
+    private String contentId;//播放文件ID
+
     public String getId() {
         return id;
     }
@@ -110,5 +112,13 @@ public class TerminalMybatis {
 
     public void setUpdateStatus(int updateStatus) {
         this.updateStatus = updateStatus;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 }
