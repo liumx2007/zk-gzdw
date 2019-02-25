@@ -149,16 +149,16 @@ public class CountInfo {
     public String  DW_TERMINAL_SAVE2CENTROL = SERVER_IP + "/api/dwHardware/save";
     public String  DW_TERMINAL_SAVE2CENTROL_TEST = SERVER_IP + "/api/dwHardware/saveTest";
 
+    /**
+     * 数据同步到监控，设备当前播放文件
+     */
+    public String DW_TERMINAL_PLAY_CONTENT = DW_SERVER_IP + "/api/dwPlayListContent/updatePlaying";
 
     /**
      * 文件信息同步监控
      */
     public  String DW_FILE_INFO_SAVE = DW_SERVER_IP + "/api/dwPlayFile/addFile";
 
-    /**
-     * 数据同步到监控，设备当前播放文件
-     */
-    public String DW_TERMINAL_PLAY_CONTENT = DW_SERVER_IP + "/api/dwPlayListContent/updatePlaying";
 
 
     /**

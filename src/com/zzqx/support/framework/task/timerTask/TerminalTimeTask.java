@@ -131,7 +131,7 @@ public class TerminalTimeTask {
         }
     }
     /**
-     * 删除
+     * 删除监控设备
      */
     public void delDwTerminal(){
         DelTerminalExample delTerminalExample = new DelTerminalExample();

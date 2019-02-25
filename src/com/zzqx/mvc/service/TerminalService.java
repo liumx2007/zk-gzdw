@@ -35,4 +35,5 @@ public interface TerminalService extends BaseService<Terminal> {
 	 * 根据mac查询设备数据
 	 */
 	TerminalMybatis selectByMac(TerminalMybatis terminalMybatis);
+
 }
